@@ -7,7 +7,7 @@
 <meta name="description" content="Werkzeuge in Sekunden digitalisieren, in einer Bibliothek verwalten und daraus standardisierte Shadowboards mit fertigen DXF-Fräsdaten erstellen.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0F1117; --panel:#1A1D27; --border:#2A2D3E; --selected:#1E2235;
@@ -17,7 +17,7 @@
   --d1:#4F8EF7; --d2:#3E6CC4; --d3:#2F4F8F;
   --display:"Archivo","Segoe UI",system-ui,sans-serif;
   --font:"Segoe UI","Archivo",system-ui,-apple-system,sans-serif;
-  --mono:Consolas,"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --mono:"Segoe UI","Archivo",system-ui,sans-serif;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
@@ -36,14 +36,6 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 .wrap{max-width:1320px;margin:0 auto;padding:0 28px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}html{scroll-behavior:auto}}
 
-/* ---------- CAD-Fadenkreuz ---------- */
-.xh{position:fixed;pointer-events:none;z-index:90;background:rgba(79,142,247,.22);display:none}
-.xh-v{top:0;bottom:0;width:1px;left:0}
-.xh-h{left:0;right:0;height:1px;top:0}
-.coords{position:fixed;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:91;display:none;gap:16px;align-items:center;padding:8px 14px;background:var(--panel);border:1px solid var(--border);border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--muted-light)}
-.coords b{color:var(--text);font-weight:400}
-.coords .sheet{color:var(--accent2)}
-@media (pointer:fine) and (min-width:900px){.xh,.coords{display:flex}.xh{display:block}}
 
 /* ---------- Kopfleiste wie die App ---------- */
 .top{position:sticky;top:0;z-index:50;background:rgba(15,17,23,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
@@ -61,14 +53,10 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 .btn[disabled]{background:var(--border);color:var(--muted);cursor:not-allowed}
 .top .btn{align-self:center}
 
-/* ---------- Blatt-Kopf mit Lineal ---------- */
-.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 0;border-top:1px solid var(--border);font-family:var(--mono);font-size:12px;color:var(--muted-light);position:relative}
-.sheet-head::before{content:"";position:absolute;left:0;right:0;top:-1px;height:8px;background:repeating-linear-gradient(90deg,var(--border) 0 1px,transparent 1px 10px),repeating-linear-gradient(90deg,var(--muted) 0 1px,transparent 1px 100px);background-size:auto 5px,auto 8px;background-repeat:repeat-x;opacity:.9}
-.sheet-head b{color:var(--accent2);font-weight:400}
 
 /* ---------- HERO ---------- */
 .hero{padding:40px 0 0}
-.h-title{font-size:clamp(60px,11.6vw,176px);font-stretch:62%;font-weight:850;text-transform:none;margin-top:18px}
+.h-title{font-size:clamp(60px,11.6vw,176px);font-stretch:62%;font-weight:850;margin-top:24px}
 .h-title .r{display:block;text-align:right}
 .h-title .l{display:block}
 .h-title .blue{color:var(--accent)}
@@ -109,7 +97,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 .chk{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);font-size:15px}
 .chk b{font-family:var(--mono);font-weight:400;font-size:14px}
 .good{color:var(--success)}.warnc{color:var(--warning)}.bad{color:var(--error)}
-.status{margin:12px 0;padding:12px;border-radius:6px;background:var(--selected);font-size:14px;min-height:66px}
+.status{margin:12px 0;padding:12px;border-radius:6px;background:var(--selected);font-size:14px;min-height:48px}
 .panel .btn{width:100%}
 .panel .btn+.btn{margin-top:8px}
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);transform:translate(-50%,20px);opacity:0;z-index:95;padding:14px 20px;border-radius:8px;background:var(--success);color:var(--bg);font-weight:700;transition:opacity .25s, transform .25s;pointer-events:none}
@@ -117,13 +105,12 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 
 /* ---------- Abschnitte ---------- */
 section.s{padding:140px 0 0}
-.s-title{font-size:clamp(46px,7vw,110px);font-stretch:62%;margin:30px 0 0}
+.s-title{font-size:clamp(46px,7vw,110px);font-stretch:62%;margin:0;max-width:14ch}
 .s-lead{font-size:20px;color:#C3CCD8;max-width:36em;margin-top:24px}
 
 /* Alter Prozess: Durchstreichen */
-.strike-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 48px;margin-top:48px;counter-reset:st}
+.strike-grid{padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 48px;margin-top:48px;counter-reset:st}
 .strike-grid li{list-style:none;position:relative;display:flex;align-items:baseline;gap:18px;padding:12px 0;border-bottom:1px solid var(--border);font-family:var(--display);font-stretch:70%;font-weight:700;font-size:clamp(26px,3vw,40px);color:var(--muted-light);line-height:1.1}
-.strike-grid li::before{counter-increment:st;content:counter(st,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:400;color:var(--muted);min-width:24px}
 .strike-grid li::after{content:"";position:absolute;left:0;top:54%;height:3px;width:0;background:var(--accent);transition:width .5s ease calc(var(--i) * 90ms)}
 .strike-grid.go li::after{width:100%}
 .strike-grid.go li{color:var(--muted)}
@@ -165,8 +152,8 @@ section.s{padding:140px 0 0}
 .note{font-size:14px;color:var(--muted-light)}
 
 /* Bibliothek */
-.lib-top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:48px}
-.search{flex:1 1 360px;display:flex;align-items:center;gap:14px;height:64px;padding:0 20px;background:var(--panel);border:2px solid var(--border);border-radius:8px}
+.lib-top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:44px}
+.search{flex:1 1 280px;min-width:0;display:flex;align-items:center;gap:14px;height:64px;padding:0 20px;background:var(--panel);border:2px solid var(--border);border-radius:8px}
 .search:focus-within{border-color:var(--accent)}
 .search input{flex:1;min-width:0;border:0;background:transparent;color:var(--text);font-family:var(--display);font-stretch:80%;font-weight:700;font-size:26px;outline:none}
 .search input::placeholder{color:var(--muted)}
@@ -207,8 +194,8 @@ section.s{padding:140px 0 0}
 /* DXF */
 .dxf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;margin-top:48px;align-items:center}
 .layers{border:1px solid var(--border);border-radius:10px;background:var(--panel);overflow:hidden}
-.layers .hd{display:flex;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:13px}
-.layer{display:grid;grid-template-columns:14px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:14px}
+.layers .hd{display:flex;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--border);font-weight:700;font-size:16px}
+.layer{display:grid;grid-template-columns:14px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);font-size:16px}
 .layer:last-child{border-bottom:0}
 .layer i{width:14px;height:14px;border-radius:2px}
 .layer span:last-child{color:var(--muted-light)}
@@ -289,9 +276,6 @@ section.s{padding:140px 0 0}
 </head>
 <body>
 
-<div class="xh xh-v" aria-hidden="true"></div>
-<div class="xh xh-h" aria-hidden="true"></div>
-<div class="coords" aria-hidden="true"><span class="sheet" id="sheetName">Blatt 01 Board</span><span>X <b id="cx">0,0</b></span><span>Y <b id="cy">0,0</b> mm</span></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <header class="top">
@@ -301,10 +285,10 @@ section.s{padding:140px 0 0}
       [Produktname]
     </a>
     <nav class="tabs" aria-label="Hauptnavigation">
-      <a href="#digitalisieren"><span>01</span>Digitalisieren</a>
-      <a href="#bibliothek"><span>02</span>Bibliothek</a>
-      <a href="#top"><span>03</span>Board</a>
-      <a href="#export"><span>04</span>Export</a>
+      <a href="#digitalisieren">Digitalisieren</a>
+      <a href="#bibliothek">Bibliothek</a>
+      <a href="#top">Board</a>
+      <a href="#export">Export</a>
     </nav>
     <a class="btn" href="#demo">Live-Demo anfragen</a>
   </div>
@@ -315,16 +299,14 @@ section.s{padding:140px 0 0}
 <!-- ===================== HERO ===================== -->
 <section class="hero" data-sheet="Blatt 01 Board">
   <div class="wrap">
-    <div class="sheet-head"><span><b>Blatt 01</b>  Shadowboard-Software</span><span>Maßstab 1:1</span></div>
 
     <h1 class="h-title">
       <span class="l">Werkzeuge digitalisieren.</span>
       <span class="r blue">Shadowboards standardisieren.</span>
     </h1>
-    <div class="dimline" aria-hidden="true"><span>Physisches Werkzeug</span><i></i><span>fertige Fräsdatei</span></div>
 
     <div class="hero-row">
-      <p>Mit [Produktname] digitalisieren Sie Werkzeuge in Sekunden, verwalten sie dauerhaft in einer zentralen Bibliothek und erstellen daraus standardisierte Shadowboards – in einem durchgängigen System.</p>
+      <p>Vom physischen Werkzeug zur fertigen Fräsdatei. In einem System.</p>
       <div class="less">
         <span><b>Weniger</b> Nachzeichnen.</span>
         <span><b>Weniger</b> Nachmessen.</span>
@@ -339,7 +321,7 @@ section.s{padding:140px 0 0}
     <!-- Interaktives Board -->
     <div class="play" id="play">
       <div class="play-bar">
-        <div class="hint"><span class="dot" aria-hidden="true"></span>Probieren Sie es: Werkzeuge auf dem Board verschieben. Mit Tab auswählen, mit Pfeiltasten bewegen.</div>
+        <div class="hint"><span class="dot" aria-hidden="true"></span>Ziehen Sie die Werkzeuge. Die Prüfung läuft live mit.</div>
         <div class="legend" aria-label="Legende der Frästiefen">
           <span><i style="background:#4F8EF7"></i>15 mm</span>
           <span><i style="background:#3E6CC4"></i>25 mm</span>
@@ -352,7 +334,7 @@ section.s{padding:140px 0 0}
           <svg id="board" viewBox="0 0 1000 460" role="application" aria-label="Interaktives Shadowboard mit verschiebbaren Werkzeugen">
             <rect x="20" y="20" width="960" height="420" rx="8" fill="#1A1D27" stroke="#2A2D3E" stroke-width="2"/>
             <rect x="40" y="40" width="920" height="380" fill="none" stroke="#2A2D3E" stroke-dasharray="8 8"/>
-            <text x="44" y="455" fill="#64748B" font-size="13" font-family="Consolas, monospace">Randabstand 20 mm</text>
+            
             <g id="tools"></g>
           </svg>
         </div>
@@ -361,7 +343,7 @@ section.s{padding:140px 0 0}
           <div class="chk"><span>Überschneidungen</span><b id="cOv">0</b></div>
           <div class="chk"><span>Abstand unter 15 mm</span><b id="cCl">0</b></div>
           <div class="chk"><span>Randbereich verletzt</span><b id="cEd">0</b></div>
-          <div class="chk"><span>Werkzeuge auf dem Board</span><b id="cN">0</b></div>
+          <b id="cN" hidden>0</b>
           <div class="status" id="status" aria-live="polite">Prüfe Board …</div>
           <button class="btn" id="arrange" type="button">Automatisch anordnen</button>
           <button class="btn sec" id="exportBtn" type="button" disabled>DXF exportieren</button>
@@ -374,9 +356,7 @@ section.s{padding:140px 0 0}
 <!-- ===================== ALTER PROZESS ===================== -->
 <section class="s" id="ablauf" data-sheet="Blatt 02 Heute">
   <div class="wrap">
-    <div class="sheet-head"><span><b>Blatt 02</b>  Der heutige Weg</span><span>10 Schritte</span></div>
-    <h2 class="s-title">Schluss mit Nachzeichnen, Skalieren und jedes Mal neu anfangen.</h2>
-    <p class="s-lead">Ein Shadowboard zu erstellen sollte kein eigenes Projekt sein. Heute sieht der Prozess oft so aus:</p>
+    <h2 class="s-title">Heute: 10 Schritte. Pro Board. Jedes Mal.</h2>
     <ol class="strike-grid" id="strike">
       <li style="--i:0">Foto machen</li>
       <li style="--i:1">Bild korrigieren</li>
@@ -389,10 +369,6 @@ section.s{padding:140px 0 0}
       <li style="--i:8">Frästiefen festlegen</li>
       <li style="--i:9">Fräsen</li>
     </ol>
-    <div class="pain">
-      <p class="muted">Für ein einzelnes Board können dabei mehrere Stunden Arbeitszeit entstehen. Und beim nächsten Board beginnt vieles wieder von vorne: Werkzeuge werden erneut aufgenommen, Konturen neu gezeichnet und Entscheidungen erneut getroffen.</p>
-      <p>[Produktname] macht daraus einen standardisierten Prozess:</p>
-    </div>
     <div class="new3">
       <div><span>01</span><strong>Werkzeug digitalisieren.</strong></div>
       <div><span>02</span><strong>Board erstellen.</strong></div>
@@ -404,9 +380,7 @@ section.s{padding:140px 0 0}
 <!-- ===================== DIGITALISIEREN ===================== -->
 <section class="s" id="digitalisieren" data-sheet="Blatt 03 Digitalisieren">
   <div class="wrap">
-    <div class="sheet-head"><span><b>Blatt 03</b>  Digitalisieren</span><span>Leuchtplatte und Marker</span></div>
-    <h2 class="s-title">Ein Werkzeug. Einmal digitalisieren. Immer wieder verwenden.</h2>
-    <p class="s-lead">Legen Sie das Werkzeug in die Aufnahme und starten Sie die Digitalisierung. Die Software korrigiert die Perspektive und erstellt daraus ein bearbeitbares digitales Werkzeug.</p>
+    <h2 class="s-title">Einmal digitalisieren. Immer wieder verwenden.</h2>
 
     <div class="dig">
       <div class="dig-stage" id="digStage">
@@ -429,25 +403,20 @@ section.s{padding:140px 0 0}
           </g>
           <g fill="#E2E8F0"><circle class="node" cx="98" cy="191" r="4.5"/><circle class="node" cx="182" cy="178" r="4.5"/><circle class="node" cx="300" cy="178" r="4.5"/><circle class="node" cx="426" cy="204" r="4.5"/><circle class="node" cx="498" cy="191" r="4.5"/><circle class="node" cx="140" cy="233" r="4.5"/><circle class="node" cx="300" cy="204" r="4.5"/></g>
           <g class="fade" stroke="#38BDF8" stroke-width="1.5"><line x1="98" y1="280" x2="498" y2="280"/><line x1="98" y1="270" x2="98" y2="290"/><line x1="498" y1="270" x2="498" y2="290"/></g>
-          <g class="fade"><rect x="238" y="266" width="124" height="28" fill="#1A1D27"/><text x="300" y="286" text-anchor="middle" fill="#38BDF8" font-size="15" font-family="Consolas, monospace">Maß erkannt</text></g>
+          <g class="fade"><rect x="238" y="266" width="124" height="28" fill="#1A1D27"/><text x="300" y="286" text-anchor="middle" fill="#38BDF8" font-size="15" font-family="Segoe UI, Archivo, sans-serif">Maß erkannt</text></g>
         </svg>
       </div>
 
       <div class="dig-side">
         <div class="timer" aria-live="off"><span id="tNum">0,0</span><small>Sek.</small></div>
-        <p class="note">Aufnahme eines Werkzeugs: ca. 20 Sekunden. Hier zeitgerafft.</p>
+        <p class="note">pro Werkzeug, hier zeitgerafft</p>
         <ol class="steps" id="digSteps">
-          <li><i></i>Aufnahme auf der Leuchtplatte</li>
-          <li><i></i>Perspektive und Maßstab korrigiert</li>
+          <li><i></i>Aufnahme</li>
+          <li><i></i>Perspektive korrigiert</li>
           <li><i></i>Kontur erkannt</li>
-          <li><i></i>Maße und Orientierung übernommen</li>
+          <li><i></i>Maße übernommen</li>
         </ol>
-        <button class="btn" id="digBtn" type="button">Digitalisierung starten</button>
-        <div>
-          <p class="note" style="color:var(--text);font-weight:700">Anschließend:</p>
-          <div class="after"><span>Konturen bearbeiten</span><span>Maße anpassen</span><span>Griffmulden hinzufügen</span><span>Frästiefen definieren</span><span>Infos hinterlegen</span><span>in der Bibliothek speichern</span></div>
-        </div>
-        <p class="note">Auch ohne Kabine: Marker-Vorlage ausdrucken und mit dem Smartphone fotografieren.</p>
+        <button class="btn" id="digBtn" type="button">Nochmal abspielen</button>
       </div>
     </div>
   </div>
@@ -456,15 +425,13 @@ section.s{padding:140px 0 0}
 <!-- ===================== BIBLIOTHEK ===================== -->
 <section class="s" id="bibliothek" data-sheet="Blatt 04 Bibliothek">
   <div class="wrap">
-    <div class="sheet-head"><span><b>Blatt 04</b>  Werkzeugbibliothek</span><span>lokal, Server oder Cloud</span></div>
-    <h2 class="s-title">Ihre Werkzeuge gehören in eine Bibliothek. Nicht in einzelne Dateien.</h2>
-    <p class="s-lead">Alle digitalisierten Werkzeuge bleiben dauerhaft gespeichert. Suchen Sie nach Projekt, Kategorie oder Stichwort und ziehen Sie das Werkzeug direkt auf Ihr Board. Probieren Sie die Suche aus.</p>
+    <h2 class="s-title">Eine Bibliothek statt einzelner Dateien.</h2>
 
     <div class="lib-top">
       <label class="search">
         <svg width="24" height="24" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="#94A3B8" stroke-width="2"/><path d="M13 13l5 5" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></svg>
         <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Werkzeug suchen</span>
-        <input id="libSearch" type="search" placeholder="z. B. Zange, Montage 1, Schlüssel" autocomplete="off">
+        <input id="libSearch" type="search" placeholder="Werkzeug suchen" autocomplete="off">
       </label>
       <button class="chipf on" type="button" data-f="">Alle Projekte</button>
       <button class="chipf" type="button" data-f="montage 1">Montage 1</button>
@@ -482,27 +449,25 @@ section.s{padding:140px 0 0}
       <div class="tile" data-s="messschieber messmittel messen instandhaltung"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#2F4F8F"><rect x="30" y="36" width="140" height="10" rx="2"/><rect x="36" y="14" width="12" height="46" rx="2"/><rect x="70" y="18" width="12" height="38" rx="2"/></g></svg></div><div><b>Messschieber</b><small>Messmittel, Instandhaltung</small></div><span class="u">auf 2 Boards</span></div>
       <div class="tile" data-s="drehmomentschlüssel schlüssel maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="30" y="34" width="130" height="12" rx="6"/><circle cx="166" cy="40" r="12"/><rect x="30" y="30" width="46" height="20" rx="8"/></g><rect x="36" y="22" width="30" height="36" rx="15" fill="#38BDF8"/></svg></div><div><b>Drehmomentschlüssel</b><small>Schlüssel, Maschine 4</small></div><span class="u">auf 4 Boards</span></div>
     </div>
-    <div class="empty" id="libEmpty">Kein Werkzeug gefunden. Anderen Begriff versuchen – oder das Werkzeug einfach digitalisieren.</div>
-    <p class="claim">Einmal digitalisiert.<br>Für viele Boards verfügbar.</p>
+    <div class="empty" id="libEmpty">Nichts gefunden.</div>
+    
   </div>
 </section>
 
 <!-- ===================== ÄNDERUNGEN ===================== -->
 <section class="s" id="aenderungen" data-sheet="Blatt 05 Änderungen">
   <div class="wrap">
-    <div class="sheet-head"><span><b>Blatt 05</b>  Änderungen</span><span>Board verweist auf Bibliothek</span></div>
-    <h2 class="s-title">Werkzeug geändert? Nicht wieder von vorne anfangen.</h2>
+    <h2 class="s-title">Werkzeug geändert? Alle Boards ziehen mit.</h2>
     <div class="chg">
       <div class="chg-text">
-        <p>Das Werkzeug auf Ihrem Board ist mit dem Eintrag in Ihrer Werkzeugbibliothek verknüpft. Sie ändern das Werkzeug – und [Produktname] erkennt, dass es auf mehreren Boards verwendet wird.</p>
-        <p>Soll die Änderung überall übernommen werden? Oder möchten Sie eine neue Variante erstellen? Sie entscheiden. So bleiben Ihre Boards mit der Bibliothek verbunden, statt zu isolierten Dateien zu werden.</p>
+        <p>Boards sind mit der Bibliothek verknüpft. Überall übernehmen oder als neue Variante speichern – Sie entscheiden.</p>
         <div class="chg-ctrl">
           <button class="btn" id="editTool" type="button">Gabelschlüssel 17 ändern</button>
           <button class="btn sec" id="resetBoards" type="button">Zurücksetzen</button>
         </div>
         <div class="dlg" id="dlg" role="dialog" aria-labelledby="dlgT">
           <h4 id="dlgT"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="#F59E0B" stroke-width="1.8"/><path d="M10 5.5v5.5M10 14v.5" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>Werkzeug wird mehrfach verwendet</h4>
-          <p>„Gabelschlüssel 17“ liegt auf 12 Boards. Beim Speichern werden alle diese Boards aktualisiert.</p>
+          <p>Liegt auf 12 Boards.</p>
           <div class="row">
             <button class="btn ghost" type="button" data-a="cancel">Abbrechen</button>
             <button class="btn sec" type="button" data-a="copy">Als Kopie speichern</button>
@@ -518,21 +483,19 @@ section.s{padding:140px 0 0}
 <!-- ===================== EXPORT ===================== -->
 <section class="s" id="export" data-sheet="Blatt 06 Export">
   <div class="wrap">
-    <div class="sheet-head"><span><b>Blatt 06</b>  DXF-Export</span><span>maschinenunabhängig</span></div>
     <h2 class="s-title">Vom Board direkt zur Fräsdatei.</h2>
     <div class="dxf">
       <div>
-        <p class="s-lead" style="margin-top:0">Wenn Ihr Board fertig ist, erzeugt [Produktname] die benötigten DXF-Daten. Konturen, Ebenen und Frästiefen werden strukturiert ausgegeben und können in Ihrer vorhandenen CAM-Software weiterverarbeitet werden.</p>
-        <p class="big-claim" style="margin-top:34px"><span>Ihre Fräse.</span><span>Ihr CAM-System.</span><span style="color:var(--accent)">Ihre Daten.</span></p>
-        <p class="note" style="margin-top:22px;font-size:16px">[Produktname] ersetzt nicht zwangsläufig Ihre bestehende Fertigungsumgebung – es macht den Weg dorthin deutlich einfacher.</p>
+        <p class="big-claim"><span>Ihre Fräse.</span><span>Ihr CAM-System.</span><span style="color:var(--accent)">Ihre Daten.</span></p>
+        <p class="s-lead">Ebenen mit Frästiefen, fertig für Ihre CAM-Software.</p>
       </div>
       <div class="layers">
-        <div class="hd"><span>Montage-1_Board-A.dxf</span><span class="good">bereit</span></div>
-        <div class="layer"><i style="background:#94A3B8"></i><span>Aussenkontur_Board</span><span>Zuschnitt</span></div>
-        <div class="layer"><i style="background:#4F8EF7"></i><span>Tasche_Tiefe_15mm</span><span>2 Konturen</span></div>
-        <div class="layer"><i style="background:#3E6CC4"></i><span>Tasche_Tiefe_25mm</span><span>2 Konturen</span></div>
-        <div class="layer"><i style="background:#2F4F8F"></i><span>Tasche_Tiefe_40mm</span><span>1 Kontur</span></div>
-        <div class="layer"><i style="background:#38BDF8"></i><span>Griffmulde_Tiefe_15mm</span><span>4 Konturen</span></div>
+        <div class="hd"><span>Board A.dxf</span><span class="good">bereit</span></div>
+        <div class="layer"><i style="background:#94A3B8"></i><span>Außenkontur</span><span>Zuschnitt</span></div>
+        <div class="layer"><i style="background:#4F8EF7"></i><span>Taschen 15 mm</span><span>2</span></div>
+        <div class="layer"><i style="background:#3E6CC4"></i><span>Taschen 25 mm</span><span>2</span></div>
+        <div class="layer"><i style="background:#2F4F8F"></i><span>Taschen 40 mm</span><span>1</span></div>
+        <div class="layer"><i style="background:#38BDF8"></i><span>Griffmulden 15 mm</span><span>4</span></div>
       </div>
     </div>
   </div>
@@ -541,35 +504,31 @@ section.s{padding:140px 0 0}
 <!-- ===================== ZEIT ===================== -->
 <section class="s" id="zeit" data-sheet="Blatt 07 Zeit">
   <div class="wrap">
-    <div class="sheet-head"><span><b>Blatt 07</b>  Zeit</span><span>Board mit 10 Werkzeugen</span></div>
     <h2 class="s-title">Von Stunden zu Minuten.</h2>
     <div class="time" id="timeBox">
       <div class="old"><div class="clock">6:00 h</div><p class="lbl">heute, manuell</p></div>
-      <div><div class="clock" id="clockNew">6:00 h</div><p class="lbl">mit [Produktname], Werkzeuge neu digitalisiert</p></div>
-      <div><div class="clock">0:01 h</div><p class="lbl">weiteres Board mit Werkzeugen aus der Bibliothek</p></div>
+      <div><div class="clock" id="clockNew">6:00 h</div><p class="lbl">mit [Produktname]</p></div>
+      <div><div class="clock">0:01 h</div><p class="lbl">nächstes Board aus der Bibliothek</p></div>
     </div>
-    <p class="foot-note">Beispielrechnung aus dem bisherigen manuellen Prozess. Die tatsächliche Zeit hängt von Werkzeug und Board ab.</p>
+    <p class="foot-note">Beispiel: Board mit 10 Werkzeugen.</p>
   </div>
 </section>
 
 <!-- ===================== ZIELGRUPPE ===================== -->
 <section class="s" id="zielgruppe" data-sheet="Blatt 08 Für wen">
   <div class="wrap">
-    <div class="sheet-head"><span><b>Blatt 08</b>  Für wen</span><span>Industrie, Werkstatt, Handwerk</span></div>
-    <h2 class="s-title">Für Menschen, die eigentlich andere Dinge erledigen sollten.</h2>
+    <h2 class="s-title">Für alle, die eigentlich anderes zu tun haben.</h2>
     <div class="who">
       <ul class="roles">
-        <li>Lean Management<span>5S</span></li>
-        <li>Industrial Engineering<span>IE</span></li>
-        <li>5S-Verantwortliche<span>Standard</span></li>
-        <li>Produktions- und Abteilungsleiter<span>Entscheidung</span></li>
-        <li>Werkstatt und Fertigung<span>täglich</span></li>
+        <li>Lean Management</li>
+        <li>Industrial Engineering</li>
+        <li>5S-Verantwortliche</li>
+        <li>Produktions- und Abteilungsleiter</li>
+        <li>Werkstatt und Fertigung</li>
       </ul>
       <div class="infra">
-        <p>Für alle, die Shadowboards brauchen, aber nicht jedes Mal Stunden mit Nachzeichnen, Skalieren und manueller Konstruktion verbringen möchten.</p>
-        <p style="margin-top:18px"><strong style="color:var(--text)">Ihre bestehende Infrastruktur bleibt bestehen.</strong> [Produktname] ist keine neue Produktionsmaschine. Sie arbeiten weiter mit Ihrer vorhandenen Frästechnik und CAM-Software. Die Software schließt die Lücke zwischen:</p>
-        <div class="chain"><span>Physisches Werkzeug</span><span>Digitales Werkzeug</span><span>Shadowboard</span><span class="hl">Fräsdaten</span></div>
-        <p>Und genau dort entsteht der größte Teil der manuellen Arbeit.</p>
+        <p><strong style="color:var(--text)">Ihre Infrastruktur bleibt.</strong> Eigene Fräse, eigenes CAM-System. [Produktname] schließt nur die Lücke dazwischen:</p>
+        <div class="chain"><span>Werkzeug</span><span>Digitales Werkzeug</span><span>Shadowboard</span><span class="hl">Fräsdaten</span></div>
       </div>
     </div>
   </div>
@@ -578,9 +537,9 @@ section.s{padding:140px 0 0}
 <!-- ===================== CTA ===================== -->
 <section class="cta" id="demo" data-sheet="Blatt 09 Demo">
   <div class="wrap">
-    <h2>Starten Sie mit einem Werkzeug. Nicht mit einem Großprojekt.</h2>
+    <h2>Starten Sie mit einem Werkzeug.</h2>
     <div class="cta-row">
-      <p>Nehmen Sie ein Werkzeug aus Ihrem aktuellen Prozess und sehen Sie selbst, wie schnell daraus ein digitales Werkzeug und anschließend ein Shadowboard wird. Wir zeigen Ihnen den kompletten Workflow in einer kurzen Live-Demo.</p>
+      <p>Nicht mit einem Großprojekt. Wir zeigen Ihnen den kompletten Workflow in einer kurzen Live-Demo.</p>
       <div class="cta-btns">
         <a class="btn" href="mailto:[E-MAIL]?subject=Live-Demo%20anfragen">Live-Demo anfragen</a>
         <a class="btn line" href="#kontakt">Kontakt</a>
@@ -597,8 +556,8 @@ section.s{padding:140px 0 0}
     <div class="title-block">
       <div><small>Benennung</small><span class="name">[Produktname]</span></div>
       <div><small>Inhalt</small><span>Werkzeuge digitalisieren. Shadowboards standardisieren.</span></div>
-      <div><small>Maßstab</small><span class="mono">1:1</span></div>
-      <div><small>Blatt</small><span class="mono">1 / 1</span></div>
+      <div><small>Maßstab</small><span>1:1</span></div>
+      <div><small>Blatt</small><span>1 / 1</span></div>
       <div><small>Kontakt</small><a href="mailto:[E-MAIL]">[E-Mail-Adresse]</a></div>
       <div><small>Telefon</small><span>[Telefon]</span></div>
       <div><small>Rechtliches</small><a href="#impressum">Impressum</a></div>
@@ -618,21 +577,6 @@ section.s{padding:140px 0 0}
   var toastEl = document.getElementById('toast'), toastT;
   function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function(){ toastEl.classList.remove('show'); }, 2600); }
 
-  /* ---------- Fadenkreuz + Koordinaten ---------- */
-  var xv = document.querySelector('.xh-v'), xh = document.querySelector('.xh-h');
-  var cx = document.getElementById('cx'), cy = document.getElementById('cy');
-  window.addEventListener('pointermove', function(e){
-    if (e.pointerType !== 'mouse') return;
-    xv.style.transform = 'translateX(' + e.clientX + 'px)';
-    xh.style.transform = 'translateY(' + e.clientY + 'px)';
-    cx.textContent = (e.clientX * 0.5).toFixed(1).replace('.', ',');
-    cy.textContent = ((e.clientY + window.scrollY) * 0.5).toFixed(1).replace('.', ',');
-  }, { passive: true });
-  var sheetName = document.getElementById('sheetName');
-  var sheetObs = new IntersectionObserver(function(ents){
-    ents.forEach(function(en){ if (en.isIntersecting) sheetName.textContent = en.target.getAttribute('data-sheet'); });
-  }, { rootMargin: '-45% 0px -50% 0px' });
-  document.querySelectorAll('[data-sheet]').forEach(function(s){ sheetObs.observe(s); });
 
   /* ---------- Interaktives Board ---------- */
   var svg = document.getElementById('board'), layer = document.getElementById('tools');
@@ -713,8 +657,8 @@ section.s{padding:140px 0 0}
     exportBtn.disabled = !okAll;
     exportBtn.className = okAll ? 'btn' : 'btn sec';
     statusEl.innerHTML = okAll
-      ? '<strong class="good">Alle Prüfungen bestanden.</strong><br>Das Board ist bereit für den DXF-Export.'
-      : (ov ? '<strong class="bad">Werkzeuge überschneiden sich.</strong><br>Verschieben oder automatisch anordnen.' : '<strong class="warnc">Abstände prüfen.</strong><br>Rot = Überschneidung, Gelb = zu knapp.');
+      ? '<strong class="good">Alles in Ordnung.</strong> Bereit für den Export.'
+      : (ov ? '<strong class="bad">Überschneidung.</strong> Verschieben oder anordnen lassen.' : '<strong class="warnc">Zu knapp.</strong> Abstände prüfen.');
   }
   document.getElementById('arrange').addEventListener('click', function(){
     if (!reduce) svg.classList.add('anim');
