@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>[Produktname] – Werkzeuge digitalisieren. Shadowboards standardisieren.</title>
+<meta name="description" content="Werkzeuge in Sekunden digitalisieren, in einer Bibliothek verwalten und daraus standardisierte Shadowboards mit fertigen DXF-Fräsdaten erstellen.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0F1117; --panel:#1A1D27; --border:#2A2D3E; --selected:#1E2235;
+  --accent:#4F8EF7; --accent2:#38BDF8;
+  --success:#22C55E; --warning:#F59E0B; --error:#EF4444;
+  --text:#E2E8F0; --muted:#64748B; --muted-light:#94A3B8; --white:#FFFFFF;
+  --d1:#4F8EF7; --d2:#3E6CC4; --d3:#2F4F8F;
+  --display:"Archivo","Segoe UI",system-ui,sans-serif;
+  --font:"Segoe UI","Archivo",system-ui,-apple-system,sans-serif;
+  --mono:Consolas,"JetBrains Mono",ui-monospace,Menlo,monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{background:var(--bg);scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
+p{margin:0}
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;letter-spacing:-.02em}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted-light)}
+.wrap{max-width:1320px;margin:0 auto;padding:0 28px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}html{scroll-behavior:auto}}
+
+/* ---------- CAD-Fadenkreuz ---------- */
+.xh{position:fixed;pointer-events:none;z-index:90;background:rgba(79,142,247,.22);display:none}
+.xh-v{top:0;bottom:0;width:1px;left:0}
+.xh-h{left:0;right:0;height:1px;top:0}
+.coords{position:fixed;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:91;display:none;gap:16px;align-items:center;padding:8px 14px;background:var(--panel);border:1px solid var(--border);border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--muted-light)}
+.coords b{color:var(--text);font-weight:400}
+.coords .sheet{color:var(--accent2)}
+@media (pointer:fine) and (min-width:900px){.xh,.coords{display:flex}.xh{display:block}}
+
+/* ---------- Kopfleiste wie die App ---------- */
+.top{position:sticky;top:0;z-index:50;background:rgba(15,17,23,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.top .wrap{display:flex;align-items:stretch;justify-content:space-between;height:62px;gap:20px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:19px;font-stretch:90%}
+.tabs{display:flex;align-items:stretch}
+.tabs a{display:flex;align-items:center;gap:8px;padding:0 18px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-light);border-bottom:2px solid transparent}
+.tabs a span{font-family:var(--mono);font-weight:400;color:var(--muted)}
+.tabs a:hover,.tabs a.on{color:var(--text);border-bottom-color:var(--accent)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:0 20px;border-radius:6px;border:0;background:var(--accent);color:var(--white);font-weight:700;font-size:16px;cursor:pointer;transition:background .15s, transform .15s}
+.btn:hover{background:#6FA2F9}
+.btn:active{transform:translateY(1px)}
+.btn.sec{background:var(--border);color:var(--text)}
+.btn.sec:hover{background:#363A50}
+.btn[disabled]{background:var(--border);color:var(--muted);cursor:not-allowed}
+.top .btn{align-self:center}
+
+/* ---------- Blatt-Kopf mit Lineal ---------- */
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 0;border-top:1px solid var(--border);font-family:var(--mono);font-size:12px;color:var(--muted-light);position:relative}
+.sheet-head::before{content:"";position:absolute;left:0;right:0;top:-1px;height:8px;background:repeating-linear-gradient(90deg,var(--border) 0 1px,transparent 1px 10px),repeating-linear-gradient(90deg,var(--muted) 0 1px,transparent 1px 100px);background-size:auto 5px,auto 8px;background-repeat:repeat-x;opacity:.9}
+.sheet-head b{color:var(--accent2);font-weight:400}
+
+/* ---------- HERO ---------- */
+.hero{padding:40px 0 0}
+.h-title{font-size:clamp(60px,11.6vw,176px);font-stretch:62%;font-weight:850;text-transform:none;margin-top:18px}
+.h-title .r{display:block;text-align:right}
+.h-title .l{display:block}
+.h-title .blue{color:var(--accent)}
+.dimline{display:flex;align-items:center;gap:12px;margin:18px 0 10px;font-family:var(--mono);font-size:13px;color:var(--accent2)}
+.dimline i{flex:1;height:1px;background:var(--accent2);position:relative}
+.dimline i::before,.dimline i::after{content:"";position:absolute;top:-6px;width:1px;height:13px;background:var(--accent2)}
+.dimline i::before{left:0}.dimline i::after{right:0}
+.hero-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) auto;gap:40px;align-items:end;margin-top:34px}
+.hero-row p{font-size:20px;color:#C3CCD8;max-width:34em}
+.less{display:grid;gap:4px;font-family:var(--display);font-stretch:80%;font-weight:700;font-size:24px;line-height:1.15}
+.less span{color:var(--muted-light)}
+.less span b{color:var(--text);font-weight:700}
+.hero-cta{display:flex;flex-direction:column;gap:10px}
+
+/* Spielfläche */
+.play{margin-top:56px;border:1px solid var(--border);border-radius:10px;background:var(--panel);overflow:hidden}
+.play-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.play-bar .hint{display:flex;align-items:center;gap:10px;font-size:15px}
+.play-bar .hint .dot{width:10px;height:10px;border-radius:50%;background:var(--accent2);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+.legend{display:flex;gap:14px;font-family:var(--mono);font-size:12px;color:var(--muted-light)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:11px;height:11px;border-radius:2px;display:inline-block}
+.play-body{display:grid;grid-template-columns:minmax(0,1fr) 290px}
+.board-wrap{padding:18px;background-color:var(--bg);background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:30px 30px;touch-action:none}
+#board{width:100%;height:auto;user-select:none;-webkit-user-select:none}
+#board .tool{cursor:grab;outline:none}
+#board .tool.drag{cursor:grabbing}
+#board.anim .tool{transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+#board .bbox{fill:none;stroke:transparent;stroke-width:2;transition:stroke .15s, fill .15s}
+#board .tool:hover .bbox,#board .tool:focus-visible .bbox{stroke:var(--accent)}
+#board .tool.drag .bbox{stroke:var(--accent);fill:rgba(79,142,247,.08)}
+#board .st-close .bbox{stroke:var(--warning)}
+#board .st-edge .bbox{stroke:var(--warning);stroke-dasharray:6 5}
+#board .st-overlap .bbox{stroke:var(--error);fill:rgba(239,68,68,.14)}
+.panel{border-left:1px solid var(--border);padding:18px;display:flex;flex-direction:column;gap:4px}
+.panel h4{margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.chk{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);font-size:15px}
+.chk b{font-family:var(--mono);font-weight:400;font-size:14px}
+.good{color:var(--success)}.warnc{color:var(--warning)}.bad{color:var(--error)}
+.status{margin:12px 0;padding:12px;border-radius:6px;background:var(--selected);font-size:14px;min-height:66px}
+.panel .btn{width:100%}
+.panel .btn+.btn{margin-top:8px}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);transform:translate(-50%,20px);opacity:0;z-index:95;padding:14px 20px;border-radius:8px;background:var(--success);color:var(--bg);font-weight:700;transition:opacity .25s, transform .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- Abschnitte ---------- */
+section.s{padding:140px 0 0}
+.s-title{font-size:clamp(46px,7vw,110px);font-stretch:62%;margin:30px 0 0}
+.s-lead{font-size:20px;color:#C3CCD8;max-width:36em;margin-top:24px}
+
+/* Alter Prozess: Durchstreichen */
+.strike-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 48px;margin-top:48px;counter-reset:st}
+.strike-grid li{list-style:none;position:relative;display:flex;align-items:baseline;gap:18px;padding:12px 0;border-bottom:1px solid var(--border);font-family:var(--display);font-stretch:70%;font-weight:700;font-size:clamp(26px,3vw,40px);color:var(--muted-light);line-height:1.1}
+.strike-grid li::before{counter-increment:st;content:counter(st,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:400;color:var(--muted);min-width:24px}
+.strike-grid li::after{content:"";position:absolute;left:0;top:54%;height:3px;width:0;background:var(--accent);transition:width .5s ease calc(var(--i) * 90ms)}
+.strike-grid.go li::after{width:100%}
+.strike-grid.go li{color:var(--muted)}
+.strike-grid ol{margin:0;padding:0}
+.new3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:40px}
+.new3 div{padding:28px;border-radius:10px;background:var(--accent);color:var(--bg)}
+.new3 div span{font-family:var(--mono);font-size:13px}
+.new3 div strong{display:block;margin-top:34px;font-family:var(--display);font-stretch:70%;font-weight:800;font-size:clamp(30px,3.4vw,46px);line-height:1}
+.pain{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;margin-top:40px;font-size:19px}
+.pain p:last-child{color:var(--text);font-weight:700}
+
+/* Digitalisieren */
+.dig{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;margin-top:52px}
+.dig-stage{position:relative;border:1px solid var(--border);border-radius:10px;background:var(--panel);overflow:hidden;aspect-ratio:600/380}
+.photo{position:absolute;inset:0;transform:perspective(900px) rotateX(26deg) rotateZ(-7deg) scale(.82) translateY(18px);transition:transform 1s cubic-bezier(.2,.8,.2,1), opacity .6s}
+.dig-stage.s1 .photo{transform:none}
+.dig-stage.s3 .photo{opacity:.18}
+.overlay{position:absolute;inset:0}
+.scan{opacity:0}
+.dig-stage.s2 .scan{animation:scan 1.2s ease-in-out forwards}
+@keyframes scan{0%{opacity:1;transform:translateY(0)}90%{opacity:1}100%{opacity:0;transform:translateY(360px)}}
+.draw{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-dasharray:1;stroke-dashoffset:1}
+.dig-stage.s3 .draw{transition:stroke-dashoffset 1.2s ease;stroke-dashoffset:0}
+.node,.fade{opacity:0;transition:opacity .4s}
+.dig-stage.s4 .node,.dig-stage.s4 .fade{opacity:1}
+.dig-side{display:flex;flex-direction:column;gap:14px}
+.timer{font-family:var(--display);font-stretch:62%;font-weight:850;font-size:clamp(90px,10vw,150px);line-height:.85;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.timer small{font-size:.35em;color:var(--muted-light);font-weight:700;margin-left:6px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.steps li{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:6px;font-size:15px;color:var(--muted-light);transition:all .3s}
+.steps li i{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex:none;transition:all .3s}
+.steps li.act{color:var(--text);border-color:var(--accent)}
+.steps li.act i{border-color:var(--accent);border-top-color:transparent;animation:spin .8s linear infinite}
+.steps li.done{color:var(--text)}
+.steps li.done i{background:var(--success);border-color:var(--success)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.after{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.after span{padding:7px 12px;border-radius:4px;border:1px solid var(--border);font-size:14px;color:var(--muted-light)}
+.note{font-size:14px;color:var(--muted-light)}
+
+/* Bibliothek */
+.lib-top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:48px}
+.search{flex:1 1 360px;display:flex;align-items:center;gap:14px;height:64px;padding:0 20px;background:var(--panel);border:2px solid var(--border);border-radius:8px}
+.search:focus-within{border-color:var(--accent)}
+.search input{flex:1;min-width:0;border:0;background:transparent;color:var(--text);font-family:var(--display);font-stretch:80%;font-weight:700;font-size:26px;outline:none}
+.search input::placeholder{color:var(--muted)}
+.chipf{height:48px;padding:0 16px;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:15px;color:var(--muted-light)}
+.chipf.on{background:var(--accent);border-color:var(--accent);color:var(--white);font-weight:700}
+.count{font-family:var(--mono);font-size:13px;color:var(--muted-light);margin-top:14px}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
+.tile{border:1px solid var(--border);border-radius:10px;background:var(--panel);padding:14px;display:flex;flex-direction:column;gap:12px;transition:border-color .2s, transform .2s}
+.tile:hover{border-color:var(--accent);transform:translateY(-2px)}
+.tile .th{height:92px;border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.tile b{font-size:16px}
+.tile small{display:block;font-size:13px;color:var(--muted-light)}
+.tile .u{align-self:flex-start;font-family:var(--mono);font-size:12px;color:var(--accent2)}
+.tile[hidden]{display:none}
+.empty{display:none;padding:28px;border:1px dashed var(--border);border-radius:10px;color:var(--warning);margin-top:14px}
+.claim{margin-top:40px;font-family:var(--display);font-stretch:70%;font-weight:800;font-size:clamp(32px,4vw,56px);line-height:1}
+
+/* Änderungen */
+.chg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:40px;margin-top:48px;align-items:start}
+.chg-text p{font-size:19px;color:#C3CCD8}
+.chg-text p+p{margin-top:16px}
+.chg-ctrl{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px}
+.dlg{margin-top:18px;border:1px solid var(--accent);border-radius:8px;background:var(--panel);padding:20px;display:none}
+.dlg.open{display:block}
+.dlg h4{margin:0;font-size:17px;display:flex;gap:10px;align-items:center}
+.dlg p{font-size:15px;color:var(--muted-light);margin:10px 0 16px}
+.dlg .row{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.dlg .btn{min-height:42px;font-size:15px;padding:0 16px}
+.btn.ghost{background:transparent;color:var(--muted-light)}
+.minis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.mini{position:relative;border:1px solid var(--border);border-radius:8px;background:var(--panel);padding:8px}
+.mini .lbl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted-light);margin-bottom:6px}
+.mini.flash{animation:flash .9s ease}
+@keyframes flash{0%{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(56,189,248,.35)}100%{border-color:var(--border);box-shadow:none}}
+.mini .var{position:absolute;right:8px;bottom:8px;font-size:11px;font-weight:700;padding:2px 6px;border-radius:3px;background:var(--accent2);color:var(--bg)}
+.wr rect,.wr circle{transition:all .6s ease}
+
+/* DXF */
+.dxf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;margin-top:48px;align-items:center}
+.layers{border:1px solid var(--border);border-radius:10px;background:var(--panel);overflow:hidden}
+.layers .hd{display:flex;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:13px}
+.layer{display:grid;grid-template-columns:14px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:14px}
+.layer:last-child{border-bottom:0}
+.layer i{width:14px;height:14px;border-radius:2px}
+.layer span:last-child{color:var(--muted-light)}
+.big-claim{font-family:var(--display);font-stretch:62%;font-weight:850;font-size:clamp(48px,6vw,92px);line-height:.9}
+.big-claim span{display:block}
+
+/* Zeit */
+.time{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:48px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.time div{padding:30px;border-right:1px solid var(--border)}
+.time div:last-child{border-right:0;background:var(--accent);color:var(--bg)}
+.time div:last-child .lbl{color:var(--bg)}
+.time .clock{font-family:var(--display);font-stretch:62%;font-weight:850;font-size:clamp(64px,7.6vw,118px);line-height:.9;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.time .lbl{font-size:16px;color:var(--muted-light);margin-top:14px}
+.time .old .clock{color:var(--muted);text-decoration:line-through;text-decoration-thickness:4px;text-decoration-color:var(--error)}
+.foot-note{font-size:14px;color:var(--muted-light);margin-top:14px}
+
+/* Zielgruppe */
+.who{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;margin-top:48px}
+.roles{list-style:none;margin:0;padding:0}
+.roles li{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:14px 0;border-bottom:1px solid var(--border);font-family:var(--display);font-stretch:70%;font-weight:700;font-size:clamp(26px,2.8vw,38px);line-height:1.05}
+.roles li span{font-family:var(--mono);font-size:12px;font-weight:400;color:var(--muted)}
+.infra p{font-size:19px;color:#C3CCD8}
+.chain{display:grid;gap:0;margin:26px 0;border-left:2px solid var(--border);padding-left:22px}
+.chain span{position:relative;padding:12px 0;font-size:19px;font-weight:600}
+.chain span::before{content:"";position:absolute;left:-29px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:var(--bg);border:2px solid var(--muted)}
+.chain span.hl{color:var(--accent)}
+.chain span.hl::before{background:var(--accent);border-color:var(--accent)}
+
+/* CTA */
+.cta{margin-top:150px;background:var(--accent);color:var(--bg)}
+.cta .wrap{padding-top:100px;padding-bottom:100px}
+.cta h2{font-size:clamp(60px,11vw,172px);font-stretch:62%;font-weight:900}
+.cta-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:40px;align-items:end;margin-top:40px}
+.cta p{font-size:21px;max-width:34em;font-weight:500}
+.cta .btn{background:var(--bg);color:var(--text);min-height:60px;padding:0 30px;font-size:18px}
+.cta .btn:hover{background:var(--panel)}
+.cta .btn.line{background:transparent;color:var(--bg);border:2px solid var(--bg)}
+.cta .btn.line:hover{background:rgba(15,17,23,.08)}
+.cta-btns{display:grid;gap:10px}
+
+/* Schriftfeld */
+.title-block{margin:48px 0;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border:2px solid var(--muted);font-size:14px}
+.title-block>div{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 14px;display:grid;gap:2px}
+.title-block>div:nth-child(4n){border-right:0}
+.title-block>div:nth-last-child(-n+4){border-bottom:0}
+.title-block small{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.title-block .name{font-family:var(--display);font-stretch:80%;font-weight:800;font-size:22px}
+.title-block a{color:var(--accent2)}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1100px){
+  .tabs{display:none}
+  .hero-row{grid-template-columns:minmax(0,1fr)}
+  .hero-cta{flex-direction:row;flex-wrap:wrap}
+  .play-body{grid-template-columns:minmax(0,1fr)}
+  .panel{border-left:0;border-top:1px solid var(--border)}
+  .dig,.chg,.dxf,.who,.pain{grid-template-columns:minmax(0,1fr)}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:700px){
+  body{font-size:16px}
+  .wrap{padding:0 18px}
+  .top .btn{display:none}
+  .h-title .r{text-align:left}
+  .strike-grid,.new3,.time{grid-template-columns:minmax(0,1fr)}
+  .time div{border-right:0;border-bottom:1px solid var(--border)}
+  .minis{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .tiles{grid-template-columns:minmax(0,1fr)}
+  .cta-row{grid-template-columns:minmax(0,1fr)}
+  .title-block{grid-template-columns:1fr 1fr}
+  .title-block>div:nth-child(4n){border-right:1px solid var(--border)}
+  .title-block>div:nth-child(2n){border-right:0}
+  .title-block>div:nth-last-child(-n+4){border-bottom:1px solid var(--border)}
+  .title-block>div:nth-last-child(-n+2){border-bottom:0}
+  section.s{padding-top:100px}
+}
+</style>
+</head>
+<body>
+
+<div class="xh xh-v" aria-hidden="true"></div>
+<div class="xh xh-h" aria-hidden="true"></div>
+<div class="coords" aria-hidden="true"><span class="sheet" id="sheetName">Blatt 01 Board</span><span>X <b id="cx">0,0</b></span><span>Y <b id="cy">0,0</b> mm</span></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="[Produktname] Startseite">
+      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="6" fill="#4F8EF7"/><rect x="7" y="12" width="20" height="10" rx="5" fill="#0F1117"/><rect x="12" y="15" width="10" height="4" rx="2" fill="#38BDF8"/></svg>
+      [Produktname]
+    </a>
+    <nav class="tabs" aria-label="Hauptnavigation">
+      <a href="#digitalisieren"><span>01</span>Digitalisieren</a>
+      <a href="#bibliothek"><span>02</span>Bibliothek</a>
+      <a href="#top"><span>03</span>Board</a>
+      <a href="#export"><span>04</span>Export</a>
+    </nav>
+    <a class="btn" href="#demo">Live-Demo anfragen</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" data-sheet="Blatt 01 Board">
+  <div class="wrap">
+    <div class="sheet-head"><span><b>Blatt 01</b>  Shadowboard-Software</span><span>Maßstab 1:1</span></div>
+
+    <h1 class="h-title">
+      <span class="l">Werkzeuge digitalisieren.</span>
+      <span class="r blue">Shadowboards standardisieren.</span>
+    </h1>
+    <div class="dimline" aria-hidden="true"><span>Physisches Werkzeug</span><i></i><span>fertige Fräsdatei</span></div>
+
+    <div class="hero-row">
+      <p>Mit [Produktname] digitalisieren Sie Werkzeuge in Sekunden, verwalten sie dauerhaft in einer zentralen Bibliothek und erstellen daraus standardisierte Shadowboards – in einem durchgängigen System.</p>
+      <div class="less">
+        <span><b>Weniger</b> Nachzeichnen.</span>
+        <span><b>Weniger</b> Nachmessen.</span>
+        <span><b>Weniger</b> manuelle Arbeit.</span>
+      </div>
+      <div class="hero-cta">
+        <a class="btn" href="#demo">Live-Demo ansehen</a>
+        <a class="btn sec" href="#ablauf">So funktioniert es</a>
+      </div>
+    </div>
+
+    <!-- Interaktives Board -->
+    <div class="play" id="play">
+      <div class="play-bar">
+        <div class="hint"><span class="dot" aria-hidden="true"></span>Probieren Sie es: Werkzeuge auf dem Board verschieben. Mit Tab auswählen, mit Pfeiltasten bewegen.</div>
+        <div class="legend" aria-label="Legende der Frästiefen">
+          <span><i style="background:#4F8EF7"></i>15 mm</span>
+          <span><i style="background:#3E6CC4"></i>25 mm</span>
+          <span><i style="background:#2F4F8F"></i>40 mm</span>
+          <span><i style="background:#38BDF8"></i>Griffmulde</span>
+        </div>
+      </div>
+      <div class="play-body">
+        <div class="board-wrap">
+          <svg id="board" viewBox="0 0 1000 460" role="application" aria-label="Interaktives Shadowboard mit verschiebbaren Werkzeugen">
+            <rect x="20" y="20" width="960" height="420" rx="8" fill="#1A1D27" stroke="#2A2D3E" stroke-width="2"/>
+            <rect x="40" y="40" width="920" height="380" fill="none" stroke="#2A2D3E" stroke-dasharray="8 8"/>
+            <text x="44" y="455" fill="#64748B" font-size="13" font-family="Consolas, monospace">Randabstand 20 mm</text>
+            <g id="tools"></g>
+          </svg>
+        </div>
+        <div class="panel">
+          <h4>Automatische Prüfungen</h4>
+          <div class="chk"><span>Überschneidungen</span><b id="cOv">0</b></div>
+          <div class="chk"><span>Abstand unter 15 mm</span><b id="cCl">0</b></div>
+          <div class="chk"><span>Randbereich verletzt</span><b id="cEd">0</b></div>
+          <div class="chk"><span>Werkzeuge auf dem Board</span><b id="cN">0</b></div>
+          <div class="status" id="status" aria-live="polite">Prüfe Board …</div>
+          <button class="btn" id="arrange" type="button">Automatisch anordnen</button>
+          <button class="btn sec" id="exportBtn" type="button" disabled>DXF exportieren</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ALTER PROZESS ===================== -->
+<section class="s" id="ablauf" data-sheet="Blatt 02 Heute">
+  <div class="wrap">
+    <div class="sheet-head"><span><b>Blatt 02</b>  Der heutige Weg</span><span>10 Schritte</span></div>
+    <h2 class="s-title">Schluss mit Nachzeichnen, Skalieren und jedes Mal neu anfangen.</h2>
+    <p class="s-lead">Ein Shadowboard zu erstellen sollte kein eigenes Projekt sein. Heute sieht der Prozess oft so aus:</p>
+    <ol class="strike-grid" id="strike">
+      <li style="--i:0">Foto machen</li>
+      <li style="--i:1">Bild korrigieren</li>
+      <li style="--i:2">Skalieren</li>
+      <li style="--i:3">Nachzeichnen</li>
+      <li style="--i:4">Pfade kontrollieren</li>
+      <li style="--i:5">DXF exportieren</li>
+      <li style="--i:6">Frässoftware</li>
+      <li style="--i:7">Fräswege definieren</li>
+      <li style="--i:8">Frästiefen festlegen</li>
+      <li style="--i:9">Fräsen</li>
+    </ol>
+    <div class="pain">
+      <p class="muted">Für ein einzelnes Board können dabei mehrere Stunden Arbeitszeit entstehen. Und beim nächsten Board beginnt vieles wieder von vorne: Werkzeuge werden erneut aufgenommen, Konturen neu gezeichnet und Entscheidungen erneut getroffen.</p>
+      <p>[Produktname] macht daraus einen standardisierten Prozess:</p>
+    </div>
+    <div class="new3">
+      <div><span>01</span><strong>Werkzeug digitalisieren.</strong></div>
+      <div><span>02</span><strong>Board erstellen.</strong></div>
+      <div><span>03</span><strong>DXF exportieren.</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DIGITALISIEREN ===================== -->
+<section class="s" id="digitalisieren" data-sheet="Blatt 03 Digitalisieren">
+  <div class="wrap">
+    <div class="sheet-head"><span><b>Blatt 03</b>  Digitalisieren</span><span>Leuchtplatte und Marker</span></div>
+    <h2 class="s-title">Ein Werkzeug. Einmal digitalisieren. Immer wieder verwenden.</h2>
+    <p class="s-lead">Legen Sie das Werkzeug in die Aufnahme und starten Sie die Digitalisierung. Die Software korrigiert die Perspektive und erstellt daraus ein bearbeitbares digitales Werkzeug.</p>
+
+    <div class="dig">
+      <div class="dig-stage" id="digStage">
+        <div class="photo" aria-hidden="true">
+          <svg viewBox="0 0 600 380" width="100%" height="100%">
+            <defs><g id="mk"><rect width="44" height="44" fill="#0F1117"/><rect x="8" y="8" width="9" height="9" fill="#fff"/><rect x="26" y="8" width="9" height="9" fill="#fff"/><rect x="17" y="17" width="9" height="9" fill="#fff"/><rect x="8" y="26" width="18" height="9" fill="#fff"/><rect x="26" y="26" width="9" height="9" fill="#fff"/></g></defs>
+            <rect width="600" height="380" fill="#F4F7FB"/>
+            <use href="#mk" x="18" y="18"/><use href="#mk" x="538" y="18"/><use href="#mk" x="18" y="318"/><use href="#mk" x="538" y="318"/>
+            <g fill="#1A1D27"><rect x="140" y="178" width="320" height="26" rx="13"/><circle cx="140" cy="191" r="42"/><circle cx="462" cy="191" r="36"/></g>
+            <g fill="#F4F7FB"><rect x="94" y="178" width="46" height="26"/><circle cx="462" cy="191" r="15"/></g>
+          </svg>
+        </div>
+        <svg class="overlay" viewBox="0 0 600 380" width="100%" height="100%" role="img" aria-label="Werkzeugfoto wird entzerrt, abgetastet und als Vektorkontur erkannt">
+          <rect class="scan" x="0" y="0" width="600" height="4" fill="#38BDF8"/>
+          <g>
+            <rect class="draw" pathLength="1" x="140" y="178" width="320" height="26" rx="13"/>
+            <circle class="draw" pathLength="1" cx="140" cy="191" r="42"/>
+            <circle class="draw" pathLength="1" cx="462" cy="191" r="36"/>
+            <circle class="draw" pathLength="1" cx="462" cy="191" r="15"/>
+          </g>
+          <g fill="#E2E8F0"><circle class="node" cx="98" cy="191" r="4.5"/><circle class="node" cx="182" cy="178" r="4.5"/><circle class="node" cx="300" cy="178" r="4.5"/><circle class="node" cx="426" cy="204" r="4.5"/><circle class="node" cx="498" cy="191" r="4.5"/><circle class="node" cx="140" cy="233" r="4.5"/><circle class="node" cx="300" cy="204" r="4.5"/></g>
+          <g class="fade" stroke="#38BDF8" stroke-width="1.5"><line x1="98" y1="280" x2="498" y2="280"/><line x1="98" y1="270" x2="98" y2="290"/><line x1="498" y1="270" x2="498" y2="290"/></g>
+          <g class="fade"><rect x="238" y="266" width="124" height="28" fill="#1A1D27"/><text x="300" y="286" text-anchor="middle" fill="#38BDF8" font-size="15" font-family="Consolas, monospace">Maß erkannt</text></g>
+        </svg>
+      </div>
+
+      <div class="dig-side">
+        <div class="timer" aria-live="off"><span id="tNum">0,0</span><small>Sek.</small></div>
+        <p class="note">Aufnahme eines Werkzeugs: ca. 20 Sekunden. Hier zeitgerafft.</p>
+        <ol class="steps" id="digSteps">
+          <li><i></i>Aufnahme auf der Leuchtplatte</li>
+          <li><i></i>Perspektive und Maßstab korrigiert</li>
+          <li><i></i>Kontur erkannt</li>
+          <li><i></i>Maße und Orientierung übernommen</li>
+        </ol>
+        <button class="btn" id="digBtn" type="button">Digitalisierung starten</button>
+        <div>
+          <p class="note" style="color:var(--text);font-weight:700">Anschließend:</p>
+          <div class="after"><span>Konturen bearbeiten</span><span>Maße anpassen</span><span>Griffmulden hinzufügen</span><span>Frästiefen definieren</span><span>Infos hinterlegen</span><span>in der Bibliothek speichern</span></div>
+        </div>
+        <p class="note">Auch ohne Kabine: Marker-Vorlage ausdrucken und mit dem Smartphone fotografieren.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BIBLIOTHEK ===================== -->
+<section class="s" id="bibliothek" data-sheet="Blatt 04 Bibliothek">
+  <div class="wrap">
+    <div class="sheet-head"><span><b>Blatt 04</b>  Werkzeugbibliothek</span><span>lokal, Server oder Cloud</span></div>
+    <h2 class="s-title">Ihre Werkzeuge gehören in eine Bibliothek. Nicht in einzelne Dateien.</h2>
+    <p class="s-lead">Alle digitalisierten Werkzeuge bleiben dauerhaft gespeichert. Suchen Sie nach Projekt, Kategorie oder Stichwort und ziehen Sie das Werkzeug direkt auf Ihr Board. Probieren Sie die Suche aus.</p>
+
+    <div class="lib-top">
+      <label class="search">
+        <svg width="24" height="24" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="#94A3B8" stroke-width="2"/><path d="M13 13l5 5" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></svg>
+        <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Werkzeug suchen</span>
+        <input id="libSearch" type="search" placeholder="z. B. Zange, Montage 1, Schlüssel" autocomplete="off">
+      </label>
+      <button class="chipf on" type="button" data-f="">Alle Projekte</button>
+      <button class="chipf" type="button" data-f="montage 1">Montage 1</button>
+      <button class="chipf" type="button" data-f="maschine 4">Maschine 4</button>
+      <button class="chipf" type="button" data-f="instandhaltung">Instandhaltung</button>
+    </div>
+    <p class="count" id="libCount">8 Werkzeuge</p>
+    <div class="tiles" id="tiles">
+      <div class="tile" data-s="gabelschlüssel 17 schlüssel montage 1"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#4F8EF7"><rect x="42" y="33" width="116" height="14" rx="7"/><circle cx="42" cy="40" r="18"/><circle cx="160" cy="40" r="15"/></g><g fill="#0F1117"><rect x="18" y="34" width="24" height="12"/><circle cx="160" cy="40" r="6"/></g><rect x="86" y="26" width="30" height="28" rx="14" fill="#38BDF8"/></svg></div><div><b>Gabelschlüssel 17</b><small>Schlüssel, Montage 1</small></div><span class="u">auf 12 Boards</span></div>
+      <div class="tile" data-s="schraubendreher ph2 schraubendreher montage 1"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="24" y="26" width="70" height="28" rx="12"/><rect x="92" y="36" width="80" height="8" rx="2"/></g><rect x="44" y="18" width="28" height="44" rx="14" fill="#38BDF8"/></svg></div><div><b>Schraubendreher PH2</b><small>Schraubendreher, Montage 1</small></div><span class="u">auf 5 Boards</span></div>
+      <div class="tile" data-s="kombizange 180 zange zangen maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g transform="translate(76 40)" stroke="#2F4F8F" stroke-linecap="round"><line x1="-50" x2="0" stroke-width="12"/><line x2="90" y2="-20" stroke-width="11"/><line x2="90" y2="20" stroke-width="11"/></g><circle cx="76" cy="40" r="9" fill="#2F4F8F"/><circle cx="160" cy="40" r="16" fill="#38BDF8"/></svg></div><div><b>Kombizange 180</b><small>Zangen, Maschine 4</small></div><span class="u">auf 3 Boards</span></div>
+      <div class="tile" data-s="seitenschneider zange zangen maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g transform="translate(70 40)" stroke="#3E6CC4" stroke-linecap="round"><line x1="-36" x2="0" stroke-width="14"/><line x2="96" y2="-16" stroke-width="10"/><line x2="96" y2="16" stroke-width="10"/></g><circle cx="70" cy="40" r="8" fill="#3E6CC4"/></svg></div><div><b>Seitenschneider</b><small>Zangen, Maschine 4</small></div><span class="u">auf 2 Boards</span></div>
+      <div class="tile" data-s="schlosserhammer hammer hämmer instandhaltung"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="30" y="34" width="120" height="12" rx="6"/><rect x="146" y="15" width="24" height="50" rx="4"/></g><rect x="54" y="24" width="30" height="32" rx="15" fill="#38BDF8"/></svg></div><div><b>Schlosserhammer</b><small>Hämmer, Instandhaltung</small></div><span class="u">auf 1 Board</span></div>
+      <div class="tile" data-s="innensechskant 6 schlüssel montage 1"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><path d="M60 20 L60 60 L140 60" fill="none" stroke="#4F8EF7" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><b>Innensechskant 6</b><small>Schlüssel, Montage 1</small></div><span class="u">auf 7 Boards</span></div>
+      <div class="tile" data-s="messschieber messmittel messen instandhaltung"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#2F4F8F"><rect x="30" y="36" width="140" height="10" rx="2"/><rect x="36" y="14" width="12" height="46" rx="2"/><rect x="70" y="18" width="12" height="38" rx="2"/></g></svg></div><div><b>Messschieber</b><small>Messmittel, Instandhaltung</small></div><span class="u">auf 2 Boards</span></div>
+      <div class="tile" data-s="drehmomentschlüssel schlüssel maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="30" y="34" width="130" height="12" rx="6"/><circle cx="166" cy="40" r="12"/><rect x="30" y="30" width="46" height="20" rx="8"/></g><rect x="36" y="22" width="30" height="36" rx="15" fill="#38BDF8"/></svg></div><div><b>Drehmomentschlüssel</b><small>Schlüssel, Maschine 4</small></div><span class="u">auf 4 Boards</span></div>
+    </div>
+    <div class="empty" id="libEmpty">Kein Werkzeug gefunden. Anderen Begriff versuchen – oder das Werkzeug einfach digitalisieren.</div>
+    <p class="claim">Einmal digitalisiert.<br>Für viele Boards verfügbar.</p>
+  </div>
+</section>
+
+<!-- ===================== ÄNDERUNGEN ===================== -->
+<section class="s" id="aenderungen" data-sheet="Blatt 05 Änderungen">
+  <div class="wrap">
+    <div class="sheet-head"><span><b>Blatt 05</b>  Änderungen</span><span>Board verweist auf Bibliothek</span></div>
+    <h2 class="s-title">Werkzeug geändert? Nicht wieder von vorne anfangen.</h2>
+    <div class="chg">
+      <div class="chg-text">
+        <p>Das Werkzeug auf Ihrem Board ist mit dem Eintrag in Ihrer Werkzeugbibliothek verknüpft. Sie ändern das Werkzeug – und [Produktname] erkennt, dass es auf mehreren Boards verwendet wird.</p>
+        <p>Soll die Änderung überall übernommen werden? Oder möchten Sie eine neue Variante erstellen? Sie entscheiden. So bleiben Ihre Boards mit der Bibliothek verbunden, statt zu isolierten Dateien zu werden.</p>
+        <div class="chg-ctrl">
+          <button class="btn" id="editTool" type="button">Gabelschlüssel 17 ändern</button>
+          <button class="btn sec" id="resetBoards" type="button">Zurücksetzen</button>
+        </div>
+        <div class="dlg" id="dlg" role="dialog" aria-labelledby="dlgT">
+          <h4 id="dlgT"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="#F59E0B" stroke-width="1.8"/><path d="M10 5.5v5.5M10 14v.5" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>Werkzeug wird mehrfach verwendet</h4>
+          <p>„Gabelschlüssel 17“ liegt auf 12 Boards. Beim Speichern werden alle diese Boards aktualisiert.</p>
+          <div class="row">
+            <button class="btn ghost" type="button" data-a="cancel">Abbrechen</button>
+            <button class="btn sec" type="button" data-a="copy">Als Kopie speichern</button>
+            <button class="btn" type="button" data-a="save">Speichern</button>
+          </div>
+        </div>
+      </div>
+      <div class="minis" id="minis" aria-label="Zwölf Boards, die den Gabelschlüssel 17 verwenden"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EXPORT ===================== -->
+<section class="s" id="export" data-sheet="Blatt 06 Export">
+  <div class="wrap">
+    <div class="sheet-head"><span><b>Blatt 06</b>  DXF-Export</span><span>maschinenunabhängig</span></div>
+    <h2 class="s-title">Vom Board direkt zur Fräsdatei.</h2>
+    <div class="dxf">
+      <div>
+        <p class="s-lead" style="margin-top:0">Wenn Ihr Board fertig ist, erzeugt [Produktname] die benötigten DXF-Daten. Konturen, Ebenen und Frästiefen werden strukturiert ausgegeben und können in Ihrer vorhandenen CAM-Software weiterverarbeitet werden.</p>
+        <p class="big-claim" style="margin-top:34px"><span>Ihre Fräse.</span><span>Ihr CAM-System.</span><span style="color:var(--accent)">Ihre Daten.</span></p>
+        <p class="note" style="margin-top:22px;font-size:16px">[Produktname] ersetzt nicht zwangsläufig Ihre bestehende Fertigungsumgebung – es macht den Weg dorthin deutlich einfacher.</p>
+      </div>
+      <div class="layers">
+        <div class="hd"><span>Montage-1_Board-A.dxf</span><span class="good">bereit</span></div>
+        <div class="layer"><i style="background:#94A3B8"></i><span>Aussenkontur_Board</span><span>Zuschnitt</span></div>
+        <div class="layer"><i style="background:#4F8EF7"></i><span>Tasche_Tiefe_15mm</span><span>2 Konturen</span></div>
+        <div class="layer"><i style="background:#3E6CC4"></i><span>Tasche_Tiefe_25mm</span><span>2 Konturen</span></div>
+        <div class="layer"><i style="background:#2F4F8F"></i><span>Tasche_Tiefe_40mm</span><span>1 Kontur</span></div>
+        <div class="layer"><i style="background:#38BDF8"></i><span>Griffmulde_Tiefe_15mm</span><span>4 Konturen</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ZEIT ===================== -->
+<section class="s" id="zeit" data-sheet="Blatt 07 Zeit">
+  <div class="wrap">
+    <div class="sheet-head"><span><b>Blatt 07</b>  Zeit</span><span>Board mit 10 Werkzeugen</span></div>
+    <h2 class="s-title">Von Stunden zu Minuten.</h2>
+    <div class="time" id="timeBox">
+      <div class="old"><div class="clock">6:00 h</div><p class="lbl">heute, manuell</p></div>
+      <div><div class="clock" id="clockNew">6:00 h</div><p class="lbl">mit [Produktname], Werkzeuge neu digitalisiert</p></div>
+      <div><div class="clock">0:01 h</div><p class="lbl">weiteres Board mit Werkzeugen aus der Bibliothek</p></div>
+    </div>
+    <p class="foot-note">Beispielrechnung aus dem bisherigen manuellen Prozess. Die tatsächliche Zeit hängt von Werkzeug und Board ab.</p>
+  </div>
+</section>
+
+<!-- ===================== ZIELGRUPPE ===================== -->
+<section class="s" id="zielgruppe" data-sheet="Blatt 08 Für wen">
+  <div class="wrap">
+    <div class="sheet-head"><span><b>Blatt 08</b>  Für wen</span><span>Industrie, Werkstatt, Handwerk</span></div>
+    <h2 class="s-title">Für Menschen, die eigentlich andere Dinge erledigen sollten.</h2>
+    <div class="who">
+      <ul class="roles">
+        <li>Lean Management<span>5S</span></li>
+        <li>Industrial Engineering<span>IE</span></li>
+        <li>5S-Verantwortliche<span>Standard</span></li>
+        <li>Produktions- und Abteilungsleiter<span>Entscheidung</span></li>
+        <li>Werkstatt und Fertigung<span>täglich</span></li>
+      </ul>
+      <div class="infra">
+        <p>Für alle, die Shadowboards brauchen, aber nicht jedes Mal Stunden mit Nachzeichnen, Skalieren und manueller Konstruktion verbringen möchten.</p>
+        <p style="margin-top:18px"><strong style="color:var(--text)">Ihre bestehende Infrastruktur bleibt bestehen.</strong> [Produktname] ist keine neue Produktionsmaschine. Sie arbeiten weiter mit Ihrer vorhandenen Frästechnik und CAM-Software. Die Software schließt die Lücke zwischen:</p>
+        <div class="chain"><span>Physisches Werkzeug</span><span>Digitales Werkzeug</span><span>Shadowboard</span><span class="hl">Fräsdaten</span></div>
+        <p>Und genau dort entsteht der größte Teil der manuellen Arbeit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<section class="cta" id="demo" data-sheet="Blatt 09 Demo">
+  <div class="wrap">
+    <h2>Starten Sie mit einem Werkzeug. Nicht mit einem Großprojekt.</h2>
+    <div class="cta-row">
+      <p>Nehmen Sie ein Werkzeug aus Ihrem aktuellen Prozess und sehen Sie selbst, wie schnell daraus ein digitales Werkzeug und anschließend ein Shadowboard wird. Wir zeigen Ihnen den kompletten Workflow in einer kurzen Live-Demo.</p>
+      <div class="cta-btns">
+        <a class="btn" href="mailto:[E-MAIL]?subject=Live-Demo%20anfragen">Live-Demo anfragen</a>
+        <a class="btn line" href="#kontakt">Kontakt</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== SCHRIFTFELD ===================== -->
+<footer id="kontakt">
+  <div class="wrap">
+    <div class="title-block">
+      <div><small>Benennung</small><span class="name">[Produktname]</span></div>
+      <div><small>Inhalt</small><span>Werkzeuge digitalisieren. Shadowboards standardisieren.</span></div>
+      <div><small>Maßstab</small><span class="mono">1:1</span></div>
+      <div><small>Blatt</small><span class="mono">1 / 1</span></div>
+      <div><small>Kontakt</small><a href="mailto:[E-MAIL]">[E-Mail-Adresse]</a></div>
+      <div><small>Telefon</small><span>[Telefon]</span></div>
+      <div><small>Rechtliches</small><a href="#impressum">Impressum</a></div>
+      <div><small>&nbsp;</small><a href="#datenschutz">Datenschutz</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var NS = 'http://www.w3.org/2000/svg';
+  var BOARD = '#1A1D27', A2 = '#38BDF8', D1 = '#4F8EF7', D2 = '#3E6CC4', D3 = '#2F4F8F';
+  function el(tag, attrs, parent){ var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Toast ---------- */
+  var toastEl = document.getElementById('toast'), toastT;
+  function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function(){ toastEl.classList.remove('show'); }, 2600); }
+
+  /* ---------- Fadenkreuz + Koordinaten ---------- */
+  var xv = document.querySelector('.xh-v'), xh = document.querySelector('.xh-h');
+  var cx = document.getElementById('cx'), cy = document.getElementById('cy');
+  window.addEventListener('pointermove', function(e){
+    if (e.pointerType !== 'mouse') return;
+    xv.style.transform = 'translateX(' + e.clientX + 'px)';
+    xh.style.transform = 'translateY(' + e.clientY + 'px)';
+    cx.textContent = (e.clientX * 0.5).toFixed(1).replace('.', ',');
+    cy.textContent = ((e.clientY + window.scrollY) * 0.5).toFixed(1).replace('.', ',');
+  }, { passive: true });
+  var sheetName = document.getElementById('sheetName');
+  var sheetObs = new IntersectionObserver(function(ents){
+    ents.forEach(function(en){ if (en.isIntersecting) sheetName.textContent = en.target.getAttribute('data-sheet'); });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  document.querySelectorAll('[data-sheet]').forEach(function(s){ sheetObs.observe(s); });
+
+  /* ---------- Interaktives Board ---------- */
+  var svg = document.getElementById('board'), layer = document.getElementById('tools');
+  var tools = [
+    { id:'wrench', name:'Gabelschlüssel 17', w:320, h:64, start:[80,64], auto:[60,60], draw:function(g){
+      el('rect',{x:30,y:21,width:260,height:22,rx:11,fill:D1},g); el('circle',{cx:32,cy:32,r:30,fill:D1},g); el('circle',{cx:292,cy:32,r:26,fill:D1},g);
+      el('rect',{x:0,y:23,width:30,height:18,fill:BOARD},g); el('circle',{cx:292,cy:32,r:12,fill:BOARD},g); el('rect',{x:130,y:10,width:64,height:44,rx:22,fill:A2},g); } },
+    { id:'driver', name:'Schraubendreher PH2', w:300, h:50, start:[150,112], auto:[60,160], draw:function(g){
+      el('rect',{x:0,y:7,width:120,height:36,rx:16,fill:D2},g); el('rect',{x:116,y:19,width:170,height:12,rx:3,fill:D2},g); el('rect',{x:284,y:21,width:14,height:8,rx:2,fill:D2},g); el('rect',{x:36,y:0,width:48,height:50,rx:24,fill:A2},g); } },
+    { id:'pliers', name:'Kombizange 180', w:262, h:90, start:[300,300], auto:[60,262], draw:function(g){
+      el('line',{x1:11,y1:45,x2:90,y2:45,stroke:D3,'stroke-width':22,'stroke-linecap':'round'},g);
+      el('line',{x1:90,y1:45,x2:236,y2:15,stroke:D3,'stroke-width':20,'stroke-linecap':'round'},g);
+      el('line',{x1:90,y1:45,x2:236,y2:75,stroke:D3,'stroke-width':20,'stroke-linecap':'round'},g);
+      el('circle',{cx:90,cy:45,r:18,fill:D3},g); el('circle',{cx:230,cy:45,r:30,fill:A2},g); } },
+    { id:'caliper', name:'Messschieber', w:280, h:70, start:[610,322], auto:[420,60], draw:function(g){
+      el('rect',{x:0,y:28,width:280,height:16,rx:3,fill:D3},g); el('rect',{x:10,y:0,width:22,height:70,rx:4,fill:D3},g); el('rect',{x:70,y:4,width:22,height:58,rx:4,fill:D3},g); el('rect',{x:170,y:18,width:56,height:36,rx:18,fill:A2},g); } },
+    { id:'hammer', name:'Schlosserhammer', w:100, h:220, start:[880,120], auto:[830,90], draw:function(g){
+      el('rect',{x:0,y:0,width:100,height:40,rx:6,fill:D2},g); el('rect',{x:38,y:24,width:24,height:196,rx:11,fill:D2},g); el('rect',{x:22,y:130,width:56,height:52,rx:26,fill:A2},g); } },
+    { id:'allen', name:'Innensechskant 6', w:60, h:150, start:[520,150], auto:[730,70], draw:function(g){
+      el('path',{d:'M9 9 L9 141 L51 141',fill:'none',stroke:D1,'stroke-width':14,'stroke-linecap':'round','stroke-linejoin':'round'},g); } }
+  ];
+  var BX = 40, BY = 40, BW = 920, BH = 380, GAP = 15;
+
+  tools.forEach(function(t){
+    t.x = t.start[0]; t.y = t.start[1];
+    var g = el('g',{ 'class':'tool', tabindex:'0', role:'button', 'aria-label': t.name + ' verschieben' }, layer);
+    el('rect',{ 'class':'bbox', x:-7, y:-7, width:t.w+14, height:t.h+14, rx:8 }, g);
+    t.draw(g); t.g = g; place(t);
+
+    var dragging = false, off = { x:0, y:0 };
+    g.addEventListener('pointerdown', function(e){
+      e.preventDefault(); dragging = true; g.setPointerCapture(e.pointerId); g.classList.add('drag'); svg.classList.remove('anim');
+      layer.appendChild(g);
+      var p = toSvg(e); off.x = p.x - t.x; off.y = p.y - t.y;
+    });
+    g.addEventListener('pointermove', function(e){
+      if (!dragging) return;
+      var p = toSvg(e);
+      t.x = clamp(p.x - off.x, 0, 1000 - t.w); t.y = clamp(p.y - off.y, 0, 460 - t.h);
+      place(t); check();
+    });
+    function end(){ if (!dragging) return; dragging = false; g.classList.remove('drag'); check(); }
+    g.addEventListener('pointerup', end); g.addEventListener('pointercancel', end);
+    g.addEventListener('keydown', function(e){
+      var step = e.shiftKey ? 50 : 10, moved = true;
+      if (e.key === 'ArrowLeft') t.x -= step; else if (e.key === 'ArrowRight') t.x += step;
+      else if (e.key === 'ArrowUp') t.y -= step; else if (e.key === 'ArrowDown') t.y += step; else moved = false;
+      if (moved){ e.preventDefault(); svg.classList.remove('anim'); t.x = clamp(t.x, 0, 1000 - t.w); t.y = clamp(t.y, 0, 460 - t.h); place(t); check(); }
+    });
+  });
+
+  function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+  function toSvg(e){ var p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
+  function place(t){ t.g.style.transform = 'translate(' + t.x + 'px,' + t.y + 'px)'; }
+  function hit(a, b, pad){ return a.x - pad < b.x + b.w && a.x + a.w + pad > b.x && a.y - pad < b.y + b.h && a.y + a.h + pad > b.y; }
+
+  var cOv = document.getElementById('cOv'), cCl = document.getElementById('cCl'), cEd = document.getElementById('cEd'), cN = document.getElementById('cN');
+  var statusEl = document.getElementById('status'), exportBtn = document.getElementById('exportBtn');
+  function check(){
+    var st = {}, ov = 0, cl = 0, ed = 0;
+    tools.forEach(function(t){ st[t.id] = 'ok'; });
+    for (var i = 0; i < tools.length; i++){
+      for (var j = i + 1; j < tools.length; j++){
+        var a = tools[i], b = tools[j];
+        if (hit(a, b, 0)){ ov++; st[a.id] = st[b.id] = 'overlap'; }
+        else if (hit(a, b, GAP)){ cl++; if (st[a.id] === 'ok') st[a.id] = 'close'; if (st[b.id] === 'ok') st[b.id] = 'close'; }
+      }
+    }
+    tools.forEach(function(t){
+      if (t.x < BX || t.y < BY || t.x + t.w > BX + BW || t.y + t.h > BY + BH){ ed++; if (st[t.id] !== 'overlap') st[t.id] = 'edge'; }
+      t.g.classList.remove('st-ok','st-close','st-edge','st-overlap'); t.g.classList.add('st-' + st[t.id]);
+    });
+    cOv.textContent = ov; cOv.className = ov ? 'bad' : 'good';
+    cCl.textContent = cl; cCl.className = cl ? 'warnc' : 'good';
+    cEd.textContent = ed; cEd.className = ed ? 'warnc' : 'good';
+    cN.textContent = tools.length;
+    var okAll = !ov && !cl && !ed;
+    exportBtn.disabled = !okAll;
+    exportBtn.className = okAll ? 'btn' : 'btn sec';
+    statusEl.innerHTML = okAll
+      ? '<strong class="good">Alle Prüfungen bestanden.</strong><br>Das Board ist bereit für den DXF-Export.'
+      : (ov ? '<strong class="bad">Werkzeuge überschneiden sich.</strong><br>Verschieben oder automatisch anordnen.' : '<strong class="warnc">Abstände prüfen.</strong><br>Rot = Überschneidung, Gelb = zu knapp.');
+  }
+  document.getElementById('arrange').addEventListener('click', function(){
+    if (!reduce) svg.classList.add('anim');
+    tools.forEach(function(t){ t.x = t.auto[0]; t.y = t.auto[1]; place(t); });
+    setTimeout(check, reduce ? 0 : 720);
+  });
+  exportBtn.addEventListener('click', function(){ toast('Board_A.dxf erzeugt: 4 Ebenen mit Frästiefen'); });
+  check();
+
+  /* ---------- Durchstreichen des alten Prozesses ---------- */
+  var strike = document.getElementById('strike');
+  new IntersectionObserver(function(ents, o){ ents.forEach(function(en){ if (en.isIntersecting){ strike.classList.add('go'); o.disconnect(); } }); }, { threshold: .5 }).observe(strike);
+
+  /* ---------- Digitalisierungs-Demo ---------- */
+  var stage = document.getElementById('digStage'), btn = document.getElementById('digBtn');
+  var steps = document.querySelectorAll('#digSteps li'), tNum = document.getElementById('tNum');
+  var timers = [], raf;
+  function setStep(i){ steps.forEach(function(li, k){ li.className = k < i ? 'done' : (k === i ? 'act' : ''); }); }
+  function runDig(){
+    timers.forEach(clearTimeout); timers = []; cancelAnimationFrame(raf);
+    stage.className = 'dig-stage'; void stage.offsetWidth; setStep(0); btn.disabled = true; btn.textContent = 'Läuft …';
+    var total = reduce ? 10 : 4400, t0 = performance.now();
+    (function tick(now){ var p = Math.min(1, (now - t0) / total); tNum.textContent = (p * 20).toFixed(1).replace('.', ','); if (p < 1) raf = requestAnimationFrame(tick); })(t0);
+    var seq = reduce ? [0,0,0,0,0] : [900, 1900, 3100, 4300, 4400];
+    timers.push(setTimeout(function(){ stage.classList.add('s1'); setStep(1); }, seq[0]));
+    timers.push(setTimeout(function(){ stage.classList.add('s2'); }, seq[1]));
+    timers.push(setTimeout(function(){ stage.classList.add('s3'); setStep(2); }, seq[2]));
+    timers.push(setTimeout(function(){ stage.classList.add('s4'); setStep(3); }, seq[3]));
+    timers.push(setTimeout(function(){ setStep(4); tNum.textContent = '20,0'; btn.disabled = false; btn.textContent = 'Nochmal digitalisieren'; }, seq[4]));
+  }
+  btn.addEventListener('click', runDig);
+  var digRan = false;
+  new IntersectionObserver(function(ents){ ents.forEach(function(en){ if (en.isIntersecting && !digRan){ digRan = true; runDig(); } }); }, { threshold: .55 }).observe(stage);
+
+  /* ---------- Bibliothek-Suche ---------- */
+  var input = document.getElementById('libSearch'), tiles = document.querySelectorAll('#tiles .tile');
+  var countEl = document.getElementById('libCount'), empty = document.getElementById('libEmpty'), proj = '';
+  function filter(){
+    var q = input.value.trim().toLowerCase(), n = 0;
+    tiles.forEach(function(t){ var s = t.getAttribute('data-s'); var show = (!q || s.indexOf(q) > -1) && (!proj || s.indexOf(proj) > -1); t.hidden = !show; if (show) n++; });
+    countEl.textContent = n + (n === 1 ? ' Werkzeug' : ' Werkzeuge');
+    empty.style.display = n ? 'none' : 'block';
+  }
+  input.addEventListener('input', filter);
+  document.querySelectorAll('.chipf').forEach(function(c){
+    c.addEventListener('click', function(){ document.querySelectorAll('.chipf').forEach(function(x){ x.classList.remove('on'); }); c.classList.add('on'); proj = c.getAttribute('data-f'); filter(); });
+  });
+
+  /* ---------- Änderungen: 12 Boards mit Referenz ---------- */
+  var minis = document.getElementById('minis'), boards = [];
+  var others = [
+    function(g){ el('rect',{x:20,y:62,width:70,height:14,rx:6,fill:D2},g); },
+    function(g){ el('rect',{x:110,y:20,width:14,height:60,rx:6,fill:D3},g); },
+    function(g){ el('circle',{cx:40,cy:70,r:12,fill:D3},g); el('rect',{x:60,y:64,width:60,height:10,rx:4,fill:D3},g); },
+    function(g){ el('path',{d:'M110 20 L110 76 L130 76',fill:'none',stroke:D1,'stroke-width':6,'stroke-linecap':'round'},g); }
+  ];
+  for (var i = 0; i < 12; i++){
+    var d = document.createElement('div'); d.className = 'mini';
+    d.innerHTML = '<div class="lbl"><span>Board ' + String.fromCharCode(65 + i) + '</span><span>v1</span></div>';
+    var s = el('svg',{viewBox:'0 0 150 96',width:'100%'}); s.setAttribute('aria-hidden','true');
+    el('rect',{width:150,height:96,rx:4,fill:'#0F1117'},s);
+    var wr = el('g',{'class':'wr'},s);
+    var h = el('rect',{x:24,y:22,width:70,height:9,rx:4.5,fill:D1},wr);
+    var c1 = el('circle',{cx:24,cy:26.5,r:10,fill:D1},wr);
+    var c2 = el('circle',{cx:95,cy:26.5,r:8,fill:D1},wr);
+    others[i % 4](s);
+    d.appendChild(s); minis.appendChild(d);
+    boards.push({ el:d, h:h, c1:c1, c2:c2, lbl:d.querySelector('.lbl span:last-child') });
+  }
+  function setV(b, v2){
+    b.h.setAttribute('width', v2 ? 82 : 70); b.c2.setAttribute('cx', v2 ? 107 : 95); b.c2.setAttribute('r', v2 ? 9 : 8);
+    [b.h,b.c1,b.c2].forEach(function(x){ x.setAttribute('fill', v2 ? A2 : D1); });
+    b.lbl.textContent = v2 ? 'v2' : 'v1';
+    b.el.classList.remove('flash'); void b.el.offsetWidth; if (v2) b.el.classList.add('flash');
+  }
+  var dlg = document.getElementById('dlg');
+  document.getElementById('editTool').addEventListener('click', function(){ dlg.classList.add('open'); dlg.querySelector('[data-a="save"]').focus(); });
+  dlg.addEventListener('click', function(e){
+    var a = e.target.closest('[data-a]'); if (!a) return; var act = a.getAttribute('data-a'); dlg.classList.remove('open');
+    if (act === 'save'){ boards.forEach(function(b, k){ setTimeout(function(){ setV(b, true); }, reduce ? 0 : k * 70); }); toast('Gespeichert: 12 Boards aktualisiert'); }
+    if (act === 'copy'){ var b = boards[0]; setV(b, true); if (!b.el.querySelector('.var')){ var v = document.createElement('span'); v.className = 'var'; v.textContent = 'Variante'; b.el.appendChild(v); } toast('Als Kopie gespeichert: nur Board A geändert'); }
+  });
+  document.getElementById('resetBoards').addEventListener('click', function(){ boards.forEach(function(b){ setV(b, false); var v = b.el.querySelector('.var'); if (v) v.remove(); }); dlg.classList.remove('open'); });
+
+  /* ---------- Zeit-Zähler ---------- */
+  var clock = document.getElementById('clockNew'), timeBox = document.getElementById('timeBox');
+  function fmt(min){ var h = Math.floor(min / 60), m = Math.round(min % 60); return h + ':' + (m < 10 ? '0' : '') + m + ' h'; }
+  new IntersectionObserver(function(ents, o){
+    ents.forEach(function(en){
+      if (!en.isIntersecting) return; o.disconnect();
+      if (reduce){ clock.textContent = fmt(30); return; }
+      var t0 = performance.now(), dur = 1800;
+      (function tick(now){ var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3); clock.textContent = fmt(360 - 330 * e); if (p < 1) requestAnimationFrame(tick); })(t0);
+    });
+  }, { threshold: .5 }).observe(timeBox);
+})();
+</script>
+</body>
+</html>
