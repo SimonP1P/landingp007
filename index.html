@@ -100,7 +100,9 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 #board .st-close .bbox{stroke:var(--warning)}
 #board .st-edge .bbox{stroke:var(--warning);stroke-dasharray:6 5}
 #board .st-overlap .bbox{stroke:var(--error);fill:rgba(239,68,68,.14)}
-#engrText{font-family:var(--mono);font-size:26px;letter-spacing:.16em;fill:none;stroke:#94A3B8;stroke-width:1.1;pointer-events:none}
+#engrText{font-family:var(--mono);font-size:26px;letter-spacing:.16em;fill:rgba(0,0,0,0);stroke:#94A3B8;stroke-width:1.1;cursor:move;outline:none;transition:stroke .15s}
+#engrText:hover,#engrText:focus-visible,#engrText.drag{stroke:var(--accent2)}
+.engrave-in small{display:block;margin-top:2px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)}
 .engrave-in{display:grid;gap:6px;margin:2px 0 12px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
 .engrave-in input{height:44px;min-width:0;padding:0 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:15px;letter-spacing:.08em;text-transform:uppercase;outline:none;transition:border-color .2s}
 .engrave-in input:focus,.engrave-in.typing input{border-color:var(--accent2)}
@@ -451,7 +453,7 @@ section.s{padding:140px 0 0}
           <svg id="board" viewBox="0 0 1000 460" role="application" aria-label="Interaktives Shadowboard mit verschiebbaren Werkzeugen">
             <rect x="20" y="20" width="960" height="420" rx="8" fill="#1A1D27" stroke="#2A2D3E" stroke-width="2"/>
             <rect x="40" y="40" width="920" height="380" fill="none" stroke="#2A2D3E" stroke-dasharray="8 8"/>
-            <text id="engrText" x="60" y="404"></text>
+            <text id="engrText" x="60" y="404" tabindex="0" role="button" aria-label="Gravur verschieben"></text>
             <g id="tools"></g>
           </svg>
         </div>
@@ -461,7 +463,7 @@ section.s{padding:140px 0 0}
           <div class="chk"><span>Abstand unter 15 mm</span><b id="cCl">0</b></div>
           <div class="chk"><span>Randbereich verletzt</span><b id="cEd">0</b></div>
           <div class="status" id="status" aria-live="polite">Prüfe Board …</div>
-          <label class="engrave-in" for="engrave"><span>Beschriftung · Gravur</span><input id="engrave" type="text" maxlength="24" placeholder="Boardname eingeben" autocomplete="off" spellcheck="false"></label>
+          <label class="engrave-in" for="engrave"><span>Beschriftung · Gravur<small>Auf dem Board verschiebbar</small></span><input id="engrave" type="text" maxlength="24" placeholder="Boardname eingeben" autocomplete="off" spellcheck="false"></label>
           <button class="btn" id="arrange" type="button">Automatisch anordnen</button>
           <button class="btn sec" id="exportBtn" type="button" disabled>DXF exportieren</button>
         </div>
@@ -913,7 +915,22 @@ section.s{padding:140px 0 0}
   }
   // Beschriftung: Eingabe im Panel erscheint sofort als Gravur unten links auf dem Board
   var engrText = document.getElementById('engrText'), engrIn = document.getElementById('engrave'), engrTouched = false, typeT;
-  function syncEngr(){ engrText.textContent = engrIn.value.toUpperCase(); }
+  function syncEngr(){ engrText.textContent = engrIn.value.toUpperCase(); placeEngr(); }
+  // Gravur verschieben: ziehen oder Pfeiltasten, bleibt auf dem Board
+  var ex = 60, ey = 404, eDrag = null;
+  function placeEngr(){
+    var b = engrText.getBBox();
+    ex = clamp(ex, BX, Math.max(BX, BX + BW - b.width)); ey = clamp(ey, BY + 26, BY + BH - 4);
+    engrText.setAttribute('x', ex); engrText.setAttribute('y', ey);
+  }
+  engrText.addEventListener('pointerdown', function(e){ e.preventDefault(); var p = toSvg(e); eDrag = { x:p.x - ex, y:p.y - ey }; engrText.setPointerCapture(e.pointerId); engrText.classList.add('drag'); });
+  engrText.addEventListener('pointermove', function(e){ if (!eDrag) return; var p = toSvg(e); ex = p.x - eDrag.x; ey = p.y - eDrag.y; placeEngr(); });
+  function eEnd(){ eDrag = null; engrText.classList.remove('drag'); }
+  engrText.addEventListener('pointerup', eEnd); engrText.addEventListener('pointercancel', eEnd);
+  engrText.addEventListener('keydown', function(e){
+    var step = e.shiftKey ? 50 : 10, k = { ArrowLeft:[-step,0], ArrowRight:[step,0], ArrowUp:[0,-step], ArrowDown:[0,step] }[e.key];
+    if (k){ e.preventDefault(); ex += k[0]; ey += k[1]; placeEngr(); }
+  });
   engrIn.addEventListener('input', function(){ engrTouched = true; clearTimeout(typeT); engrIn.parentNode.classList.remove('typing'); syncEngr(); });
   function typeLabel(text){
     if (engrTouched || engrIn.value) return;
