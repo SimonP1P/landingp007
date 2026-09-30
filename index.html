@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>[Produktname] – Werkzeuge digitalisieren. Shadowboards standardisieren.</title>
-<meta name="description" content="Werkzeuge in Sekunden digitalisieren, in einer Bibliothek verwalten und daraus standardisierte Shadowboards mit fertigen DXF-Fräsdaten erstellen.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet">
+<title>Seiton Studio – Werkzeuge digitalisieren. Shadowboards standardisieren.</title>
+<meta name="description" content="Seiton Studio digitalisiert Werkzeuge maßhaltig, verwaltet sie in einer Bibliothek und macht daraus standardisierte Shadowboards – als DXF für Ihre Fräse oder gefräst von Seiton Boards.">
+<meta name="theme-color" content="#0F1117">
 <style>
+/* Archivo, lokal ausgeliefert (SIL Open Font License, fonts/OFL.txt) – kein Nachladen von Google */
+@font-face{font-family:"Archivo";font-style:normal;font-weight:300 900;font-stretch:62% 125%;font-display:swap;src:url(fonts/archivo-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Archivo";font-style:normal;font-weight:300 900;font-stretch:62% 125%;font-display:swap;src:url(fonts/archivo-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
 :root{
   --bg:#0F1117; --panel:#1A1D27; --border:#2A2D3E; --selected:#1E2235;
   --accent:#4F8EF7; --accent2:#38BDF8;
@@ -17,32 +19,30 @@
   --d1:#4F8EF7; --d2:#3E6CC4; --d3:#2F4F8F;
   --display:"Archivo","Segoe UI",system-ui,sans-serif;
   --font:"Segoe UI","Archivo",system-ui,-apple-system,sans-serif;
-  --mono:"Segoe UI","Archivo",system-ui,sans-serif;
+  --mono:"SF Mono",Menlo,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --ease:cubic-bezier(.2,.8,.2,1);
   box-sizing:border-box;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
 }
 *,*::before,*::after{box-sizing:inherit}
 html{background:var(--bg);scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom,0px)}
 svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
 p{margin:0}
 h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;letter-spacing:-.02em}
-.mono{font-family:var(--mono)}
-.muted{color:var(--muted-light)}
 .wrap{max-width:1320px;margin:0 auto;padding:0 28px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}html{scroll-behavior:auto}}
 
-
 /* ---------- Kopfleiste wie die App ---------- */
-.top{position:sticky;top:0;z-index:50;background:rgba(15,17,23,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.top{position:sticky;top:0;z-index:50;background:rgba(15,17,23,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding-top:env(safe-area-inset-top,0px)}
 .top .wrap{display:flex;align-items:stretch;justify-content:space-between;height:62px;gap:20px}
-.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:19px;font-stretch:90%}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:21px;font-stretch:85%;letter-spacing:.01em}
+.logo small{font-weight:500;color:var(--muted-light);font-size:15px;font-stretch:100%;letter-spacing:.04em}
 .tabs{display:flex;align-items:stretch}
-.tabs a{display:flex;align-items:center;gap:8px;padding:0 18px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-light);border-bottom:2px solid transparent}
+.tabs a{display:flex;align-items:center;gap:8px;padding:0 15px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-light);border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
 .tabs a span{font-family:var(--mono);font-weight:400;color:var(--muted)}
 .tabs a:hover,.tabs a.on{color:var(--text);border-bottom-color:var(--accent)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:0 20px;border-radius:6px;border:0;background:var(--accent);color:var(--white);font-weight:700;font-size:16px;cursor:pointer;transition:background .15s, transform .15s}
@@ -53,17 +53,24 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 .btn[disabled]{background:var(--border);color:var(--muted);cursor:not-allowed}
 .top .btn{align-self:center}
 
+/* Segmentschalter wie in der App */
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;border:1px solid var(--border);border-radius:8px;background:var(--panel)}
+.seg button{border:0;background:transparent;border-radius:5px;padding:10px 16px;font-size:15px;font-weight:600;color:var(--muted-light);cursor:pointer;transition:background .2s,color .2s}
+.seg button:hover{color:var(--text)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--white)}
+.est{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);border-radius:3px;padding:1px 5px;vertical-align:middle;white-space:nowrap}
+
+/* Blattkennung je Abschnitt (Zeichnungsmetapher) */
+.sheet{display:flex;align-items:center;gap:12px;margin-bottom:26px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.sheet b{color:var(--accent2);font-weight:400}
+.sheet i{flex:0 0 60px;height:1px;background:var(--border)}
 
 /* ---------- HERO ---------- */
 .hero{padding:40px 0 0}
-.h-title{font-size:clamp(60px,11.6vw,176px);font-stretch:62%;font-weight:850;margin-top:24px}
+.h-title{font-size:clamp(56px,11.6vw,176px);font-stretch:62%;font-weight:850;margin-top:10px}
 .h-title .r{display:block;text-align:right}
 .h-title .l{display:block}
 .h-title .blue{color:var(--accent)}
-.dimline{display:flex;align-items:center;gap:12px;margin:18px 0 10px;font-family:var(--mono);font-size:13px;color:var(--accent2)}
-.dimline i{flex:1;height:1px;background:var(--accent2);position:relative}
-.dimline i::before,.dimline i::after{content:"";position:absolute;top:-6px;width:1px;height:13px;background:var(--accent2)}
-.dimline i::before{left:0}.dimline i::after{right:0}
 .hero-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) auto;gap:40px;align-items:end;margin-top:34px}
 .hero-row p{font-size:20px;color:#C3CCD8;max-width:34em}
 .less{display:grid;gap:4px;font-family:var(--display);font-stretch:80%;font-weight:700;font-size:24px;line-height:1.15}
@@ -71,13 +78,26 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 .less span b{color:var(--text);font-weight:700}
 .hero-cta{display:flex;flex-direction:column;gap:10px}
 
+/* 5S-Leiste: Seiton ist das zweite S */
+.fives{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin-top:8px;border:1px solid var(--border);border-radius:8px;overflow:hidden;width:max-content;max-width:100%}
+.fives button{display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:8px 14px;border:0;border-right:1px solid var(--border);background:transparent;cursor:pointer;text-align:left;color:var(--muted);transition:background .2s,color .2s}
+.fives button:last-child{border-right:0}
+.fives button b{font-family:var(--display);font-stretch:80%;font-size:17px;font-weight:700;line-height:1.1}
+.fives button span{font-size:12px}
+.fives button:hover{color:var(--muted-light)}
+.fives button.me{background:var(--accent);color:var(--white)}
+.fives button.me span{color:rgba(255,255,255,.85)}
+.kanji{font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;font-weight:600}
+.five-say{margin-top:10px;font-size:15px;color:var(--muted-light);min-height:1.5em}
+.five-say b{color:var(--text)}
+
 /* Spielfläche */
 .play{margin-top:56px;border:1px solid var(--border);border-radius:10px;background:var(--panel);overflow:hidden}
 .play-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}
 .play-bar .hint{display:flex;align-items:center;gap:10px;font-size:15px}
 .play-bar .hint .dot{width:10px;height:10px;border-radius:50%;background:var(--accent2);animation:pulse 1.6s ease-in-out infinite}
 @keyframes pulse{50%{opacity:.25}}
-.legend{display:flex;gap:14px;font-family:var(--mono);font-size:12px;color:var(--muted-light)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-family:var(--mono);font-size:12px;color:var(--muted-light)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:11px;height:11px;border-radius:2px;display:inline-block}
 .play-body{display:grid;grid-template-columns:minmax(0,1fr) 290px}
@@ -85,13 +105,14 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 #board{width:100%;height:auto;user-select:none;-webkit-user-select:none}
 #board .tool{cursor:grab;outline:none}
 #board .tool.drag{cursor:grabbing}
-#board.anim .tool{transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+#board.anim .tool{transition:transform .7s var(--ease)}
 #board .bbox{fill:none;stroke:transparent;stroke-width:2;transition:stroke .15s, fill .15s}
 #board .tool:hover .bbox,#board .tool:focus-visible .bbox{stroke:var(--accent)}
 #board .tool.drag .bbox{stroke:var(--accent);fill:rgba(79,142,247,.08)}
 #board .st-close .bbox{stroke:var(--warning)}
 #board .st-edge .bbox{stroke:var(--warning);stroke-dasharray:6 5}
 #board .st-overlap .bbox{stroke:var(--error);fill:rgba(239,68,68,.14)}
+#board .engr{font-family:var(--mono);font-size:11px;letter-spacing:.12em;fill:none;stroke:#64748B;stroke-width:.6;pointer-events:none}
 .panel{border-left:1px solid var(--border);padding:18px;display:flex;flex-direction:column;gap:4px}
 .panel h4{margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
 .chk{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);font-size:15px}
@@ -100,32 +121,52 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 .status{margin:12px 0;padding:12px;border-radius:6px;background:var(--selected);font-size:14px;min-height:48px}
 .panel .btn{width:100%}
 .panel .btn+.btn{margin-top:8px}
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);transform:translate(-50%,20px);opacity:0;z-index:95;padding:14px 20px;border-radius:8px;background:var(--success);color:var(--bg);font-weight:700;transition:opacity .25s, transform .25s;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);transform:translate(-50%,20px);opacity:0;z-index:95;padding:14px 20px;border-radius:8px;background:var(--success);color:var(--bg);font-weight:700;transition:opacity .25s, transform .25s;pointer-events:none;max-width:calc(100vw - 32px)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
 /* ---------- Abschnitte ---------- */
 section.s{padding:140px 0 0}
-.s-title{font-size:clamp(46px,7vw,110px);font-stretch:62%;margin:0;max-width:14ch}
+.s-title{font-size:clamp(44px,7vw,110px);font-stretch:62%;margin:0;max-width:14ch}
 .s-lead{font-size:20px;color:#C3CCD8;max-width:36em;margin-top:24px}
 
-/* Alter Prozess: Durchstreichen */
-.strike-grid{padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 48px;margin-top:48px;counter-reset:st}
-.strike-grid li{list-style:none;position:relative;display:flex;align-items:baseline;gap:18px;padding:12px 0;border-bottom:1px solid var(--border);font-family:var(--display);font-stretch:70%;font-weight:700;font-size:clamp(26px,3vw,40px);color:var(--muted-light);line-height:1.1}
-.strike-grid li::after{content:"";position:absolute;left:0;top:54%;height:3px;width:0;background:var(--accent);transition:width .5s ease calc(var(--i) * 90ms)}
-.strike-grid.go li::after{width:100%}
-.strike-grid.go li{color:var(--muted)}
-.strike-grid ol{margin:0;padding:0}
-.new3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:40px}
-.new3 div{padding:28px;border-radius:10px;background:var(--accent);color:var(--bg)}
-.new3 div span{font-family:var(--mono);font-size:13px}
-.new3 div strong{display:block;margin-top:34px;font-family:var(--display);font-stretch:70%;font-weight:800;font-size:clamp(30px,3.4vw,46px);line-height:1}
-.pain{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;margin-top:40px;font-size:19px}
-.pain p:last-child{color:var(--text);font-weight:700}
+/* ---------- Prozesskette: zehn Schritte fließen zusammen ---------- */
+.flow-ctrl{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-top:44px}
+.mill{display:inline-flex;align-items:center;gap:12px;cursor:pointer;font-size:15px;color:var(--muted-light);user-select:none}
+.mill input{position:absolute;opacity:0;pointer-events:none}
+.mill .sw{position:relative;width:46px;height:26px;border-radius:13px;background:var(--border);transition:background .2s;flex:none}
+.mill .sw::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:var(--muted-light);transition:transform .25s var(--ease),background .2s}
+.mill input:checked+.sw{background:var(--accent2)}
+.mill input:checked+.sw::after{transform:translateX(20px);background:var(--bg)}
+.mill input:focus-visible+.sw{outline:2px solid var(--accent2);outline-offset:3px}
+.flow{position:relative;margin-top:30px;border:1px solid var(--border);border-radius:10px;background:var(--panel);padding:34px 20px 26px;overflow:hidden}
+.rail{position:absolute;left:36px;right:36px;top:78px;height:2px;background:var(--border)}
+.rail i{position:absolute;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--accent2);box-shadow:0 0 12px var(--accent2);animation:run 3.2s linear infinite;opacity:.9}
+@keyframes run{from{left:0}to{left:calc(100% - 10px)}}
+.chain2{position:relative;display:flex;justify-content:center;list-style:none;margin:0;padding:0}
+.stp{position:relative;flex:1 1 0;min-width:0;max-width:240px;padding:0 6px;transition:flex-grow .7s var(--ease),max-width .7s var(--ease),padding .7s var(--ease),opacity .45s ease}
+.stp .no{display:flex;align-items:center;justify-content:center;width:38px;height:38px;margin:0 auto;border-radius:50%;background:var(--bg);border:2px solid var(--muted);font-family:var(--mono);font-size:13px;color:var(--muted-light);position:relative;z-index:1;transition:all .35s}
+.stp .lb{display:block;margin-top:16px;text-align:center;font-family:var(--display);font-stretch:75%;font-weight:700;font-size:clamp(15px,1.35vw,19px);line-height:1.15;color:var(--text);position:relative;transition:color .3s}
+.stp .lb::after{content:"";position:absolute;left:8%;top:50%;height:2px;width:0;background:var(--error);transition:width .45s ease}
+.stp .why{display:block;margin-top:8px;text-align:center;font-size:12px;color:var(--accent2);opacity:0;transform:translateY(-4px);transition:opacity .3s,transform .3s;min-height:1.3em}
+.stp.cut .lb{color:var(--muted)}
+.stp.cut .lb::after{width:84%}
+.stp.cut .no{border-color:var(--error);color:var(--error)}
+.stp.cut .why{opacity:1;transform:none;color:var(--muted-light)}
+.stp.kept .no{border-color:var(--accent);background:var(--accent);color:var(--white)}
+.stp.new .no{border-color:var(--accent2);background:var(--accent2);color:var(--bg)}
+.stp.new .lb{color:var(--accent2)}
+.stp.help .why{opacity:1;transform:none}
+.stp.gone{flex-grow:0;max-width:0;padding:0;opacity:0;pointer-events:none}
+.flow-sum{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:0 40px;align-items:end;margin-top:34px;padding-top:24px;border-top:1px solid var(--border)}
+.flow-sum .big{font-family:var(--display);font-stretch:62%;font-weight:850;font-size:clamp(56px,6.4vw,96px);line-height:.85;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.flow-sum .big small{font-size:.3em;color:var(--muted-light);font-weight:700;margin-left:8px;letter-spacing:0}
+.flow-sum p{font-size:16px;color:var(--muted-light);align-self:center}
+.flow-sum p b{color:var(--text)}
 
 /* Digitalisieren */
 .dig{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;margin-top:52px}
 .dig-stage{position:relative;border:1px solid var(--border);border-radius:10px;background:var(--panel);overflow:hidden;aspect-ratio:600/380}
-.photo{position:absolute;inset:0;transform:perspective(900px) rotateX(26deg) rotateZ(-7deg) scale(.82) translateY(18px);transition:transform 1s cubic-bezier(.2,.8,.2,1), opacity .6s}
+.photo{position:absolute;inset:0;transform:perspective(900px) rotateX(26deg) rotateZ(-7deg) scale(.82) translateY(18px);transition:transform 1s var(--ease), opacity .6s}
 .dig-stage.s1 .photo{transform:none}
 .dig-stage.s3 .photo{opacity:.18}
 .overlay{position:absolute;inset:0}
@@ -147,9 +188,32 @@ section.s{padding:140px 0 0}
 .steps li.done{color:var(--text)}
 .steps li.done i{background:var(--success);border-color:var(--success)}
 @keyframes spin{to{transform:rotate(360deg)}}
-.after{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-.after span{padding:7px 12px;border-radius:4px;border:1px solid var(--border);font-size:14px;color:var(--muted-light)}
 .note{font-size:14px;color:var(--muted-light)}
+.ways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:28px}
+.way{border:1px solid var(--border);border-radius:10px;padding:20px;background:transparent;text-align:left;cursor:pointer;transition:border-color .2s,background .2s}
+.way:hover,.way.on{border-color:var(--accent);background:var(--selected)}
+.way span{font-family:var(--mono);font-size:12px;color:var(--accent2)}
+.way b{display:block;margin-top:10px;font-family:var(--display);font-stretch:75%;font-size:26px;line-height:1.05}
+.way p{margin-top:8px;font-size:15px;color:var(--muted-light)}
+
+/* Tiefe: Kavität in 3D */
+.depth{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;margin-top:52px;align-items:stretch}
+.scene{position:relative;border:1px solid var(--border);border-radius:10px;background:radial-gradient(120% 90% at 50% 20%,#1b2030 0%,var(--bg) 70%);overflow:hidden;aspect-ratio:600/420;perspective:1400px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.scene.grab{cursor:grabbing}
+.obj{position:absolute;left:50%;top:46%;width:600px;height:340px;margin:-170px 0 0 -300px;transform-style:preserve-3d;transition:transform .9s var(--ease)}
+.scene.live .obj{transition:none}
+.obj>svg{position:absolute;inset:0;width:600px;height:340px;overflow:visible;backface-visibility:visible}
+.scene-hint{position:absolute;left:14px;bottom:12px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.scene-tag{position:absolute;right:14px;top:12px;display:flex;gap:6px}
+.depth-side{display:flex;flex-direction:column;gap:12px}
+.rg{border:1px solid var(--border);border-radius:8px;padding:14px 16px;background:var(--panel)}
+.rg-h{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:15px}
+.rg-h span{display:flex;align-items:center;gap:10px}
+.rg-h i{width:12px;height:12px;border-radius:2px}
+.rg-h b{font-family:var(--mono);font-weight:400;font-size:14px;color:var(--accent2)}
+.rg input[type=range]{width:100%;margin:12px 0 2px;accent-color:var(--accent)}
+.formula{font-size:14px;color:var(--muted-light);padding:4px 2px}
+.formula b{color:var(--text)}
 
 /* Bibliothek */
 .lib-top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:44px}
@@ -169,12 +233,12 @@ section.s{padding:140px 0 0}
 .tile .u{align-self:flex-start;font-family:var(--mono);font-size:12px;color:var(--accent2)}
 .tile[hidden]{display:none}
 .empty{display:none;padding:28px;border:1px dashed var(--border);border-radius:10px;color:var(--warning);margin-top:14px}
-.claim{margin-top:40px;font-family:var(--display);font-stretch:70%;font-weight:800;font-size:clamp(32px,4vw,56px);line-height:1}
+.lib-foot{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:22px;font-size:15px;color:var(--muted-light)}
+.lib-foot span::before{content:"";display:inline-block;width:8px;height:8px;margin-right:10px;border-radius:50%;background:var(--accent2);vertical-align:middle}
 
 /* Änderungen */
 .chg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:40px;margin-top:48px;align-items:start}
 .chg-text p{font-size:19px;color:#C3CCD8}
-.chg-text p+p{margin-top:16px}
 .chg-ctrl{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px}
 .dlg{margin-top:18px;border:1px solid var(--accent);border-radius:8px;background:var(--panel);padding:20px;display:none}
 .dlg.open{display:block}
@@ -191,43 +255,71 @@ section.s{padding:140px 0 0}
 .mini .var{position:absolute;right:8px;bottom:8px;font-size:11px;font-weight:700;padding:2px 6px;border-radius:3px;background:var(--accent2);color:var(--bg)}
 .wr rect,.wr circle{transition:all .6s ease}
 
-/* DXF */
-.dxf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;margin-top:48px;align-items:center}
+/* Export: eigene Fräse oder Seiton Boards */
+.dxf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;margin-top:40px;align-items:center}
+.big-claim{font-family:var(--display);font-stretch:62%;font-weight:850;font-size:clamp(48px,6vw,92px);line-height:.9}
+.big-claim span{display:block}
+.swap{display:grid}
+.swap>*{grid-area:1/1;transition:opacity .45s ease,transform .6s var(--ease)}
+.swap>.off{opacity:0;transform:translateY(16px);pointer-events:none}
 .layers{border:1px solid var(--border);border-radius:10px;background:var(--panel);overflow:hidden}
 .layers .hd{display:flex;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--border);font-weight:700;font-size:16px}
 .layer{display:grid;grid-template-columns:14px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);font-size:16px}
 .layer:last-child{border-bottom:0}
 .layer i{width:14px;height:14px;border-radius:2px}
-.layer span:last-child{color:var(--muted-light)}
-.big-claim{font-family:var(--display);font-stretch:62%;font-weight:850;font-size:clamp(48px,6vw,92px);line-height:.9}
-.big-claim span{display:block}
+.layer span:last-child{color:var(--muted-light);font-family:var(--mono);font-size:14px}
+.order{border:1px solid var(--accent2);border-radius:10px;background:var(--panel);overflow:hidden}
+.order .hd{display:flex;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--border);font-weight:700;font-size:16px}
+.otrack{list-style:none;margin:0;padding:10px 18px 18px}
+.otrack li{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);font-size:16px;color:var(--muted-light);transition:color .3s}
+.otrack li:last-child{border-bottom:0}
+.otrack li i{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);flex:none;transition:all .3s}
+.otrack li.done{color:var(--text)}
+.otrack li.done i{background:var(--accent2);border-color:var(--accent2)}
 
 /* Zeit */
 .time{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:48px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.time div{padding:30px;border-right:1px solid var(--border)}
-.time div:last-child{border-right:0;background:var(--accent);color:var(--bg)}
-.time div:last-child .lbl{color:var(--bg)}
+.time>div{padding:30px;border-right:1px solid var(--border)}
+.time>div:last-child{border-right:0;background:var(--accent);color:var(--bg)}
+.time>div:last-child .lbl{color:var(--bg)}
 .time .clock{font-family:var(--display);font-stretch:62%;font-weight:850;font-size:clamp(64px,7.6vw,118px);line-height:.9;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .time .lbl{font-size:16px;color:var(--muted-light);margin-top:14px}
 .time .old .clock{color:var(--muted);text-decoration:line-through;text-decoration-thickness:4px;text-decoration-color:var(--error)}
-.foot-note{font-size:14px;color:var(--muted-light);margin-top:14px}
+.foot-note{font-size:14px;color:var(--muted-light);margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 
-/* Zielgruppe */
+/* Seiton: vier Teile, ein Ablauf */
+.fam-rail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin-top:48px;border-top:2px solid var(--border)}
+.fam-rail span{position:relative;padding:16px 8px 0 0;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);transition:color .3s}
+.fam-rail span::before{content:"";position:absolute;left:0;top:-7px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--muted);transition:all .3s}
+.fam-rail span.hl{color:var(--accent2)}
+.fam-rail span.hl::before{background:var(--accent2);border-color:var(--accent2);box-shadow:0 0 12px var(--accent2)}
+.fam{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:28px}
+.card{position:relative;border:1px solid var(--border);border-radius:10px;background:var(--panel);padding:22px;display:flex;flex-direction:column;gap:14px;cursor:default;transition:border-color .25s,transform .25s,background .25s;outline:none}
+.card:hover,.card:focus-visible,.card.on{border-color:var(--accent);transform:translateY(-3px);background:var(--selected)}
+.card .ic{height:74px;display:flex;align-items:flex-end}
+.card h3{font-size:clamp(30px,2.6vw,40px);font-stretch:70%;line-height:.95}
+.card h3 small{display:block;font-size:.5em;font-weight:600;font-stretch:100%;letter-spacing:.02em;color:var(--muted-light);margin-top:6px}
+.card p{font-size:15px;color:var(--muted-light)}
+.card .for{margin-top:auto;font-family:var(--mono);font-size:12px;color:var(--accent2)}
+
+/* Für wen */
 .who{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;margin-top:48px}
 .roles{list-style:none;margin:0;padding:0}
 .roles li{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:14px 0;border-bottom:1px solid var(--border);font-family:var(--display);font-stretch:70%;font-weight:700;font-size:clamp(26px,2.8vw,38px);line-height:1.05}
-.roles li span{font-family:var(--mono);font-size:12px;font-weight:400;color:var(--muted)}
 .infra p{font-size:19px;color:#C3CCD8}
+.infra p+p{margin-top:14px}
 .chain{display:grid;gap:0;margin:26px 0;border-left:2px solid var(--border);padding-left:22px}
 .chain span{position:relative;padding:12px 0;font-size:19px;font-weight:600}
 .chain span::before{content:"";position:absolute;left:-29px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:var(--bg);border:2px solid var(--muted)}
 .chain span.hl{color:var(--accent)}
 .chain span.hl::before{background:var(--accent);border-color:var(--accent)}
+.chain span.alt{color:var(--accent2)}
+.chain span.alt::before{background:var(--accent2);border-color:var(--accent2)}
 
 /* CTA */
 .cta{margin-top:150px;background:var(--accent);color:var(--bg)}
 .cta .wrap{padding-top:100px;padding-bottom:100px}
-.cta h2{font-size:clamp(60px,11vw,172px);font-stretch:62%;font-weight:900}
+.cta h2{font-size:clamp(56px,11vw,172px);font-stretch:62%;font-weight:900}
 .cta-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:40px;align-items:end;margin-top:40px}
 .cta p{font-size:21px;max-width:34em;font-weight:500}
 .cta .btn{background:var(--bg);color:var(--text);min-height:60px;padding:0 30px;font-size:18px}
@@ -244,26 +336,44 @@ section.s{padding:140px 0 0}
 .title-block small{font-family:var(--mono);font-size:11px;color:var(--muted)}
 .title-block .name{font-family:var(--display);font-stretch:80%;font-weight:800;font-size:22px}
 .title-block a{color:var(--accent2)}
+.title-block .todo{color:var(--muted)}
 
 /* ---------- Responsive ---------- */
+@media (max-width:1180px){ .tabs a{padding:0 10px} .tabs a span{display:none} }
 @media (max-width:1100px){
   .tabs{display:none}
   .hero-row{grid-template-columns:minmax(0,1fr)}
   .hero-cta{flex-direction:row;flex-wrap:wrap}
   .play-body{grid-template-columns:minmax(0,1fr)}
   .panel{border-left:0;border-top:1px solid var(--border)}
-  .dig,.chg,.dxf,.who,.pain{grid-template-columns:minmax(0,1fr)}
-  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dig,.chg,.dxf,.who,.depth{grid-template-columns:minmax(0,1fr)}
+  .tiles,.fam{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .flow-sum{grid-template-columns:auto auto;gap:10px 32px}
+  .flow-sum p{grid-column:1/-1}
+}
+@media (max-width:900px){
+  /* Kette senkrecht: wegfallende Schritte klappen nach oben zusammen */
+  .rail{left:38px;right:auto;top:30px;bottom:30px;width:2px;height:auto}
+  .rail i{left:-4px!important;animation:runv 3.2s linear infinite}
+  @keyframes runv{from{top:0}to{top:calc(100% - 10px)}}
+  .chain2{flex-direction:column}
+  .stp{display:grid;grid-template-columns:38px minmax(0,1fr);column-gap:18px;align-items:center;max-width:none;max-height:90px;padding:7px 0;transition:max-height .7s var(--ease),padding .7s var(--ease),opacity .45s ease}
+  .stp .no{margin:0;grid-row:1/3}
+  .stp .lb{margin:0;text-align:left;font-size:20px}
+  .stp .lb::after{left:0}
+  .stp .why{margin:2px 0 0;text-align:left;min-height:0}
+  .stp.gone{max-height:0;padding:0}
+  .ways{grid-template-columns:minmax(0,1fr)}
+  .fam-rail span{font-size:10px;letter-spacing:.02em}
 }
 @media (max-width:700px){
   body{font-size:16px}
-  .wrap{padding:0 18px}
+  .wrap{padding:0 16px}
   .top .btn{display:none}
   .h-title .r{text-align:left}
-  .strike-grid,.new3,.time{grid-template-columns:minmax(0,1fr)}
-  .time div{border-right:0;border-bottom:1px solid var(--border)}
+  .time,.tiles,.fam{grid-template-columns:minmax(0,1fr)}
+  .time>div{border-right:0;border-bottom:1px solid var(--border)}
   .minis{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .tiles{grid-template-columns:minmax(0,1fr)}
   .cta-row{grid-template-columns:minmax(0,1fr)}
   .title-block{grid-template-columns:1fr 1fr}
   .title-block>div:nth-child(4n){border-right:1px solid var(--border)}
@@ -271,6 +381,14 @@ section.s{padding:140px 0 0}
   .title-block>div:nth-last-child(-n+4){border-bottom:1px solid var(--border)}
   .title-block>div:nth-last-child(-n+2){border-bottom:0}
   section.s{padding-top:100px}
+  .fives{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));width:100%}
+  .fives button{padding:8px 4px;align-items:center;text-align:center}
+  .fives button b{font-size:14px}
+  .fives button span,.fives button .kanji{display:none}
+  .flow{padding:22px 14px 20px}
+  .rail{left:32px}
+  .seg button{padding:9px 12px;font-size:14px}
+  .scene-hint{display:none}
 }
 </style>
 </head>
@@ -280,15 +398,17 @@ section.s{padding:140px 0 0}
 
 <header class="top">
   <div class="wrap">
-    <a class="logo" href="#top" aria-label="[Produktname] Startseite">
+    <a class="logo" href="#top" aria-label="Seiton Studio – Startseite">
       <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="6" fill="#4F8EF7"/><rect x="7" y="12" width="20" height="10" rx="5" fill="#0F1117"/><rect x="12" y="15" width="10" height="4" rx="2" fill="#38BDF8"/></svg>
-      [Produktname]
+      Seiton <small>Studio</small>
     </a>
     <nav class="tabs" aria-label="Hauptnavigation">
-      <a href="#digitalisieren">Digitalisieren</a>
-      <a href="#bibliothek">Bibliothek</a>
-      <a href="#top">Board</a>
-      <a href="#export">Export</a>
+      <a href="#ablauf"><span>01</span>Ablauf</a>
+      <a href="#digitalisieren"><span>02</span>Digitalisieren</a>
+      <a href="#tiefe"><span>03</span>Tiefe</a>
+      <a href="#bibliothek"><span>04</span>Bibliothek</a>
+      <a href="#export"><span>05</span>Fräsen</a>
+      <a href="#seiton"><span>06</span>Seiton</a>
     </nav>
     <a class="btn" href="#demo">Live-Demo anfragen</a>
   </div>
@@ -297,8 +417,17 @@ section.s{padding:140px 0 0}
 <main id="top">
 
 <!-- ===================== HERO ===================== -->
-<section class="hero" data-sheet="Blatt 01 Board">
+<section class="hero">
   <div class="wrap">
+
+    <div class="fives" role="group" aria-label="Die 5S – Seiton ist das zweite S">
+      <button type="button" data-say="<b>Seiri</b> – sortieren: Was nicht gebraucht wird, kommt weg."><b>Seiri</b><span>Sortieren</span></button>
+      <button type="button" class="me" data-say="<b>Seiton <span class='kanji'>整頓</span></b> – ordnen: Jedes Werkzeug hat seinen festen Platz. Genau dafür gibt es Shadowboards – und diese Software."><b>Seiton <span class="kanji">整頓</span></b><span>Ordnen</span></button>
+      <button type="button" data-say="<b>Seiso</b> – säubern: Sauber ist, was schnell sichtbar wird."><b>Seiso</b><span>Säubern</span></button>
+      <button type="button" data-say="<b>Seiketsu</b> – standardisieren: Jedes Board nach demselben Muster."><b>Seiketsu</b><span>Standardisieren</span></button>
+      <button type="button" data-say="<b>Shitsuke</b> – Disziplin: Ordnung halten, weil sie leicht fällt."><b>Shitsuke</b><span>Disziplin</span></button>
+    </div>
+    <p class="five-say" id="fiveSay" aria-live="polite"><b>Seiton <span class="kanji">整頓</span></b> – japanisch „ordnen“. Das zweite S von 5S.</p>
 
     <h1 class="h-title">
       <span class="l">Werkzeuge digitalisieren.</span>
@@ -306,11 +435,11 @@ section.s{padding:140px 0 0}
     </h1>
 
     <div class="hero-row">
-      <p>Vom physischen Werkzeug zur fertigen Fräsdatei. In einem System.</p>
+      <p>Vom Werkzeug auf dem Tisch zum fertigen Shadowboard. Fräsen Sie selbst – oder lassen Sie Seiton Boards fräsen.</p>
       <div class="less">
-        <span><b>Weniger</b> Nachzeichnen.</span>
-        <span><b>Weniger</b> Nachmessen.</span>
-        <span><b>Weniger</b> manuelle Arbeit.</span>
+        <span><b>Kein</b> Nachzeichnen.</span>
+        <span><b>Kein</b> Nachmessen.</span>
+        <span><b>Keine</b> Tiefe pro Tasche.</span>
       </div>
       <div class="hero-cta">
         <a class="btn" href="#demo">Live-Demo ansehen</a>
@@ -334,7 +463,6 @@ section.s{padding:140px 0 0}
           <svg id="board" viewBox="0 0 1000 460" role="application" aria-label="Interaktives Shadowboard mit verschiebbaren Werkzeugen">
             <rect x="20" y="20" width="960" height="420" rx="8" fill="#1A1D27" stroke="#2A2D3E" stroke-width="2"/>
             <rect x="40" y="40" width="920" height="380" fill="none" stroke="#2A2D3E" stroke-dasharray="8 8"/>
-            
             <g id="tools"></g>
           </svg>
         </div>
@@ -343,7 +471,6 @@ section.s{padding:140px 0 0}
           <div class="chk"><span>Überschneidungen</span><b id="cOv">0</b></div>
           <div class="chk"><span>Abstand unter 15 mm</span><b id="cCl">0</b></div>
           <div class="chk"><span>Randbereich verletzt</span><b id="cEd">0</b></div>
-          <b id="cN" hidden>0</b>
           <div class="status" id="status" aria-live="polite">Prüfe Board …</div>
           <button class="btn" id="arrange" type="button">Automatisch anordnen</button>
           <button class="btn sec" id="exportBtn" type="button" disabled>DXF exportieren</button>
@@ -353,34 +480,40 @@ section.s{padding:140px 0 0}
   </div>
 </section>
 
-<!-- ===================== ALTER PROZESS ===================== -->
-<section class="s" id="ablauf" data-sheet="Blatt 02 Heute">
+<!-- ===================== ABLAUF ===================== -->
+<section class="s" id="ablauf">
   <div class="wrap">
-    <h2 class="s-title">Heute: 10 Schritte. Pro Board. Jedes Mal.</h2>
-    <ol class="strike-grid" id="strike">
-      <li style="--i:0">Foto machen</li>
-      <li style="--i:1">Bild korrigieren</li>
-      <li style="--i:2">Skalieren</li>
-      <li style="--i:3">Nachzeichnen</li>
-      <li style="--i:4">Pfade kontrollieren</li>
-      <li style="--i:5">DXF exportieren</li>
-      <li style="--i:6">Frässoftware</li>
-      <li style="--i:7">Fräswege definieren</li>
-      <li style="--i:8">Frästiefen festlegen</li>
-      <li style="--i:9">Fräsen</li>
-    </ol>
-    <div class="new3">
-      <div><span>01</span><strong>Werkzeug digitalisieren.</strong></div>
-      <div><span>02</span><strong>Board erstellen.</strong></div>
-      <div><span>03</span><strong>DXF exportieren.</strong></div>
+    <div class="sheet"><b>Blatt 01</b><i></i>Ablauf</div>
+    <h2 class="s-title">Zehn Schritte. Übrig bleiben drei.</h2>
+    <p class="s-lead">Die ganze Kette vom Werkzeug bis zum gefrästen Board. Schalten Sie um und sehen Sie, was wegfällt.</p>
+
+    <div class="flow-ctrl">
+      <div class="seg" role="group" aria-label="Ablauf wählen" id="flowSeg">
+        <button type="button" data-m="0" aria-pressed="true">Heute</button>
+        <button type="button" data-m="1" aria-pressed="false">Erstes Board mit Seiton</button>
+        <button type="button" data-m="2" aria-pressed="false">Jedes weitere Board</button>
+      </div>
+      <label class="mill"><input type="checkbox" id="noMill"><span class="sw" aria-hidden="true"></span>Keine eigene Fräse</label>
+    </div>
+
+    <div class="flow">
+      <div class="rail" aria-hidden="true"><i></i></div>
+      <ol class="chain2" id="chain"></ol>
+      <div class="flow-sum">
+        <div class="big" id="fCount">10<small>Schritte</small></div>
+        <div class="big" id="fTime">6:00<small>h</small></div>
+        <p id="fSay"><b>Heute:</b> jedes Board von vorn – vom Foto bis zur Tiefe jeder einzelnen Tasche. <span class="est">geschätzt</span></p>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ===================== DIGITALISIEREN ===================== -->
-<section class="s" id="digitalisieren" data-sheet="Blatt 03 Digitalisieren">
+<section class="s" id="digitalisieren">
   <div class="wrap">
+    <div class="sheet"><b>Blatt 02</b><i></i>Digitalisieren</div>
     <h2 class="s-title">Einmal digitalisieren. Immer wieder verwenden.</h2>
+    <p class="s-lead">Werkzeug auf den Seiton-Messbogen legen, Foto machen. Die Marker am Rand machen aus jedem Foto ein maßhaltiges Abbild – Perspektive, Maßstab und Kontur rechnet Seiton Studio selbst.</p>
 
     <div class="dig">
       <div class="dig-stage" id="digStage">
@@ -403,7 +536,7 @@ section.s{padding:140px 0 0}
           </g>
           <g fill="#E2E8F0"><circle class="node" cx="98" cy="191" r="4.5"/><circle class="node" cx="182" cy="178" r="4.5"/><circle class="node" cx="300" cy="178" r="4.5"/><circle class="node" cx="426" cy="204" r="4.5"/><circle class="node" cx="498" cy="191" r="4.5"/><circle class="node" cx="140" cy="233" r="4.5"/><circle class="node" cx="300" cy="204" r="4.5"/></g>
           <g class="fade" stroke="#38BDF8" stroke-width="1.5"><line x1="98" y1="280" x2="498" y2="280"/><line x1="98" y1="270" x2="98" y2="290"/><line x1="498" y1="270" x2="498" y2="290"/></g>
-          <g class="fade"><rect x="238" y="266" width="124" height="28" fill="#1A1D27"/><text x="300" y="286" text-anchor="middle" fill="#38BDF8" font-size="15" font-family="Segoe UI, Archivo, sans-serif">Maß erkannt</text></g>
+          <g class="fade"><rect x="250" y="266" width="100" height="28" fill="#1A1D27"/><text x="300" y="286" text-anchor="middle" fill="#38BDF8" font-size="15" font-family="Segoe UI, Archivo, sans-serif">200,0 mm</text></g>
         </svg>
       </div>
 
@@ -411,7 +544,7 @@ section.s{padding:140px 0 0}
         <div class="timer" aria-live="off"><span id="tNum">0,0</span><small>Sek.</small></div>
         <p class="note">pro Werkzeug, hier zeitgerafft</p>
         <ol class="steps" id="digSteps">
-          <li><i></i>Aufnahme</li>
+          <li><i></i>Aufnahme auf dem Messbogen</li>
           <li><i></i>Perspektive korrigiert</li>
           <li><i></i>Kontur erkannt</li>
           <li><i></i>Maße übernommen</li>
@@ -419,55 +552,86 @@ section.s{padding:140px 0 0}
         <button class="btn" id="digBtn" type="button">Nochmal abspielen</button>
       </div>
     </div>
+
+    <div class="ways" role="group" aria-label="Drei Wege zum digitalen Werkzeug">
+      <button class="way on" type="button"><span>Weg 1</span><b>Handy + Messbogen</b><p>Messbogen ausdrucken, Werkzeug drauf, Foto. Keine Hardware nötig.</p></button>
+      <button class="way" type="button"><span>Weg 2</span><b>Seiton Capture</b><p>Die Aufnahmebox: Werkzeug rein, Knopf drücken. Gleiches Licht, gleiche Genauigkeit, jedes Mal.</p></button>
+      <button class="way" type="button"><span>Weg 3</span><b>Datei</b><p>Vorhandene DXF oder eine Werkzeug-Datei von einem anderen Standort übernehmen.</p></button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TIEFE ===================== -->
+<section class="s" id="tiefe">
+  <div class="wrap">
+    <div class="sheet"><b>Blatt 03</b><i></i>Tiefe</div>
+    <h2 class="s-title">Jede Fläche hat ihre Dicke.</h2>
+    <p class="s-lead">Kopf dicker als der Griff? Dann wird die Tasche dort tiefer. Sie geben die Dicke einmal am Werkzeug an – die Frästiefe jeder Stufe rechnet Seiton aus. Griffmulden inklusive.</p>
+
+    <div class="depth">
+      <div class="scene" id="scene" aria-label="3D-Ansicht einer gestuften Werkzeugtasche, zum Drehen ziehen" role="img">
+        <div class="obj" id="obj"></div>
+        <div class="scene-tag"><div class="seg" role="group" aria-label="Ansicht"><button type="button" id="v3d" aria-pressed="true">3D</button><button type="button" id="v2d" aria-pressed="false">Draufsicht</button></div></div>
+        <div class="scene-hint">Ziehen zum Drehen</div>
+      </div>
+      <div class="depth-side">
+        <div class="rg"><div class="rg-h"><span><i style="background:#2F4F8F"></i>Maulköpfe</span><b id="oHead">14 mm</b></div><input type="range" min="4" max="30" value="14" id="rHead" aria-label="Dicke der Maulköpfe in mm"></div>
+        <div class="rg"><div class="rg-h"><span><i style="background:#4F8EF7"></i>Griff</span><b id="oGrip">8 mm</b></div><input type="range" min="4" max="30" value="8" id="rGrip" aria-label="Dicke des Griffs in mm"></div>
+        <div class="rg"><div class="rg-h"><span><i style="background:#38BDF8"></i>Griffmulde</span><b id="oRec">20 mm</b></div><input type="range" min="10" max="34" value="20" id="rRec" aria-label="Tiefe der Griffmulde in mm"></div>
+        <p class="formula">Die Frästiefe jeder Fläche ergibt sich aus ihrer <b>Dicke</b> und der <b>Eintauchtiefe</b> – etwa 70 % versenkt oder 5 mm Überstand zum Greifen. Jede Tiefe landet auf ihrer eigenen Ebene im DXF.</p>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ===================== BIBLIOTHEK ===================== -->
-<section class="s" id="bibliothek" data-sheet="Blatt 04 Bibliothek">
+<section class="s" id="bibliothek">
   <div class="wrap">
+    <div class="sheet"><b>Blatt 04</b><i></i>Bibliothek</div>
     <h2 class="s-title">Eine Bibliothek statt einzelner Dateien.</h2>
 
     <div class="lib-top">
       <label class="search">
         <svg width="24" height="24" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="#94A3B8" stroke-width="2"/><path d="M13 13l5 5" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></svg>
-        <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Werkzeug suchen</span>
+        <span class="sr">Werkzeug suchen</span>
         <input id="libSearch" type="search" placeholder="Werkzeug suchen" autocomplete="off">
       </label>
-      <button class="chipf on" type="button" data-f="">Alle Projekte</button>
+      <button class="chipf on" type="button" data-f="">Alle Labels</button>
       <button class="chipf" type="button" data-f="montage 1">Montage 1</button>
       <button class="chipf" type="button" data-f="maschine 4">Maschine 4</button>
       <button class="chipf" type="button" data-f="instandhaltung">Instandhaltung</button>
     </div>
     <p class="count" id="libCount">8 Werkzeuge</p>
     <div class="tiles" id="tiles">
-      <div class="tile" data-s="gabelschlüssel 17 schlüssel montage 1"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#4F8EF7"><rect x="42" y="33" width="116" height="14" rx="7"/><circle cx="42" cy="40" r="18"/><circle cx="160" cy="40" r="15"/></g><g fill="#0F1117"><rect x="18" y="34" width="24" height="12"/><circle cx="160" cy="40" r="6"/></g><rect x="86" y="26" width="30" height="28" rx="14" fill="#38BDF8"/></svg></div><div><b>Gabelschlüssel 17</b><small>Schlüssel, Montage 1</small></div><span class="u">auf 12 Boards</span></div>
-      <div class="tile" data-s="schraubendreher ph2 schraubendreher montage 1"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="24" y="26" width="70" height="28" rx="12"/><rect x="92" y="36" width="80" height="8" rx="2"/></g><rect x="44" y="18" width="28" height="44" rx="14" fill="#38BDF8"/></svg></div><div><b>Schraubendreher PH2</b><small>Schraubendreher, Montage 1</small></div><span class="u">auf 5 Boards</span></div>
-      <div class="tile" data-s="kombizange 180 zange zangen maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g transform="translate(76 40)" stroke="#2F4F8F" stroke-linecap="round"><line x1="-50" x2="0" stroke-width="12"/><line x2="90" y2="-20" stroke-width="11"/><line x2="90" y2="20" stroke-width="11"/></g><circle cx="76" cy="40" r="9" fill="#2F4F8F"/><circle cx="160" cy="40" r="16" fill="#38BDF8"/></svg></div><div><b>Kombizange 180</b><small>Zangen, Maschine 4</small></div><span class="u">auf 3 Boards</span></div>
-      <div class="tile" data-s="seitenschneider zange zangen maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g transform="translate(70 40)" stroke="#3E6CC4" stroke-linecap="round"><line x1="-36" x2="0" stroke-width="14"/><line x2="96" y2="-16" stroke-width="10"/><line x2="96" y2="16" stroke-width="10"/></g><circle cx="70" cy="40" r="8" fill="#3E6CC4"/></svg></div><div><b>Seitenschneider</b><small>Zangen, Maschine 4</small></div><span class="u">auf 2 Boards</span></div>
-      <div class="tile" data-s="schlosserhammer hammer hämmer instandhaltung"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="30" y="34" width="120" height="12" rx="6"/><rect x="146" y="15" width="24" height="50" rx="4"/></g><rect x="54" y="24" width="30" height="32" rx="15" fill="#38BDF8"/></svg></div><div><b>Schlosserhammer</b><small>Hämmer, Instandhaltung</small></div><span class="u">auf 1 Board</span></div>
-      <div class="tile" data-s="innensechskant 6 schlüssel montage 1"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><path d="M60 20 L60 60 L140 60" fill="none" stroke="#4F8EF7" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><b>Innensechskant 6</b><small>Schlüssel, Montage 1</small></div><span class="u">auf 7 Boards</span></div>
-      <div class="tile" data-s="messschieber messmittel messen instandhaltung"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#2F4F8F"><rect x="30" y="36" width="140" height="10" rx="2"/><rect x="36" y="14" width="12" height="46" rx="2"/><rect x="70" y="18" width="12" height="38" rx="2"/></g></svg></div><div><b>Messschieber</b><small>Messmittel, Instandhaltung</small></div><span class="u">auf 2 Boards</span></div>
-      <div class="tile" data-s="drehmomentschlüssel schlüssel maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="30" y="34" width="130" height="12" rx="6"/><circle cx="166" cy="40" r="12"/><rect x="30" y="30" width="46" height="20" rx="8"/></g><rect x="36" y="22" width="30" height="36" rx="15" fill="#38BDF8"/></svg></div><div><b>Drehmomentschlüssel</b><small>Schlüssel, Maschine 4</small></div><span class="u">auf 4 Boards</span></div>
+      <div class="tile" data-s="gabelschlüssel 17 schlüssel montage 1"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#4F8EF7"><rect x="42" y="33" width="116" height="14" rx="7"/><circle cx="42" cy="40" r="18"/><circle cx="160" cy="40" r="15"/></g><g fill="#0F1117"><rect x="18" y="34" width="24" height="12"/><circle cx="160" cy="40" r="6"/></g><rect x="86" y="26" width="30" height="28" rx="14" fill="#38BDF8"/></svg></div><div><b>Gabelschlüssel 17</b><small>Schlüssel · Montage 1</small></div><span class="u">auf 12 Boards</span></div>
+      <div class="tile" data-s="schraubendreher ph2 schraubendreher montage 1"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="24" y="26" width="70" height="28" rx="12"/><rect x="92" y="36" width="80" height="8" rx="2"/></g><rect x="44" y="18" width="28" height="44" rx="14" fill="#38BDF8"/></svg></div><div><b>Schraubendreher PH2</b><small>Schraubendreher · Montage 1</small></div><span class="u">auf 5 Boards</span></div>
+      <div class="tile" data-s="kombizange 180 zange zangen maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g transform="translate(76 40)" stroke="#2F4F8F" stroke-linecap="round"><line x1="-50" x2="0" stroke-width="12"/><line x2="90" y2="-20" stroke-width="11"/><line x2="90" y2="20" stroke-width="11"/></g><circle cx="76" cy="40" r="9" fill="#2F4F8F"/><circle cx="160" cy="40" r="16" fill="#38BDF8"/></svg></div><div><b>Kombizange 180</b><small>Zangen · Maschine 4</small></div><span class="u">auf 3 Boards</span></div>
+      <div class="tile" data-s="seitenschneider zange zangen maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g transform="translate(70 40)" stroke="#3E6CC4" stroke-linecap="round"><line x1="-36" x2="0" stroke-width="14"/><line x2="96" y2="-16" stroke-width="10"/><line x2="96" y2="16" stroke-width="10"/></g><circle cx="70" cy="40" r="8" fill="#3E6CC4"/></svg></div><div><b>Seitenschneider</b><small>Zangen · Maschine 4</small></div><span class="u">auf 2 Boards</span></div>
+      <div class="tile" data-s="schlosserhammer hammer hämmer instandhaltung"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="30" y="34" width="120" height="12" rx="6"/><rect x="146" y="15" width="24" height="50" rx="4"/></g><rect x="54" y="24" width="30" height="32" rx="15" fill="#38BDF8"/></svg></div><div><b>Schlosserhammer</b><small>Hämmer · Instandhaltung</small></div><span class="u">auf 1 Board</span></div>
+      <div class="tile" data-s="innensechskant 6 schlüssel montage 1"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><path d="M60 20 L60 60 L140 60" fill="none" stroke="#4F8EF7" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><b>Innensechskant 6</b><small>Schlüssel · Montage 1</small></div><span class="u">auf 7 Boards</span></div>
+      <div class="tile" data-s="messschieber messmittel messen instandhaltung"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#2F4F8F"><rect x="30" y="36" width="140" height="10" rx="2"/><rect x="36" y="14" width="12" height="46" rx="2"/><rect x="70" y="18" width="12" height="38" rx="2"/></g></svg></div><div><b>Messschieber</b><small>Messmittel · Instandhaltung</small></div><span class="u">auf 2 Boards</span></div>
+      <div class="tile" data-s="drehmomentschlüssel schlüssel maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="30" y="34" width="130" height="12" rx="6"/><circle cx="166" cy="40" r="12"/><rect x="30" y="30" width="46" height="20" rx="8"/></g><rect x="36" y="22" width="30" height="36" rx="15" fill="#38BDF8"/></svg></div><div><b>Drehmomentschlüssel</b><small>Schlüssel · Maschine 4</small></div><span class="u">auf 4 Boards</span></div>
     </div>
     <div class="empty" id="libEmpty">Nichts gefunden.</div>
-    
+    <div class="lib-foot"><span>Labels und gespeicherte Suchen</span><span>Werkzeuge als Datei weitergeben – zwischen Standorten</span><span>Windows und Mac</span></div>
   </div>
 </section>
 
 <!-- ===================== ÄNDERUNGEN ===================== -->
-<section class="s" id="aenderungen" data-sheet="Blatt 05 Änderungen">
+<section class="s" id="aenderungen">
   <div class="wrap">
+    <div class="sheet"><b>Blatt 05</b><i></i>Änderungen</div>
     <h2 class="s-title">Werkzeug geändert? Alle Boards ziehen mit.</h2>
     <div class="chg">
       <div class="chg-text">
-        <p>Boards sind mit der Bibliothek verknüpft. Überall übernehmen oder als neue Variante speichern – Sie entscheiden.</p>
+        <p>Boards sind mit der Bibliothek verknüpft. Überall übernehmen oder als Kopie speichern – Sie entscheiden.</p>
         <div class="chg-ctrl">
           <button class="btn" id="editTool" type="button">Gabelschlüssel 17 ändern</button>
           <button class="btn sec" id="resetBoards" type="button">Zurücksetzen</button>
         </div>
         <div class="dlg" id="dlg" role="dialog" aria-labelledby="dlgT">
           <h4 id="dlgT"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="#F59E0B" stroke-width="1.8"/><path d="M10 5.5v5.5M10 14v.5" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>Werkzeug wird mehrfach verwendet</h4>
-          <p>Liegt auf 12 Boards.</p>
+          <p>Wird auf 12 Boards verwendet – dort wird es ebenfalls geändert.</p>
           <div class="row">
             <button class="btn ghost" type="button" data-a="cancel">Abbrechen</button>
             <button class="btn sec" type="button" data-a="copy">Als Kopie speichern</button>
@@ -480,43 +644,109 @@ section.s{padding:140px 0 0}
   </div>
 </section>
 
-<!-- ===================== EXPORT ===================== -->
-<section class="s" id="export" data-sheet="Blatt 06 Export">
+<!-- ===================== FRÄSEN ===================== -->
+<section class="s" id="export">
   <div class="wrap">
-    <h2 class="s-title">Vom Board direkt zur Fräsdatei.</h2>
-    <div class="dxf">
-      <div>
-        <p class="big-claim"><span>Ihre Fräse.</span><span>Ihr CAM-System.</span><span style="color:var(--accent)">Ihre Daten.</span></p>
-        <p class="s-lead">Ebenen mit Frästiefen, fertig für Ihre CAM-Software.</p>
+    <div class="sheet"><b>Blatt 06</b><i></i>Fräsen</div>
+    <h2 class="s-title">Vom Board zum fertigen Einsatz.</h2>
+    <div class="flow-ctrl">
+      <div class="seg" role="group" aria-label="Wer fräst?" id="millSeg">
+        <button type="button" data-k="own" aria-pressed="true">Ich habe eine Fräse</button>
+        <button type="button" data-k="svc" aria-pressed="false">Ich habe keine Fräse</button>
       </div>
-      <div class="layers">
-        <div class="hd"><span>Board A.dxf</span><span class="good">bereit</span></div>
-        <div class="layer"><i style="background:#94A3B8"></i><span>Außenkontur</span><span>Zuschnitt</span></div>
-        <div class="layer"><i style="background:#4F8EF7"></i><span>Taschen 15 mm</span><span>2</span></div>
-        <div class="layer"><i style="background:#3E6CC4"></i><span>Taschen 25 mm</span><span>2</span></div>
-        <div class="layer"><i style="background:#2F4F8F"></i><span>Taschen 40 mm</span><span>1</span></div>
-        <div class="layer"><i style="background:#38BDF8"></i><span>Griffmulden 15 mm</span><span>4</span></div>
+    </div>
+    <div class="dxf">
+      <div class="swap">
+        <div id="clOwn">
+          <p class="big-claim"><span>Ihre Fräse.</span><span>Ihr CAM-System.</span><span style="color:var(--accent)">Ihre Daten.</span></p>
+          <p class="s-lead">Eine DXF, eine Ebene je Frästiefe – im CAM-Programm ein Klick pro Ebene statt eine Tiefe pro Tasche.</p>
+        </div>
+        <div id="clSvc" class="off">
+          <p class="big-claim"><span>Keine Fräse?</span><span>Kein CAM?</span><span style="color:var(--accent2)">Seiton Boards.</span></p>
+          <p class="s-lead">Sie gestalten das Board, wir fräsen es und liefern den fertigen Einsatz – passend für Ihre Schublade oder Wand.</p>
+        </div>
+      </div>
+      <div class="swap">
+        <div class="layers" id="pnOwn">
+          <div class="hd"><span>Board A.dxf</span><span class="good">bereit</span></div>
+          <div class="layer"><i style="background:#94A3B8"></i><span>Außenkontur</span><span>Zuschnitt</span></div>
+          <div class="layer"><i style="background:#4F8EF7"></i><span>Taschen 15 mm</span><span>2</span></div>
+          <div class="layer"><i style="background:#3E6CC4"></i><span>Taschen 25 mm</span><span>2</span></div>
+          <div class="layer"><i style="background:#2F4F8F"></i><span>Taschen 40 mm</span><span>1</span></div>
+          <div class="layer"><i style="background:#38BDF8"></i><span>Griffmulden 15 mm</span><span>4</span></div>
+          <div class="layer"><i style="background:#E2E8F0"></i><span>Gravur 0,5 mm</span><span>Namen</span></div>
+        </div>
+        <div class="order off" id="pnSvc">
+          <div class="hd"><span>Board A · 600 × 400 × 40 mm</span><span style="color:var(--accent2)">Seiton Boards</span></div>
+          <ol class="otrack" id="otrack">
+            <li><i></i>Board in Seiton Studio gestalten</li>
+            <li><i></i>Bestellen – direkt aus dem Board</li>
+            <li><i></i>Wir fräsen und gravieren</li>
+            <li><i></i>Fertiger Einsatz kommt zu Ihnen</li>
+          </ol>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ===================== ZEIT ===================== -->
-<section class="s" id="zeit" data-sheet="Blatt 07 Zeit">
+<section class="s" id="zeit">
   <div class="wrap">
+    <div class="sheet"><b>Blatt 07</b><i></i>Zeit</div>
     <h2 class="s-title">Von Stunden zu Minuten.</h2>
     <div class="time" id="timeBox">
-      <div class="old"><div class="clock">6:00 h</div><p class="lbl">heute, manuell</p></div>
-      <div><div class="clock" id="clockNew">6:00 h</div><p class="lbl">mit [Produktname]</p></div>
-      <div><div class="clock">0:01 h</div><p class="lbl">nächstes Board aus der Bibliothek</p></div>
+      <div class="old"><div class="clock">6:00 h</div><p class="lbl">heute, von Hand</p></div>
+      <div><div class="clock" id="clockNew">6:00 h</div><p class="lbl">erstes Board mit Seiton</p></div>
+      <div><div class="clock" id="clockNext">6:00 h</div><p class="lbl">jedes weitere Board aus der Bibliothek</p></div>
     </div>
-    <p class="foot-note">Beispiel: Board mit 10 Werkzeugen.</p>
+    <p class="foot-note"><span class="est">geschätzt</span> Beispiel: Board mit 10 Werkzeugen, Arbeitszeit ohne Laufzeit der Maschine.</p>
   </div>
 </section>
 
-<!-- ===================== ZIELGRUPPE ===================== -->
-<section class="s" id="zielgruppe" data-sheet="Blatt 08 Für wen">
+<!-- ===================== SEITON ===================== -->
+<section class="s" id="seiton">
   <div class="wrap">
+    <div class="sheet"><b>Blatt 08</b><i></i>Seiton</div>
+    <h2 class="s-title">Vier Teile. Ein Ablauf.</h2>
+    <p class="s-lead">Nehmen Sie, was Sie brauchen. Alles greift ineinander – vom ersten Foto bis zum fertigen Einsatz.</p>
+
+    <div class="fam-rail" id="famRail" aria-hidden="true">
+      <span data-p="cap">Aufnehmen</span><span data-p="lib">Bibliothek</span><span data-p="brd">Board</span><span data-p="dxf">Fräsdaten</span><span data-p="mill">Gefräst</span>
+    </div>
+    <div class="fam" id="fam">
+      <div class="card" tabindex="0" data-p="cap lib brd dxf">
+        <div class="ic"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><rect x="4" y="10" width="56" height="42" rx="5" fill="none" stroke="#4F8EF7" stroke-width="3"/><rect x="14" y="24" width="30" height="8" rx="4" fill="#4F8EF7"/><rect x="24" y="22" width="10" height="12" rx="5" fill="#38BDF8"/><path d="M20 58h24" stroke="#64748B" stroke-width="3" stroke-linecap="round"/></svg></div>
+        <h3>Seiton Studio<small>Die Software</small></h3>
+        <p>Digitalisieren, Werkzeuge pflegen, Boards gestalten, DXF exportieren. Windows und Mac.</p>
+        <span class="for">Für alle</span>
+      </div>
+      <div class="card" tabindex="0" data-p="cap">
+        <div class="ic"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 20 L32 8 L56 20 V52 H8 Z" fill="none" stroke="#4F8EF7" stroke-width="3" stroke-linejoin="round"/><circle cx="32" cy="22" r="5" fill="#38BDF8"/><path d="M32 27 L20 46 M32 27 L44 46" stroke="#38BDF8" stroke-width="1.5" stroke-dasharray="3 3"/><rect x="14" y="44" width="36" height="4" rx="1" fill="#E2E8F0"/></svg></div>
+        <h3>Seiton Capture<small>Die Aufnahmebox</small></h3>
+        <p>Kamera, Licht und Messfläche in einer Box. Werkzeug rein, Knopf drücken, fertig.</p>
+        <span class="for">Für viele Werkzeuge</span>
+      </div>
+      <div class="card" tabindex="0" data-p="lib">
+        <div class="ic"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><path d="M16 44a12 12 0 0 1 1-24 16 16 0 0 1 30 4 10 10 0 0 1 1 20Z" fill="none" stroke="#4F8EF7" stroke-width="3" stroke-linejoin="round"/><rect x="22" y="50" width="6" height="6" rx="1" fill="#38BDF8"/><rect x="30" y="50" width="6" height="6" rx="1" fill="#4F8EF7"/><rect x="38" y="50" width="6" height="6" rx="1" fill="#2F4F8F"/></svg></div>
+        <h3>Seiton Library<small>Die Werkzeugdatenbank</small></h3>
+        <p>Unternehmensübergreifend in der Cloud: Werkzeuge, die schon jemand digitalisiert hat, einfach übernehmen. Im Abo.</p>
+        <span class="for">Für Abo-Kunden</span>
+      </div>
+      <div class="card" tabindex="0" data-p="mill">
+        <div class="ic"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><rect x="4" y="30" width="56" height="22" rx="3" fill="none" stroke="#4F8EF7" stroke-width="3"/><rect x="12" y="36" width="22" height="8" rx="4" fill="#2F4F8F"/><rect x="40" y="35" width="12" height="10" rx="2" fill="#2F4F8F"/><path d="M32 6 V22" stroke="#E2E8F0" stroke-width="4" stroke-linecap="round"/><path d="M26 6 H38" stroke="#E2E8F0" stroke-width="3" stroke-linecap="round"/><path d="M32 22 v4" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"/></svg></div>
+        <h3>Seiton Boards<small>Der Fräsdienst</small></h3>
+        <p>Keine Fräse im Haus? Wir fräsen Ihre Boards und liefern sie einbaufertig.</p>
+        <span class="for">Für alle ohne Fräse</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FÜR WEN ===================== -->
+<section class="s" id="zielgruppe">
+  <div class="wrap">
+    <div class="sheet"><b>Blatt 09</b><i></i>Für wen</div>
     <h2 class="s-title">Für alle, die eigentlich anderes zu tun haben.</h2>
     <div class="who">
       <ul class="roles">
@@ -524,24 +754,25 @@ section.s{padding:140px 0 0}
         <li>Industrial Engineering</li>
         <li>5S-Verantwortliche</li>
         <li>Produktions- und Abteilungsleiter</li>
-        <li>Werkstatt und Fertigung</li>
+        <li>Werkstatt und Betriebsmittelbau</li>
       </ul>
       <div class="infra">
-        <p><strong style="color:var(--text)">Ihre Infrastruktur bleibt.</strong> Eigene Fräse, eigenes CAM-System. [Produktname] schließt nur die Lücke dazwischen:</p>
-        <div class="chain"><span>Werkzeug</span><span>Digitales Werkzeug</span><span>Shadowboard</span><span class="hl">Fräsdaten</span></div>
+        <p><strong style="color:var(--text)">Mit eigener Fräse:</strong> Ihre Infrastruktur bleibt. Seiton schließt nur die Lücke zwischen Werkzeug und Fräsdaten.</p>
+        <p><strong style="color:var(--text)">Ohne Fräse:</strong> Seiton Boards fräst für Sie. Sie brauchen nur die Werkzeuge und einen Drucker.</p>
+        <div class="chain"><span>Werkzeug</span><span>Digitales Werkzeug</span><span>Shadowboard</span><span class="hl">Fräsdaten – oder</span><span class="alt">fertiges Board, geliefert</span></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ===================== CTA ===================== -->
-<section class="cta" id="demo" data-sheet="Blatt 09 Demo">
+<section class="cta" id="demo">
   <div class="wrap">
     <h2>Starten Sie mit einem Werkzeug.</h2>
     <div class="cta-row">
-      <p>Nicht mit einem Großprojekt. Wir zeigen Ihnen den kompletten Workflow in einer kurzen Live-Demo.</p>
+      <p>Nicht mit einem Großprojekt. Wir zeigen Ihnen den kompletten Ablauf in einer kurzen Live-Demo – mit Ihrem Werkzeug.</p>
       <div class="cta-btns">
-        <a class="btn" href="mailto:[E-MAIL]?subject=Live-Demo%20anfragen">Live-Demo anfragen</a>
+        <a class="btn" href="mailto:[E-MAIL]?subject=Seiton%20Live-Demo">Live-Demo anfragen</a>
         <a class="btn line" href="#kontakt">Kontakt</a>
       </div>
     </div>
@@ -554,14 +785,14 @@ section.s{padding:140px 0 0}
 <footer id="kontakt">
   <div class="wrap">
     <div class="title-block">
-      <div><small>Benennung</small><span class="name">[Produktname]</span></div>
+      <div><small>Benennung</small><span class="name">Seiton Studio</span></div>
       <div><small>Inhalt</small><span>Werkzeuge digitalisieren. Shadowboards standardisieren.</span></div>
       <div><small>Maßstab</small><span>1:1</span></div>
-      <div><small>Blatt</small><span>1 / 1</span></div>
-      <div><small>Kontakt</small><a href="mailto:[E-MAIL]">[E-Mail-Adresse]</a></div>
-      <div><small>Telefon</small><span>[Telefon]</span></div>
-      <div><small>Rechtliches</small><a href="#impressum">Impressum</a></div>
-      <div><small>&nbsp;</small><a href="#datenschutz">Datenschutz</a></div>
+      <div><small>Blatt</small><span>09 / 09</span></div>
+      <div><small>Kontakt</small><span class="todo">[E-Mail-Adresse]</span></div>
+      <div><small>Telefon</small><span class="todo">[Telefon]</span></div>
+      <div><small>Rechtliches</small><span class="todo">Impressum (folgt)</span></div>
+      <div><small>&nbsp;</small><span class="todo">Datenschutz (folgt)</span></div>
     </div>
   </div>
 </footer>
@@ -572,11 +803,20 @@ section.s{padding:140px 0 0}
   var BOARD = '#1A1D27', A2 = '#38BDF8', D1 = '#4F8EF7', D2 = '#3E6CC4', D3 = '#2F4F8F';
   function el(tag, attrs, parent){ var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function onView(node, fn, th){ new IntersectionObserver(function(ents, o){ ents.forEach(function(en){ if (en.isIntersecting){ o.disconnect(); fn(); } }); }, { threshold: th || .5 }).observe(node); }
+  function pressed(group, btn){ group.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); }); }
 
   /* ---------- Toast ---------- */
   var toastEl = document.getElementById('toast'), toastT;
   function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function(){ toastEl.classList.remove('show'); }, 2600); }
 
+  /* ---------- 5S-Leiste ---------- */
+  var say = document.getElementById('fiveSay'), sayDefault = say.innerHTML;
+  document.querySelectorAll('.fives button').forEach(function(b){
+    function show(){ say.innerHTML = b.getAttribute('data-say'); }
+    b.addEventListener('mouseenter', show); b.addEventListener('focus', show); b.addEventListener('click', show);
+    b.addEventListener('mouseleave', function(){ say.innerHTML = sayDefault; });
+  });
 
   /* ---------- Interaktives Board ---------- */
   var svg = document.getElementById('board'), layer = document.getElementById('tools');
@@ -633,7 +873,7 @@ section.s{padding:140px 0 0}
   function place(t){ t.g.style.transform = 'translate(' + t.x + 'px,' + t.y + 'px)'; }
   function hit(a, b, pad){ return a.x - pad < b.x + b.w && a.x + a.w + pad > b.x && a.y - pad < b.y + b.h && a.y + a.h + pad > b.y; }
 
-  var cOv = document.getElementById('cOv'), cCl = document.getElementById('cCl'), cEd = document.getElementById('cEd'), cN = document.getElementById('cN');
+  var cOv = document.getElementById('cOv'), cCl = document.getElementById('cCl'), cEd = document.getElementById('cEd');
   var statusEl = document.getElementById('status'), exportBtn = document.getElementById('exportBtn');
   function check(){
     var st = {}, ov = 0, cl = 0, ed = 0;
@@ -652,7 +892,6 @@ section.s{padding:140px 0 0}
     cOv.textContent = ov; cOv.className = ov ? 'bad' : 'good';
     cCl.textContent = cl; cCl.className = cl ? 'warnc' : 'good';
     cEd.textContent = ed; cEd.className = ed ? 'warnc' : 'good';
-    cN.textContent = tools.length;
     var okAll = !ov && !cl && !ed;
     exportBtn.disabled = !okAll;
     exportBtn.className = okAll ? 'btn' : 'btn sec';
@@ -665,12 +904,75 @@ section.s{padding:140px 0 0}
     tools.forEach(function(t){ t.x = t.auto[0]; t.y = t.auto[1]; place(t); });
     setTimeout(check, reduce ? 0 : 720);
   });
-  exportBtn.addEventListener('click', function(){ toast('Board_A.dxf erzeugt: 4 Ebenen mit Frästiefen'); });
+  exportBtn.addEventListener('click', function(){ toast('Board_A.dxf erzeugt: Ebenen je Frästiefe und Gravur'); });
   check();
 
-  /* ---------- Durchstreichen des alten Prozesses ---------- */
-  var strike = document.getElementById('strike');
-  new IntersectionObserver(function(ents, o){ ents.forEach(function(en){ if (en.isIntersecting){ strike.classList.add('go'); o.disconnect(); } }); }, { threshold: .5 }).observe(strike);
+  /* ---------- Prozesskette: zehn Schritte, die zusammenfließen ---------- */
+  // Jeder Schritt: Text heute; je Ablauf (1 = erstes Board, 2 = weitere) 'k' bleibt, 'c' fällt weg (mit Grund), 'h' bleibt mit Hilfe.
+  var STEPS = [
+    { t:'Werkzeug fotografieren',          m:[null, ['h','auf dem Messbogen'], ['c','liegt in der Bibliothek']] },
+    { t:'Perspektive entzerren',           m:[null, ['c','automatisch'],       ['c','liegt in der Bibliothek']] },
+    { t:'Maßstab setzen',                  m:[null, ['c','automatisch'],       ['c','liegt in der Bibliothek']] },
+    { t:'Kontur nachzeichnen',             m:[null, ['c','automatisch'],       ['c','liegt in der Bibliothek']] },
+    { t:'Nachmessen und korrigieren',      m:[null, ['c','automatisch'],       ['c','liegt in der Bibliothek']] },
+    { t:'Tiefen und Griffmulden festlegen', m:[null, ['h','einmal je Werkzeug'], ['c','liegt in der Bibliothek']] },
+    { t:'Werkzeuge anordnen',              m:[null, ['h','automatisch anordnen'], ['h','automatisch anordnen']] },
+    { t:'Abstände prüfen',                 m:[null, ['c','prüft live'],        ['c','prüft live']] },
+    { t:'Tiefe je Tasche im CAM anlegen',  m:[null, ['h','eine Ebene je Tiefe'], ['h','eine Ebene je Tiefe']], svc:'Board bestellen' },
+    { t:'Fräsen',                          m:[null, ['k',''],                  ['k','']], svc:'Seiton Boards fräst' }
+  ];
+  var TIMES = ['6:00', '0:20', '0:05'];
+  var SAYS = [
+    '<b>Heute:</b> jedes Board von vorn – vom Foto bis zur Tiefe jeder einzelnen Tasche.',
+    '<b>Erstes Board:</b> Foto auf dem Messbogen, Dicken einmal angeben – Kontur, Maße und Prüfung macht Seiton.',
+    '<b>Jedes weitere Board:</b> Werkzeuge aus der Bibliothek ziehen, anordnen lassen, exportieren.'
+  ];
+  var chain = document.getElementById('chain'), noMill = document.getElementById('noMill');
+  var fCount = document.getElementById('fCount'), fTime = document.getElementById('fTime'), fSay = document.getElementById('fSay');
+  STEPS.forEach(function(s, i){
+    var li = document.createElement('li'); li.className = 'stp';
+    li.innerHTML = '<span class="no">' + String(i + 1).padStart(2, '0') + '</span><span class="lb"></span><span class="why"></span>';
+    chain.appendChild(li); s.li = li; s.lb = li.querySelector('.lb'); s.why = li.querySelector('.why');
+  });
+  var mode = 0, flowTimers = [];
+  function renderFlow(){
+    flowTimers.forEach(clearTimeout); flowTimers = [];
+    var svc = noMill.checked, n = 0;
+    STEPS.forEach(function(s, i){
+      var st = s.m[mode] ? s.m[mode][0] : 'k', why = s.m[mode] ? s.m[mode][1] : '', label = s.t, isNew = false;
+      if (svc && s.svc){
+        if (i === 9){ st = 'c'; why = 'wir fräsen für Sie'; }
+        else { label = s.svc; why = 'bei Seiton Boards'; st = 'h'; isNew = true; }
+      }
+      s.lb.textContent = label; s.why.textContent = why;
+      var li = s.li;
+      li.classList.toggle('new', isNew);
+      if (st === 'c'){
+        if (!li.classList.contains('cut')){
+          li.classList.add('cut'); li.classList.remove('kept', 'help');
+          flowTimers.push(setTimeout(function(){ li.classList.add('gone'); }, reduce ? 0 : 900 + i * 60));
+        }
+      } else {
+        n++;
+        li.classList.remove('cut', 'gone');
+        li.classList.toggle('kept', mode > 0 && !isNew);
+        li.classList.toggle('help', st === 'h');
+      }
+    });
+    fCount.innerHTML = n + '<small>' + (n === 1 ? 'Schritt' : 'Schritte') + '</small>';
+    fTime.innerHTML = TIMES[mode] + '<small>h</small>';
+    fSay.innerHTML = SAYS[mode] + ' <span class="est">geschätzt</span>';
+  }
+  var flowSeg = document.getElementById('flowSeg'), userTouched = false;
+  function setMode(m, btn){ mode = m; pressed(flowSeg, btn || flowSeg.querySelector('[data-m="' + m + '"]')); renderFlow(); }
+  flowSeg.addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; userTouched = true; setMode(+b.getAttribute('data-m'), b); });
+  noMill.addEventListener('change', function(){ userTouched = true; if (mode === 0) setMode(1); else renderFlow(); });
+  renderFlow();
+  onView(chain, function(){
+    if (reduce) return;
+    setTimeout(function(){ if (!userTouched) setMode(1); }, 1400);
+    setTimeout(function(){ if (!userTouched) setMode(2); }, 4600);
+  }, .25);
 
   /* ---------- Digitalisierungs-Demo ---------- */
   var stage = document.getElementById('digStage'), btn = document.getElementById('digBtn');
@@ -690,8 +992,68 @@ section.s{padding:140px 0 0}
     timers.push(setTimeout(function(){ setStep(4); tNum.textContent = '20,0'; btn.disabled = false; btn.textContent = 'Nochmal digitalisieren'; }, seq[4]));
   }
   btn.addEventListener('click', runDig);
-  var digRan = false;
-  new IntersectionObserver(function(ents){ ents.forEach(function(en){ if (en.isIntersecting && !digRan){ digRan = true; runDig(); } }); }, { threshold: .55 }).observe(stage);
+  onView(stage, runDig, .55);
+  document.querySelectorAll('.way').forEach(function(w){ w.addEventListener('click', function(){ document.querySelectorAll('.way').forEach(function(x){ x.classList.toggle('on', x === w); }); }); });
+
+  /* ---------- Tiefe: gestufte Tasche in 3D (Schichten in CSS 3D) ---------- */
+  var obj = document.getElementById('obj'), scene = document.getElementById('scene');
+  var PX = 3, PLATE = 30, rx = 58, rz = -24, flat = false;
+  // Flächen in Tafel-Koordinaten (600 × 340); Tiefe in mm, 3 px je mm
+  var REG = [
+    { key:'head', color:D3, shapes:[['c',140,170,62],['c',462,170,52]] },
+    { key:'grip', color:D1, shapes:[['r',140,150,322,40,20]] },
+    { key:'rec',  color:A2, shapes:[['r',258,112,86,116,43]] }
+  ];
+  var depthMm = { head:14, grip:8, rec:20 };
+  function shape(g, s, attrs){
+    var a = {}; for (var k in attrs) a[k] = attrs[k];
+    if (s[0] === 'c'){ a.cx = s[1]; a.cy = s[2]; a.r = s[3]; return el('circle', a, g); }
+    a.x = s[1]; a.y = s[2]; a.width = s[3]; a.height = s[4]; a.rx = s[5]; return el('rect', a, g);
+  }
+  function layerSvg(z){ var s = el('svg', { viewBox:'0 0 600 340', width:600, height:340 }); s.style.transform = 'translateZ(' + z + 'px)'; obj.appendChild(s); return s; }
+  function buildPocket(){
+    obj.textContent = '';
+    var maxD = Math.max(depthMm.head, depthMm.grip, depthMm.rec);
+    // Plattenunterseite und Seitenwände der Platte
+    var bot = layerSvg(-PLATE * PX); el('rect', { x:0, y:0, width:600, height:340, rx:6, fill:'#12141c', stroke:'#2A2D3E', 'stroke-width':1.5 }, bot);
+    for (var z = PLATE - 3; z > 0; z -= 3){ var w = layerSvg(-z * PX); el('rect', { x:0, y:0, width:600, height:340, rx:6, fill:'none', stroke:'#2A2D3E', 'stroke-width':1.2 }, w); }
+    // Taschenböden, tiefster zuerst (Maler-Reihenfolge)
+    REG.slice().sort(function(a, b){ return depthMm[b.key] - depthMm[a.key]; }).forEach(function(r){
+      var f = layerSvg(-depthMm[r.key] * PX);
+      r.shapes.forEach(function(s){ shape(f, s, { fill:r.color, 'fill-opacity':.9 }); });
+    });
+    // Taschenwände als Höhenlinien je 1,5 mm
+    for (var d = maxD; d > 0; d -= 1.5){
+      var sl = layerSvg(-d * PX);
+      REG.forEach(function(r){ if (depthMm[r.key] >= d) r.shapes.forEach(function(s){ shape(sl, s, { fill:'none', stroke:r.color, 'stroke-width':1.6, 'stroke-opacity':.55 }); }); });
+    }
+    // Oberseite mit Loch (Maske) und Gravur
+    var top = layerSvg(0), mid = 'm' + Math.random().toString(36).slice(2, 7);
+    var mask = el('mask', { id:mid }, el('defs', {}, top));
+    el('rect', { x:0, y:0, width:600, height:340, fill:'#fff' }, mask);
+    REG.forEach(function(r){ r.shapes.forEach(function(s){ shape(mask, s, { fill:'#000' }); }); });
+    el('rect', { x:0, y:0, width:600, height:340, rx:6, fill:'#232737', stroke:'#3a3f55', 'stroke-width':2, mask:'url(#' + mid + ')' }, top);
+    REG.forEach(function(r){ r.shapes.forEach(function(s){ shape(top, s, { fill:'none', stroke:'#E2E8F0', 'stroke-width':1.4, 'stroke-opacity':.8 }); }); });
+    var tx = el('text', { x:300, y:296, 'text-anchor':'middle', 'font-size':16, 'letter-spacing':4, fill:'none', stroke:'#94A3B8', 'stroke-width':.8, 'font-family':'Archivo, sans-serif' }, top);
+    tx.textContent = 'GABELSCHLÜSSEL 17';
+  }
+  function view(){ obj.style.transform = flat ? 'rotateX(0deg) rotateZ(0deg) scale(.86)' : 'rotateX(' + rx + 'deg) rotateZ(' + rz + 'deg) scale(.86)'; }
+  function fit(){ obj.style.scale = Math.min(1, scene.clientWidth / 640); }
+  [['rHead','oHead','head'],['rGrip','oGrip','grip'],['rRec','oRec','rec']].forEach(function(a){
+    var r = document.getElementById(a[0]), o = document.getElementById(a[1]);
+    r.addEventListener('input', function(){ depthMm[a[2]] = +r.value; o.textContent = r.value + ' mm'; buildPocket(); });
+  });
+  var v3 = document.getElementById('v3d'), v2 = document.getElementById('v2d');
+  v3.addEventListener('click', function(){ flat = false; pressed(v3.parentNode, v3); view(); });
+  v2.addEventListener('click', function(){ flat = true; pressed(v2.parentNode, v2); view(); });
+  var drag = null;
+  scene.addEventListener('pointerdown', function(e){ if (e.target.closest('button')) return; drag = { x:e.clientX, y:e.clientY, rx:rx, rz:rz }; scene.setPointerCapture(e.pointerId); scene.classList.add('live', 'grab'); if (flat){ flat = false; pressed(v3.parentNode, v3); } });
+  scene.addEventListener('pointermove', function(e){ if (!drag) return; rz = drag.rz + (e.clientX - drag.x) * .4; rx = clamp(drag.rx - (e.clientY - drag.y) * .3, 0, 78); view(); });
+  function up(){ drag = null; scene.classList.remove('live', 'grab'); }
+  scene.addEventListener('pointerup', up); scene.addEventListener('pointercancel', up);
+  buildPocket(); fit(); window.addEventListener('resize', fit);
+  obj.style.transform = 'rotateX(0deg) rotateZ(0deg) scale(.86)';
+  onView(scene, function(){ setTimeout(view, reduce ? 0 : 250); }, .4);
 
   /* ---------- Bibliothek-Suche ---------- */
   var input = document.getElementById('libSearch'), tiles = document.querySelectorAll('#tiles .tile');
@@ -739,21 +1101,49 @@ section.s{padding:140px 0 0}
   dlg.addEventListener('click', function(e){
     var a = e.target.closest('[data-a]'); if (!a) return; var act = a.getAttribute('data-a'); dlg.classList.remove('open');
     if (act === 'save'){ boards.forEach(function(b, k){ setTimeout(function(){ setV(b, true); }, reduce ? 0 : k * 70); }); toast('Gespeichert: 12 Boards aktualisiert'); }
-    if (act === 'copy'){ var b = boards[0]; setV(b, true); if (!b.el.querySelector('.var')){ var v = document.createElement('span'); v.className = 'var'; v.textContent = 'Variante'; b.el.appendChild(v); } toast('Als Kopie gespeichert: nur Board A geändert'); }
+    if (act === 'copy'){ var b = boards[0]; setV(b, true); if (!b.el.querySelector('.var')){ var v = document.createElement('span'); v.className = 'var'; v.textContent = 'Kopie'; b.el.appendChild(v); } toast('Als Kopie gespeichert – Board A nutzt die Kopie'); }
   });
   document.getElementById('resetBoards').addEventListener('click', function(){ boards.forEach(function(b){ setV(b, false); var v = b.el.querySelector('.var'); if (v) v.remove(); }); dlg.classList.remove('open'); });
 
+  /* ---------- Fräsen: eigene Fräse oder Seiton Boards ---------- */
+  var millSeg = document.getElementById('millSeg'), otrack = document.querySelectorAll('#otrack li'), oT = [];
+  millSeg.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return; pressed(millSeg, b);
+    var svc = b.getAttribute('data-k') === 'svc';
+    ['clOwn','pnOwn'].forEach(function(id){ document.getElementById(id).classList.toggle('off', svc); });
+    ['clSvc','pnSvc'].forEach(function(id){ document.getElementById(id).classList.toggle('off', !svc); });
+    oT.forEach(clearTimeout); oT = []; otrack.forEach(function(li){ li.classList.remove('done'); });
+    if (svc) otrack.forEach(function(li, k){ oT.push(setTimeout(function(){ li.classList.add('done'); }, reduce ? 0 : 350 + k * 450)); });
+  });
+
   /* ---------- Zeit-Zähler ---------- */
-  var clock = document.getElementById('clockNew'), timeBox = document.getElementById('timeBox');
-  function fmt(min){ var h = Math.floor(min / 60), m = Math.round(min % 60); return h + ':' + (m < 10 ? '0' : '') + m + ' h'; }
-  new IntersectionObserver(function(ents, o){
-    ents.forEach(function(en){
-      if (!en.isIntersecting) return; o.disconnect();
-      if (reduce){ clock.textContent = fmt(30); return; }
-      var t0 = performance.now(), dur = 1800;
-      (function tick(now){ var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3); clock.textContent = fmt(360 - 330 * e); if (p < 1) requestAnimationFrame(tick); })(t0);
-    });
-  }, { threshold: .5 }).observe(timeBox);
+  var clock = document.getElementById('clockNew'), clockN = document.getElementById('clockNext'), timeBox = document.getElementById('timeBox');
+  function fmt(min){ var h = Math.floor(min / 60), m = Math.round(min % 60); if (m === 60){ h++; m = 0; } return h + ':' + (m < 10 ? '0' : '') + m + ' h'; }
+  function count(elm, to, dur){
+    if (reduce){ elm.textContent = fmt(to); return; }
+    var t0 = performance.now();
+    (function tick(now){ var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3); elm.textContent = fmt(360 - (360 - to) * e); if (p < 1) requestAnimationFrame(tick); })(t0);
+  }
+  onView(timeBox, function(){ count(clock, 20, 1800); setTimeout(function(){ count(clockN, 5, 1800); }, reduce ? 0 : 500); });
+
+  /* ---------- Seiton: vier Teile auf der Kette ---------- */
+  var railSpans = document.querySelectorAll('#famRail span');
+  function lightRail(parts){ railSpans.forEach(function(s){ s.classList.toggle('hl', parts.indexOf(s.getAttribute('data-p')) > -1); }); }
+  document.querySelectorAll('#fam .card').forEach(function(c){
+    var parts = c.getAttribute('data-p').split(' ');
+    c.addEventListener('mouseenter', function(){ lightRail(parts); });
+    c.addEventListener('focus', function(){ lightRail(parts); });
+    c.addEventListener('click', function(){ lightRail(parts); });
+    c.addEventListener('mouseleave', function(){ lightRail([]); });
+  });
+
+  /* ---------- Aktiver Reiter in der Kopfleiste ---------- */
+  var tabs = document.querySelectorAll('.tabs a');
+  var secs = Array.prototype.map.call(tabs, function(a){ return document.querySelector(a.getAttribute('href')); });
+  var tabIO = new IntersectionObserver(function(ents){
+    ents.forEach(function(en){ if (en.isIntersecting){ tabs.forEach(function(a, k){ a.classList.toggle('on', secs[k] === en.target); }); } });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(function(sct){ if (sct) tabIO.observe(sct); });
 })();
 </script>
 </body>
