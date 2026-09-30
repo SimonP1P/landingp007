@@ -6,6 +6,7 @@
 <title>Seiton Studio – Werkzeuge digitalisieren. Shadowboards standardisieren.</title>
 <meta name="description" content="Seiton Studio digitalisiert Werkzeuge maßhaltig, verwaltet sie in einer Bibliothek und macht daraus standardisierte Shadowboards – als DXF für Ihre Fräse oder gefräst von Seiton Boards.">
 <meta name="theme-color" content="#0F1117">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Crect width='34' height='34' rx='6' fill='%234F8EF7'/%3E%3Cg transform='rotate%28-35 17 17%29'%3E%3Cpath fill='%230F1117' fill-rule='evenodd' d='M4.3 15.3H9A1.7 1.7 0 0 1 9 18.7H4.3A5 5 0 0 0 13.58 19L22.21 18.8A4.2 4.2 0 1 0 22.21 15.2L13.58 15A5 5 0 0 0 4.3 15.3ZM27.8 17A1.8 1.8 0 1 0 24.2 17A1.8 1.8 0 1 0 27.8 17Z'/%3E%3Crect x='15.6' y='10.5' width='3.6' height='13' rx='1.8' fill='%2338BDF8'/%3E%3C/g%3E%3C/svg%3E">
 <style>
 /* Archivo, lokal ausgeliefert (SIL Open Font License, fonts/OFL.txt) – kein Nachladen von Google */
 @font-face{font-family:"Archivo";font-style:normal;font-weight:300 900;font-stretch:62% 125%;font-display:swap;src:url(fonts/archivo-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
@@ -77,19 +78,6 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 .less span{color:var(--muted-light)}
 .less span b{color:var(--text);font-weight:700}
 .hero-cta{display:flex;flex-direction:column;gap:10px}
-
-/* 5S-Leiste: Seiton ist das zweite S */
-.fives{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin-top:8px;border:1px solid var(--border);border-radius:8px;overflow:hidden;width:max-content;max-width:100%}
-.fives button{display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:8px 14px;border:0;border-right:1px solid var(--border);background:transparent;cursor:pointer;text-align:left;color:var(--muted);transition:background .2s,color .2s}
-.fives button:last-child{border-right:0}
-.fives button b{font-family:var(--display);font-stretch:80%;font-size:17px;font-weight:700;line-height:1.1}
-.fives button span{font-size:12px}
-.fives button:hover{color:var(--muted-light)}
-.fives button.me{background:var(--accent);color:var(--white)}
-.fives button.me span{color:rgba(255,255,255,.85)}
-.kanji{font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;font-weight:600}
-.five-say{margin-top:10px;font-size:15px;color:var(--muted-light);min-height:1.5em}
-.five-say b{color:var(--text)}
 
 /* Spielfläche */
 .play{margin-top:56px;border:1px solid var(--border);border-radius:10px;background:var(--panel);overflow:hidden}
@@ -168,7 +156,7 @@ section.s{padding:140px 0 0}
 .dig-stage{position:relative;border:1px solid var(--border);border-radius:10px;background:var(--panel);overflow:hidden;aspect-ratio:600/380}
 .photo{position:absolute;inset:0;transform:perspective(900px) rotateX(26deg) rotateZ(-7deg) scale(.82) translateY(18px);transition:transform 1s var(--ease), opacity .6s}
 .dig-stage.s1 .photo{transform:none}
-.dig-stage.s3 .photo{opacity:.18}
+.dig-stage.s3 .photo{opacity:.3}
 .overlay{position:absolute;inset:0}
 .scan{opacity:0}
 .dig-stage.s2 .scan{animation:scan 1.2s ease-in-out forwards}
@@ -189,12 +177,19 @@ section.s{padding:140px 0 0}
 .steps li.done i{background:var(--success);border-color:var(--success)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .note{font-size:14px;color:var(--muted-light)}
-.ways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:28px}
+.ways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px}
 .way{border:1px solid var(--border);border-radius:10px;padding:20px;background:transparent;text-align:left;cursor:pointer;transition:border-color .2s,background .2s}
 .way:hover,.way.on{border-color:var(--accent);background:var(--selected)}
 .way span{font-family:var(--mono);font-size:12px;color:var(--accent2)}
 .way b{display:block;margin-top:10px;font-family:var(--display);font-stretch:75%;font-size:26px;line-height:1.05}
-.way p{margin-top:8px;font-size:15px;color:var(--muted-light)}
+.ways-h{margin-top:64px;font-size:clamp(30px,3.2vw,44px);font-stretch:70%;line-height:1}
+.way-text{margin-top:12px;border:1px solid var(--border);border-radius:10px;background:var(--panel);padding:22px 24px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px 40px;align-items:start;min-height:150px}
+.way-text p{font-size:18px;color:#C3CCD8}
+.way-text ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.way-text li{font-size:15px;color:var(--muted-light);padding-left:20px;position:relative}
+.way-text li::before{content:"";position:absolute;left:0;top:.55em;width:8px;height:8px;border-radius:50%;background:var(--accent2)}
+.way-text.swap-in{animation:wayIn .35s var(--ease)}
+@keyframes wayIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 /* Tiefe: Kavität in 3D */
 .depth{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;margin-top:52px;align-items:stretch}
@@ -300,7 +295,6 @@ section.s{padding:140px 0 0}
 .card h3{font-size:clamp(30px,2.6vw,40px);font-stretch:70%;line-height:.95}
 .card h3 small{display:block;font-size:.5em;font-weight:600;font-stretch:100%;letter-spacing:.02em;color:var(--muted-light);margin-top:6px}
 .card p{font-size:15px;color:var(--muted-light)}
-.card .for{margin-top:auto;font-family:var(--mono);font-size:12px;color:var(--accent2)}
 
 /* Für wen */
 .who{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;margin-top:48px}
@@ -329,7 +323,7 @@ section.s{padding:140px 0 0}
 .cta-btns{display:grid;gap:10px}
 
 /* Schriftfeld */
-.title-block{margin:48px 0;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border:2px solid var(--muted);font-size:14px}
+.title-block{margin:48px 0;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;font-size:14px}
 .title-block>div{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 14px;display:grid;gap:2px}
 .title-block>div:nth-child(4n){border-right:0}
 .title-block>div:nth-last-child(-n+4){border-bottom:0}
@@ -364,6 +358,7 @@ section.s{padding:140px 0 0}
   .stp .why{margin:2px 0 0;text-align:left;min-height:0}
   .stp.gone{max-height:0;padding:0}
   .ways{grid-template-columns:minmax(0,1fr)}
+  .way-text{grid-template-columns:minmax(0,1fr)}
   .fam-rail span{font-size:10px;letter-spacing:.02em}
 }
 @media (max-width:700px){
@@ -381,10 +376,6 @@ section.s{padding:140px 0 0}
   .title-block>div:nth-last-child(-n+4){border-bottom:1px solid var(--border)}
   .title-block>div:nth-last-child(-n+2){border-bottom:0}
   section.s{padding-top:100px}
-  .fives{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));width:100%}
-  .fives button{padding:8px 4px;align-items:center;text-align:center}
-  .fives button b{font-size:14px}
-  .fives button span,.fives button .kanji{display:none}
   .flow{padding:22px 14px 20px}
   .rail{left:32px}
   .seg button{padding:9px 12px;font-size:14px}
@@ -399,7 +390,7 @@ section.s{padding:140px 0 0}
 <header class="top">
   <div class="wrap">
     <a class="logo" href="#top" aria-label="Seiton Studio – Startseite">
-      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="6" fill="#4F8EF7"/><rect x="7" y="12" width="20" height="10" rx="5" fill="#0F1117"/><rect x="12" y="15" width="10" height="4" rx="2" fill="#38BDF8"/></svg>
+      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="6" fill="#4F8EF7"/><g transform="rotate(-35 17 17)"><path fill="#0F1117" fill-rule="evenodd" d="M4.3 15.3H9A1.7 1.7 0 0 1 9 18.7H4.3A5 5 0 0 0 13.58 19L22.21 18.8A4.2 4.2 0 1 0 22.21 15.2L13.58 15A5 5 0 0 0 4.3 15.3ZM27.8 17A1.8 1.8 0 1 0 24.2 17A1.8 1.8 0 1 0 27.8 17Z"/><rect x="15.6" y="10.5" width="3.6" height="13" rx="1.8" fill="#38BDF8"/></g></svg>
       Seiton <small>Studio</small>
     </a>
     <nav class="tabs" aria-label="Hauptnavigation">
@@ -420,15 +411,6 @@ section.s{padding:140px 0 0}
 <section class="hero">
   <div class="wrap">
 
-    <div class="fives" role="group" aria-label="Die 5S – Seiton ist das zweite S">
-      <button type="button" data-say="<b>Seiri</b> – sortieren: Was nicht gebraucht wird, kommt weg."><b>Seiri</b><span>Sortieren</span></button>
-      <button type="button" class="me" data-say="<b>Seiton <span class='kanji'>整頓</span></b> – ordnen: Jedes Werkzeug hat seinen festen Platz. Genau dafür gibt es Shadowboards – und diese Software."><b>Seiton <span class="kanji">整頓</span></b><span>Ordnen</span></button>
-      <button type="button" data-say="<b>Seiso</b> – säubern: Sauber ist, was schnell sichtbar wird."><b>Seiso</b><span>Säubern</span></button>
-      <button type="button" data-say="<b>Seiketsu</b> – standardisieren: Jedes Board nach demselben Muster."><b>Seiketsu</b><span>Standardisieren</span></button>
-      <button type="button" data-say="<b>Shitsuke</b> – Disziplin: Ordnung halten, weil sie leicht fällt."><b>Shitsuke</b><span>Disziplin</span></button>
-    </div>
-    <p class="five-say" id="fiveSay" aria-live="polite"><b>Seiton <span class="kanji">整頓</span></b> – japanisch „ordnen“. Das zweite S von 5S.</p>
-
     <h1 class="h-title">
       <span class="l">Werkzeuge digitalisieren.</span>
       <span class="r blue">Shadowboards standardisieren.</span>
@@ -438,8 +420,8 @@ section.s{padding:140px 0 0}
       <p>Vom Werkzeug auf dem Tisch zum fertigen Shadowboard. Fräsen Sie selbst – oder lassen Sie Seiton Boards fräsen.</p>
       <div class="less">
         <span><b>Kein</b> Nachzeichnen.</span>
-        <span><b>Kein</b> Nachmessen.</span>
-        <span><b>Keine</b> Tiefe pro Tasche.</span>
+        <span><b>Kein</b> Dokumentenwirrwarr.</span>
+        <span><b>Kein</b> Gefrickel.</span>
       </div>
       <div class="hero-cta">
         <a class="btn" href="#demo">Live-Demo ansehen</a>
@@ -520,22 +502,23 @@ section.s{padding:140px 0 0}
         <div class="photo" aria-hidden="true">
           <svg viewBox="0 0 600 380" width="100%" height="100%">
             <defs><g id="mk"><rect width="44" height="44" fill="#0F1117"/><rect x="8" y="8" width="9" height="9" fill="#fff"/><rect x="26" y="8" width="9" height="9" fill="#fff"/><rect x="17" y="17" width="9" height="9" fill="#fff"/><rect x="8" y="26" width="18" height="9" fill="#fff"/><rect x="26" y="26" width="9" height="9" fill="#fff"/></g></defs>
-            <rect width="600" height="380" fill="#F4F7FB"/>
+            <defs><linearGradient id="steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E4E9F0"/><stop offset=".42" stop-color="#A3AEBD"/><stop offset=".58" stop-color="#8793A3"/><stop offset="1" stop-color="#566072"/></linearGradient>
+              <filter id="toolShadow" x="-10%" y="-40%" width="125%" height="190%"><feDropShadow dx="7" dy="12" stdDeviation="7" flood-color="#0F1117" flood-opacity=".38"/></filter></defs>
+            <rect width="600" height="380" fill="#FFFFFF"/>
             <use href="#mk" x="18" y="18"/><use href="#mk" x="538" y="18"/><use href="#mk" x="18" y="318"/><use href="#mk" x="538" y="318"/>
-            <g fill="#1A1D27"><rect x="140" y="178" width="320" height="26" rx="13"/><circle cx="140" cy="191" r="42"/><circle cx="462" cy="191" r="36"/></g>
-            <g fill="#F4F7FB"><rect x="94" y="178" width="46" height="26"/><circle cx="462" cy="191" r="15"/></g>
+            <path d="M106 174H140A17 17 0 0 1 140 208H106L114.8 227A44 44 0 0 0 181 207L428.8 205A36 36 0 1 0 428.8 177L181 175A44 44 0 0 0 114.8 155ZM478 191A16 16 0 1 0 446 191A16 16 0 1 0 478 191Z" fill="url(#steel)" fill-rule="evenodd" stroke="#4B5563" stroke-width="1" filter="url(#toolShadow)"/>
+            <path d="M192 182.5L420 184" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M122 158A40 40 0 0 1 170 162M436 164A32 32 0 0 1 488 176" fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </div>
         <svg class="overlay" viewBox="0 0 600 380" width="100%" height="100%" role="img" aria-label="Werkzeugfoto wird entzerrt, abgetastet und als Vektorkontur erkannt">
           <rect class="scan" x="0" y="0" width="600" height="4" fill="#38BDF8"/>
           <g>
-            <rect class="draw" pathLength="1" x="140" y="178" width="320" height="26" rx="13"/>
-            <circle class="draw" pathLength="1" cx="140" cy="191" r="42"/>
-            <circle class="draw" pathLength="1" cx="462" cy="191" r="36"/>
-            <circle class="draw" pathLength="1" cx="462" cy="191" r="15"/>
+            <path class="draw" pathLength="1" d="M106 174H140A17 17 0 0 1 140 208H106L114.8 227A44 44 0 0 0 181 207L428.8 205A36 36 0 1 0 428.8 177L181 175A44 44 0 0 0 114.8 155Z"/>
+            <circle class="draw" pathLength="1" cx="462" cy="191" r="16"/>
           </g>
-          <g fill="#E2E8F0"><circle class="node" cx="98" cy="191" r="4.5"/><circle class="node" cx="182" cy="178" r="4.5"/><circle class="node" cx="300" cy="178" r="4.5"/><circle class="node" cx="426" cy="204" r="4.5"/><circle class="node" cx="498" cy="191" r="4.5"/><circle class="node" cx="140" cy="233" r="4.5"/><circle class="node" cx="300" cy="204" r="4.5"/></g>
-          <g class="fade" stroke="#38BDF8" stroke-width="1.5"><line x1="98" y1="280" x2="498" y2="280"/><line x1="98" y1="270" x2="98" y2="290"/><line x1="498" y1="270" x2="498" y2="290"/></g>
+          <g fill="#E2E8F0" stroke="#0F1117" stroke-width="1.5"><circle class="node" cx="106" cy="174" r="4.5"/><circle class="node" cx="106" cy="208" r="4.5"/><circle class="node" cx="114.8" cy="155" r="4.5"/><circle class="node" cx="114.8" cy="227" r="4.5"/><circle class="node" cx="157" cy="191" r="4.5"/><circle class="node" cx="181" cy="175" r="4.5"/><circle class="node" cx="428.8" cy="205" r="4.5"/><circle class="node" cx="498" cy="191" r="4.5"/></g>
+          <g class="fade" stroke="#38BDF8" stroke-width="1.5"><line x1="106" y1="280" x2="498" y2="280"/><line x1="106" y1="270" x2="106" y2="290"/><line x1="498" y1="270" x2="498" y2="290"/></g>
           <g class="fade"><rect x="250" y="266" width="100" height="28" fill="#1A1D27"/><text x="300" y="286" text-anchor="middle" fill="#38BDF8" font-size="15" font-family="Segoe UI, Archivo, sans-serif">200,0 mm</text></g>
         </svg>
       </div>
@@ -553,11 +536,13 @@ section.s{padding:140px 0 0}
       </div>
     </div>
 
-    <div class="ways" role="group" aria-label="Drei Wege zum digitalen Werkzeug">
-      <button class="way on" type="button"><span>Weg 1</span><b>Handy + Messbogen</b><p>Messbogen ausdrucken, Werkzeug drauf, Foto. Keine Hardware nötig.</p></button>
-      <button class="way" type="button"><span>Weg 2</span><b>Seiton Capture</b><p>Die Aufnahmebox: Werkzeug rein, Knopf drücken. Gleiches Licht, gleiche Genauigkeit, jedes Mal.</p></button>
-      <button class="way" type="button"><span>Weg 3</span><b>Datei</b><p>Vorhandene DXF oder eine Werkzeug-Datei von einem anderen Standort übernehmen.</p></button>
+    <h3 class="ways-h">Drei Wege zum digitalen Werkzeug</h3>
+    <div class="ways" role="group" aria-label="Weg wählen">
+      <button class="way on" type="button" aria-pressed="true" data-w="0"><span>Weg 1</span><b>Handy + Messbogen</b></button>
+      <button class="way" type="button" aria-pressed="false" data-w="1"><span>Weg 2</span><b>Seiton Capture</b></button>
+      <button class="way" type="button" aria-pressed="false" data-w="2"><span>Weg 3</span><b>Datei</b></button>
     </div>
+    <div class="way-text" id="wayText" aria-live="polite"></div>
   </div>
 </section>
 
@@ -575,7 +560,7 @@ section.s{padding:140px 0 0}
         <div class="scene-hint">Ziehen zum Drehen</div>
       </div>
       <div class="depth-side">
-        <div class="rg"><div class="rg-h"><span><i style="background:#2F4F8F"></i>Maulköpfe</span><b id="oHead">14 mm</b></div><input type="range" min="4" max="30" value="14" id="rHead" aria-label="Dicke der Maulköpfe in mm"></div>
+        <div class="rg"><div class="rg-h"><span><i style="background:#2F4F8F"></i>Köpfe</span><b id="oHead">14 mm</b></div><input type="range" min="4" max="30" value="14" id="rHead" aria-label="Dicke der Köpfe in mm"></div>
         <div class="rg"><div class="rg-h"><span><i style="background:#4F8EF7"></i>Griff</span><b id="oGrip">8 mm</b></div><input type="range" min="4" max="30" value="8" id="rGrip" aria-label="Dicke des Griffs in mm"></div>
         <div class="rg"><div class="rg-h"><span><i style="background:#38BDF8"></i>Griffmulde</span><b id="oRec">20 mm</b></div><input type="range" min="10" max="34" value="20" id="rRec" aria-label="Tiefe der Griffmulde in mm"></div>
         <p class="formula">Die Frästiefe jeder Fläche ergibt sich aus ihrer <b>Dicke</b> und der <b>Eintauchtiefe</b> – etwa 70 % versenkt oder 5 mm Überstand zum Greifen. Jede Tiefe landet auf ihrer eigenen Ebene im DXF.</p>
@@ -603,14 +588,14 @@ section.s{padding:140px 0 0}
     </div>
     <p class="count" id="libCount">8 Werkzeuge</p>
     <div class="tiles" id="tiles">
-      <div class="tile" data-s="gabelschlüssel 17 schlüssel montage 1"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#4F8EF7"><rect x="42" y="33" width="116" height="14" rx="7"/><circle cx="42" cy="40" r="18"/><circle cx="160" cy="40" r="15"/></g><g fill="#0F1117"><rect x="18" y="34" width="24" height="12"/><circle cx="160" cy="40" r="6"/></g><rect x="86" y="26" width="30" height="28" rx="14" fill="#38BDF8"/></svg></div><div><b>Gabelschlüssel 17</b><small>Schlüssel · Montage 1</small></div><span class="u">auf 12 Boards</span></div>
-      <div class="tile" data-s="schraubendreher ph2 schraubendreher montage 1"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="24" y="26" width="70" height="28" rx="12"/><rect x="92" y="36" width="80" height="8" rx="2"/></g><rect x="44" y="18" width="28" height="44" rx="14" fill="#38BDF8"/></svg></div><div><b>Schraubendreher PH2</b><small>Schraubendreher · Montage 1</small></div><span class="u">auf 5 Boards</span></div>
-      <div class="tile" data-s="kombizange 180 zange zangen maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g transform="translate(76 40)" stroke="#2F4F8F" stroke-linecap="round"><line x1="-50" x2="0" stroke-width="12"/><line x2="90" y2="-20" stroke-width="11"/><line x2="90" y2="20" stroke-width="11"/></g><circle cx="76" cy="40" r="9" fill="#2F4F8F"/><circle cx="160" cy="40" r="16" fill="#38BDF8"/></svg></div><div><b>Kombizange 180</b><small>Zangen · Maschine 4</small></div><span class="u">auf 3 Boards</span></div>
-      <div class="tile" data-s="seitenschneider zange zangen maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g transform="translate(70 40)" stroke="#3E6CC4" stroke-linecap="round"><line x1="-36" x2="0" stroke-width="14"/><line x2="96" y2="-16" stroke-width="10"/><line x2="96" y2="16" stroke-width="10"/></g><circle cx="70" cy="40" r="8" fill="#3E6CC4"/></svg></div><div><b>Seitenschneider</b><small>Zangen · Maschine 4</small></div><span class="u">auf 2 Boards</span></div>
-      <div class="tile" data-s="schlosserhammer hammer hämmer instandhaltung"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="30" y="34" width="120" height="12" rx="6"/><rect x="146" y="15" width="24" height="50" rx="4"/></g><rect x="54" y="24" width="30" height="32" rx="15" fill="#38BDF8"/></svg></div><div><b>Schlosserhammer</b><small>Hämmer · Instandhaltung</small></div><span class="u">auf 1 Board</span></div>
-      <div class="tile" data-s="innensechskant 6 schlüssel montage 1"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><path d="M60 20 L60 60 L140 60" fill="none" stroke="#4F8EF7" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><b>Innensechskant 6</b><small>Schlüssel · Montage 1</small></div><span class="u">auf 7 Boards</span></div>
-      <div class="tile" data-s="messschieber messmittel messen instandhaltung"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#2F4F8F"><rect x="30" y="36" width="140" height="10" rx="2"/><rect x="36" y="14" width="12" height="46" rx="2"/><rect x="70" y="18" width="12" height="38" rx="2"/></g></svg></div><div><b>Messschieber</b><small>Messmittel · Instandhaltung</small></div><span class="u">auf 2 Boards</span></div>
-      <div class="tile" data-s="drehmomentschlüssel schlüssel maschine 4"><div class="th"><svg viewBox="0 0 200 80" width="170" aria-hidden="true"><g fill="#3E6CC4"><rect x="30" y="34" width="130" height="12" rx="6"/><circle cx="166" cy="40" r="12"/><rect x="30" y="30" width="46" height="20" rx="8"/></g><rect x="36" y="22" width="30" height="36" rx="15" fill="#38BDF8"/></svg></div><div><b>Drehmomentschlüssel</b><small>Schlüssel · Maschine 4</small></div><span class="u">auf 4 Boards</span></div>
+      <div class="tile" data-s="ring-maulschlüssel 17 maulschlüssel gabelschlüssel schlüssel montage 1"><div class="th" data-t="wrench"></div><div><b>Ring-Maulschlüssel 17</b><small>Schlüssel · Montage 1</small></div><span class="u">auf 12 Boards</span></div>
+      <div class="tile" data-s="schraubendreher ph2 schraubendreher montage 1"><div class="th" data-t="driver"></div><div><b>Schraubendreher PH2</b><small>Schraubendreher · Montage 1</small></div><span class="u">auf 5 Boards</span></div>
+      <div class="tile" data-s="kombizange 180 zange zangen maschine 4"><div class="th" data-t="pliers"></div><div><b>Kombizange 180</b><small>Zangen · Maschine 4</small></div><span class="u">auf 3 Boards</span></div>
+      <div class="tile" data-s="seitenschneider zange zangen maschine 4"><div class="th" data-t="cutter"></div><div><b>Seitenschneider</b><small>Zangen · Maschine 4</small></div><span class="u">auf 2 Boards</span></div>
+      <div class="tile" data-s="schlosserhammer hammer hämmer instandhaltung"><div class="th" data-t="hammer"></div><div><b>Schlosserhammer</b><small>Hämmer · Instandhaltung</small></div><span class="u">auf 1 Board</span></div>
+      <div class="tile" data-s="innensechskant 6 schlüssel montage 1"><div class="th" data-t="allen"></div><div><b>Innensechskant 6</b><small>Schlüssel · Montage 1</small></div><span class="u">auf 7 Boards</span></div>
+      <div class="tile" data-s="messschieber messmittel messen instandhaltung"><div class="th" data-t="caliper"></div><div><b>Messschieber</b><small>Messmittel · Instandhaltung</small></div><span class="u">auf 2 Boards</span></div>
+      <div class="tile" data-s="drehmomentschlüssel schlüssel maschine 4"><div class="th" data-t="torque"></div><div><b>Drehmomentschlüssel</b><small>Schlüssel · Maschine 4</small></div><span class="u">auf 4 Boards</span></div>
     </div>
     <div class="empty" id="libEmpty">Nichts gefunden.</div>
     <div class="lib-foot"><span>Labels und gespeicherte Suchen</span><span>Werkzeuge als Datei weitergeben – zwischen Standorten</span><span>Windows und Mac</span></div>
@@ -626,7 +611,7 @@ section.s{padding:140px 0 0}
       <div class="chg-text">
         <p>Boards sind mit der Bibliothek verknüpft. Überall übernehmen oder als Kopie speichern – Sie entscheiden.</p>
         <div class="chg-ctrl">
-          <button class="btn" id="editTool" type="button">Gabelschlüssel 17 ändern</button>
+          <button class="btn" id="editTool" type="button">Ring-Maulschlüssel 17 ändern</button>
           <button class="btn sec" id="resetBoards" type="button">Zurücksetzen</button>
         </div>
         <div class="dlg" id="dlg" role="dialog" aria-labelledby="dlgT">
@@ -639,7 +624,7 @@ section.s{padding:140px 0 0}
           </div>
         </div>
       </div>
-      <div class="minis" id="minis" aria-label="Zwölf Boards, die den Gabelschlüssel 17 verwenden"></div>
+      <div class="minis" id="minis" aria-label="Zwölf Boards, die den Ring-Maulschlüssel 17 verwenden"></div>
     </div>
   </div>
 </section>
@@ -719,25 +704,21 @@ section.s{padding:140px 0 0}
         <div class="ic"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><rect x="4" y="10" width="56" height="42" rx="5" fill="none" stroke="#4F8EF7" stroke-width="3"/><rect x="14" y="24" width="30" height="8" rx="4" fill="#4F8EF7"/><rect x="24" y="22" width="10" height="12" rx="5" fill="#38BDF8"/><path d="M20 58h24" stroke="#64748B" stroke-width="3" stroke-linecap="round"/></svg></div>
         <h3>Seiton Studio<small>Die Software</small></h3>
         <p>Digitalisieren, Werkzeuge pflegen, Boards gestalten, DXF exportieren. Windows und Mac.</p>
-        <span class="for">Für alle</span>
       </div>
       <div class="card" tabindex="0" data-p="cap">
         <div class="ic"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 20 L32 8 L56 20 V52 H8 Z" fill="none" stroke="#4F8EF7" stroke-width="3" stroke-linejoin="round"/><circle cx="32" cy="22" r="5" fill="#38BDF8"/><path d="M32 27 L20 46 M32 27 L44 46" stroke="#38BDF8" stroke-width="1.5" stroke-dasharray="3 3"/><rect x="14" y="44" width="36" height="4" rx="1" fill="#E2E8F0"/></svg></div>
         <h3>Seiton Capture<small>Die Aufnahmebox</small></h3>
         <p>Kamera, Licht und Messfläche in einer Box. Werkzeug rein, Knopf drücken, fertig.</p>
-        <span class="for">Für viele Werkzeuge</span>
       </div>
       <div class="card" tabindex="0" data-p="lib">
         <div class="ic"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><path d="M16 44a12 12 0 0 1 1-24 16 16 0 0 1 30 4 10 10 0 0 1 1 20Z" fill="none" stroke="#4F8EF7" stroke-width="3" stroke-linejoin="round"/><rect x="22" y="50" width="6" height="6" rx="1" fill="#38BDF8"/><rect x="30" y="50" width="6" height="6" rx="1" fill="#4F8EF7"/><rect x="38" y="50" width="6" height="6" rx="1" fill="#2F4F8F"/></svg></div>
         <h3>Seiton Library<small>Die Werkzeugdatenbank</small></h3>
         <p>Unternehmensübergreifend in der Cloud: Werkzeuge, die schon jemand digitalisiert hat, einfach übernehmen. Im Abo.</p>
-        <span class="for">Für Abo-Kunden</span>
       </div>
       <div class="card" tabindex="0" data-p="mill">
         <div class="ic"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><rect x="4" y="30" width="56" height="22" rx="3" fill="none" stroke="#4F8EF7" stroke-width="3"/><rect x="12" y="36" width="22" height="8" rx="4" fill="#2F4F8F"/><rect x="40" y="35" width="12" height="10" rx="2" fill="#2F4F8F"/><path d="M32 6 V22" stroke="#E2E8F0" stroke-width="4" stroke-linecap="round"/><path d="M26 6 H38" stroke="#E2E8F0" stroke-width="3" stroke-linecap="round"/><path d="M32 22 v4" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"/></svg></div>
         <h3>Seiton Boards<small>Der Fräsdienst</small></h3>
         <p>Keine Fräse im Haus? Wir fräsen Ihre Boards und liefern sie einbaufertig.</p>
-        <span class="for">Für alle ohne Fräse</span>
       </div>
     </div>
   </div>
@@ -770,7 +751,7 @@ section.s{padding:140px 0 0}
   <div class="wrap">
     <h2>Starten Sie mit einem Werkzeug.</h2>
     <div class="cta-row">
-      <p>Nicht mit einem Großprojekt. Wir zeigen Ihnen den kompletten Ablauf in einer kurzen Live-Demo – mit Ihrem Werkzeug.</p>
+      <p>Wir zeigen Ihnen den kompletten Ablauf in einer kurzen Live-Demo – mit Ihrem Werkzeug.</p>
       <div class="cta-btns">
         <a class="btn" href="mailto:[E-MAIL]?subject=Seiton%20Live-Demo">Live-Demo anfragen</a>
         <a class="btn line" href="#kontakt">Kontakt</a>
@@ -810,34 +791,57 @@ section.s{padding:140px 0 0}
   var toastEl = document.getElementById('toast'), toastT;
   function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function(){ toastEl.classList.remove('show'); }, 2600); }
 
-  /* ---------- 5S-Leiste ---------- */
-  var say = document.getElementById('fiveSay'), sayDefault = say.innerHTML;
-  document.querySelectorAll('.fives button').forEach(function(b){
-    function show(){ say.innerHTML = b.getAttribute('data-say'); }
-    b.addEventListener('mouseenter', show); b.addEventListener('focus', show); b.addEventListener('click', show);
-    b.addEventListener('mouseleave', function(){ say.innerHTML = sayDefault; });
-  });
-
   /* ---------- Interaktives Board ---------- */
   var svg = document.getElementById('board'), layer = document.getElementById('tools');
+  // Tool drawings, shared by the board and the library tiles (about 1.6 px per mm).
+  // Finger recesses (A2) are long slots across the tool, like in the app.
+  var WR = 'M106 174H140A17 17 0 0 1 140 208H106L114.8 227A44 44 0 0 0 181 207L428.8 205A36 36 0 1 0 428.8 177L181 175A44 44 0 0 0 114.8 155Z', WR_HOLE = 'M478 191A16 16 0 1 0 446 191A16 16 0 1 0 478 191Z';
+  function cap(g, x, y, w, h, fill){ return el('rect',{x:x,y:y,width:w,height:h,rx:Math.min(w, h) / 2,fill:fill},g); }
+  function bar(g, x1, y1, x2, y2, w, c){ return el('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:c,'stroke-width':w,'stroke-linecap':'round'},g); }
+  var TOOLS = {
+    wrench: { name:'Ring-Maulschlüssel 17', w:320, h:104, draw:function(g){
+      var k = 320 / 392;
+      el('path',{d:WR + WR_HOLE,'fill-rule':'evenodd',fill:D1,transform:'translate(' + (-106 * k) + ' ' + (52 - 191 * k) + ') scale(' + k + ')'},g);
+      cap(g,142,0,36,104,A2); } },
+    driver: { name:'Schraubendreher PH2', w:300, h:90, draw:function(g){
+      el('rect',{x:0,y:27,width:118,height:36,rx:14,fill:D2},g); el('rect',{x:114,y:37,width:14,height:16,rx:3,fill:D2},g);
+      el('rect',{x:126,y:40,width:162,height:10,rx:2,fill:D2},g); el('path',{d:'M286 40L300 43.5V46.5L286 50Z',fill:D2},g);
+      cap(g,41,0,36,90,A2); } },
+    pliers: { name:'Kombizange 180', w:292, h:96, draw:function(g){
+      el('path',{d:'M104 34L62 37L14 43Q4 48 14 53L62 59L104 62Z',fill:D3},g); el('circle',{cx:104,cy:48,r:18,fill:D3},g);
+      bar(g,112,40,282,20,14,D3); bar(g,112,56,282,76,14,D3); bar(g,168,33.4,280,20.2,20,D3); bar(g,168,62.6,280,75.8,20,D3);
+      cap(g,207,0,36,96,A2); } },
+    cutter: { name:'Seitenschneider', w:272, h:96, draw:function(g){
+      el('path',{d:'M86 32L44 38Q30 48 44 58L86 64Z',fill:D2},g); el('circle',{cx:86,cy:48,r:17,fill:D2},g);
+      bar(g,94,40,262,20,14,D2); bar(g,94,56,262,76,14,D2); bar(g,150,33.3,260,20.2,20,D2); bar(g,150,62.7,260,75.8,20,D2);
+      cap(g,190,0,36,96,A2); } },
+    caliper: { name:'Messschieber', w:290, h:124, draw:function(g){
+      el('rect',{x:16,y:40,width:274,height:22,rx:2,fill:D3},g);
+      el('path',{d:'M16 62H46V114L38 122L16 78Z',fill:D3},g); el('path',{d:'M18 40L26 8H34L42 40Z',fill:D3},g);
+      el('rect',{x:58,y:32,width:92,height:38,rx:4,fill:D3},g);
+      el('path',{d:'M58 70H84L64 118L58 114Z',fill:D3},g); el('path',{d:'M60 32L66 8H72L80 32Z',fill:D3},g);
+      el('circle',{cx:112,cy:76,r:6,fill:D3},g);
+      cap(g,197,3,36,96,A2); } },
+    hammer: { name:'Schlosserhammer', w:100, h:220, draw:function(g){
+      el('path',{d:'M4 0H66L100 10V30L66 40H4Q0 40 0 36V4Q0 0 4 0Z',fill:D2},g);
+      el('path',{d:'M40 38H60L63 212Q63 220 55 220H45Q37 220 37 212Z',fill:D2},g);
+      cap(g,4,132,92,34,A2); } },
+    allen: { name:'Innensechskant 6', w:80, h:150, draw:function(g){
+      el('path',{d:'M36 2V122Q36 140 54 140H78',fill:'none',stroke:D1,'stroke-width':12,'stroke-linejoin':'round'},g);
+      cap(g,0,46,72,28,A2); } },
+    torque: { name:'Drehmomentschlüssel', w:320, h:90, draw:function(g){
+      el('rect',{x:0,y:27,width:110,height:36,rx:14,fill:D2},g); el('rect',{x:104,y:35,width:190,height:20,rx:8,fill:D2},g);
+      el('circle',{cx:298,cy:45,r:22,fill:D2},g);
+      cap(g,37,0,36,90,A2); } }
+  };
   var tools = [
-    { id:'wrench', name:'Gabelschlüssel 17', w:320, h:64, start:[80,64], auto:[60,60], draw:function(g){
-      el('rect',{x:30,y:21,width:260,height:22,rx:11,fill:D1},g); el('circle',{cx:32,cy:32,r:30,fill:D1},g); el('circle',{cx:292,cy:32,r:26,fill:D1},g);
-      el('rect',{x:0,y:23,width:30,height:18,fill:BOARD},g); el('circle',{cx:292,cy:32,r:12,fill:BOARD},g); el('rect',{x:130,y:10,width:64,height:44,rx:22,fill:A2},g); } },
-    { id:'driver', name:'Schraubendreher PH2', w:300, h:50, start:[150,112], auto:[60,160], draw:function(g){
-      el('rect',{x:0,y:7,width:120,height:36,rx:16,fill:D2},g); el('rect',{x:116,y:19,width:170,height:12,rx:3,fill:D2},g); el('rect',{x:284,y:21,width:14,height:8,rx:2,fill:D2},g); el('rect',{x:36,y:0,width:48,height:50,rx:24,fill:A2},g); } },
-    { id:'pliers', name:'Kombizange 180', w:262, h:90, start:[300,300], auto:[60,262], draw:function(g){
-      el('line',{x1:11,y1:45,x2:90,y2:45,stroke:D3,'stroke-width':22,'stroke-linecap':'round'},g);
-      el('line',{x1:90,y1:45,x2:236,y2:15,stroke:D3,'stroke-width':20,'stroke-linecap':'round'},g);
-      el('line',{x1:90,y1:45,x2:236,y2:75,stroke:D3,'stroke-width':20,'stroke-linecap':'round'},g);
-      el('circle',{cx:90,cy:45,r:18,fill:D3},g); el('circle',{cx:230,cy:45,r:30,fill:A2},g); } },
-    { id:'caliper', name:'Messschieber', w:280, h:70, start:[610,322], auto:[420,60], draw:function(g){
-      el('rect',{x:0,y:28,width:280,height:16,rx:3,fill:D3},g); el('rect',{x:10,y:0,width:22,height:70,rx:4,fill:D3},g); el('rect',{x:70,y:4,width:22,height:58,rx:4,fill:D3},g); el('rect',{x:170,y:18,width:56,height:36,rx:18,fill:A2},g); } },
-    { id:'hammer', name:'Schlosserhammer', w:100, h:220, start:[880,120], auto:[830,90], draw:function(g){
-      el('rect',{x:0,y:0,width:100,height:40,rx:6,fill:D2},g); el('rect',{x:38,y:24,width:24,height:196,rx:11,fill:D2},g); el('rect',{x:22,y:130,width:56,height:52,rx:26,fill:A2},g); } },
-    { id:'allen', name:'Innensechskant 6', w:60, h:150, start:[520,150], auto:[730,70], draw:function(g){
-      el('path',{d:'M9 9 L9 141 L51 141',fill:'none',stroke:D1,'stroke-width':14,'stroke-linecap':'round','stroke-linejoin':'round'},g); } }
-  ];
+    { id:'wrench',  start:[80,50],   auto:[60,60] },
+    { id:'driver',  start:[160,120], auto:[60,200] },
+    { id:'pliers',  start:[300,300], auto:[380,205] },
+    { id:'caliper', start:[600,290], auto:[400,60] },
+    { id:'hammer',  start:[860,120], auto:[830,90] },
+    { id:'allen',   start:[520,120], auto:[710,60] }
+  ].map(function(t){ var d = TOOLS[t.id]; t.name = d.name; t.w = d.w; t.h = d.h; t.draw = d.draw; return t; });
   var BX = 40, BY = 40, BW = 920, BH = 380, GAP = 15;
 
   tools.forEach(function(t){
@@ -921,7 +925,7 @@ section.s{padding:140px 0 0}
     { t:'Tiefe je Tasche im CAM anlegen',  m:[null, ['h','eine Ebene je Tiefe'], ['h','eine Ebene je Tiefe']], svc:'Board bestellen' },
     { t:'Fräsen',                          m:[null, ['k',''],                  ['k','']], svc:'Seiton Boards fräst' }
   ];
-  var TIMES = ['6:00', '0:20', '0:05'];
+  var TIMES = [['6:00', 'h'], ['30', 'min'], ['10', 'min']];
   var SAYS = [
     '<b>Heute:</b> jedes Board von vorn – vom Foto bis zur Tiefe jeder einzelnen Tasche.',
     '<b>Erstes Board:</b> Foto auf dem Messbogen, Dicken einmal angeben – Kontur, Maße und Prüfung macht Seiton.',
@@ -948,10 +952,10 @@ section.s{padding:140px 0 0}
       var li = s.li;
       li.classList.toggle('new', isNew);
       if (st === 'c'){
-        if (!li.classList.contains('cut')){
-          li.classList.add('cut'); li.classList.remove('kept', 'help');
-          flowTimers.push(setTimeout(function(){ li.classList.add('gone'); }, reduce ? 0 : 900 + i * 60));
-        }
+        // renderFlow cancels all pending timers, so every cut step that is not gone yet needs a new one
+        var fresh = !li.classList.contains('cut');
+        li.classList.add('cut'); li.classList.remove('kept', 'help');
+        if (!li.classList.contains('gone')) flowTimers.push(setTimeout(function(){ li.classList.add('gone'); }, reduce ? 0 : (fresh ? 900 + i * 60 : 250)));
       } else {
         n++;
         li.classList.remove('cut', 'gone');
@@ -960,7 +964,7 @@ section.s{padding:140px 0 0}
       }
     });
     fCount.innerHTML = n + '<small>' + (n === 1 ? 'Schritt' : 'Schritte') + '</small>';
-    fTime.innerHTML = TIMES[mode] + '<small>h</small>';
+    fTime.innerHTML = TIMES[mode][0] + '<small>' + TIMES[mode][1] + '</small>';
     fSay.innerHTML = SAYS[mode] + ' <span class="est">geschätzt</span>';
   }
   var flowSeg = document.getElementById('flowSeg'), userTouched = false;
@@ -993,22 +997,49 @@ section.s{padding:140px 0 0}
   }
   btn.addEventListener('click', runDig);
   onView(stage, runDig, .55);
-  document.querySelectorAll('.way').forEach(function(w){ w.addEventListener('click', function(){ document.querySelectorAll('.way').forEach(function(x){ x.classList.toggle('on', x === w); }); }); });
+  var WAYS = [
+    { p:'Messbogen ausdrucken, Werkzeug drauflegen, ein Foto von oben. Die Marker am Rand machen aus dem Foto ein maßhaltiges Abbild – ohne zusätzliche Hardware.',
+      li:['Bögen für A4, A3, Letter und Tabloid', 'Weiß oder schwarz – schwarz für blankes Metall', 'Foto mit Handy oder Kamera, auch mehrere auf einmal'] },
+    { p:'Die Aufnahmebox für Betriebe mit vielen Werkzeugen: Werkzeug hineinlegen, Knopf drücken. Kamera, Licht und Messfläche sind fest eingebaut.',
+      li:['Leuchtfläche von unten – scharfe Kontur auch bei blankem Metall', 'Gleiche Bedingungen bei jeder Aufnahme', 'Direkt in die Bibliothek'] },
+    { p:'Das Werkzeug gibt es schon digital? Dann übernehmen Sie es einfach – als DXF oder als Werkzeug-Datei von einem anderen Standort.',
+      li:['DXF-Kontur als Werkzeug einlesen', 'Werkzeug-Datei bringt Dicken und Griffmulden mit', 'Windows und Mac'] }
+  ];
+  var wayText = document.getElementById('wayText'), wayBtns = document.querySelectorAll('.way');
+  function showWay(i){
+    wayBtns.forEach(function(x, k){ x.classList.toggle('on', k === i); x.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
+    wayText.innerHTML = '<p>' + WAYS[i].p + '</p><ul>' + WAYS[i].li.map(function(t){ return '<li>' + t + '</li>'; }).join('') + '</ul>';
+    wayText.classList.remove('swap-in'); void wayText.offsetWidth; if (!reduce) wayText.classList.add('swap-in');
+  }
+  wayBtns.forEach(function(w){ w.addEventListener('click', function(){ showWay(+w.getAttribute('data-w')); }); });
+  showWay(0);
 
   /* ---------- Tiefe: gestufte Tasche in 3D (Schichten in CSS 3D) ---------- */
   var obj = document.getElementById('obj'), scene = document.getElementById('scene');
   var PX = 3, PLATE = 30, rx = 58, rz = -24, flat = false;
   // Flächen in Tafel-Koordinaten (600 × 340); Tiefe in mm, 3 px je mm
+  var T3 = 'translate(52 170) scale(1.25) translate(-106 -191)';  // wrench outline (same as the digitizing demo) scaled onto the plate
   var REG = [
-    { key:'head', color:D3, shapes:[['c',140,170,62],['c',462,170,52]] },
-    { key:'grip', color:D1, shapes:[['r',140,150,322,40,20]] },
-    { key:'rec',  color:A2, shapes:[['r',258,112,86,116,43]] }
+    { key:'head', color:D3, shapes:[['p','M106 174H140A17 17 0 0 1 140 208H106L114.8 227A44 44 0 0 0 181 207V175A44 44 0 0 0 114.8 155Z',T3],
+                                   ['p','M498 191A36 36 0 1 0 426 191A36 36 0 1 0 498 191ZM478 191A16 16 0 1 0 446 191A16 16 0 1 0 478 191Z',T3]] },
+    { key:'grip', color:D1, shapes:[['p','M176 174.9L433 177.1V204.9L176 207.1Z',T3]] },
+    { key:'rec',  color:A2, shapes:[['r',277,70,48,200,24]] }
   ];
   var depthMm = { head:14, grip:8, rec:20 };
   function shape(g, s, attrs){
     var a = {}; for (var k in attrs) a[k] = attrs[k];
     if (s[0] === 'c'){ a.cx = s[1]; a.cy = s[2]; a.r = s[3]; return el('circle', a, g); }
+    if (s[0] === 'p'){ a.d = s[1]; a['fill-rule'] = 'evenodd'; if (s[2]) a.transform = s[2]; return el('path', a, g); }
     a.x = s[1]; a.y = s[2]; a.width = s[3]; a.height = s[4]; a.rx = s[5]; return el('rect', a, g);
+  }
+  var maskN = 0;
+  // Group whose content is hidden where the given regions lie (their fills cut the layer)
+  function cutOut(sv, regions){
+    if (!regions.length) return sv;
+    var id = 'cut' + (++maskN), m = el('mask', { id:id, maskUnits:'userSpaceOnUse', x:-60, y:-60, width:720, height:460 }, el('defs', {}, sv));
+    el('rect', { x:-60, y:-60, width:720, height:460, fill:'#fff' }, m);
+    regions.forEach(function(r){ r.shapes.forEach(function(s){ shape(m, s, { fill:'#000' }); }); });
+    return el('g', { mask:'url(#' + id + ')' }, sv);
   }
   function layerSvg(z){ var s = el('svg', { viewBox:'0 0 600 340', width:600, height:340 }); s.style.transform = 'translateZ(' + z + 'px)'; obj.appendChild(s); return s; }
   function buildPocket(){
@@ -1017,15 +1048,16 @@ section.s{padding:140px 0 0}
     // Plattenunterseite und Seitenwände der Platte
     var bot = layerSvg(-PLATE * PX); el('rect', { x:0, y:0, width:600, height:340, rx:6, fill:'#12141c', stroke:'#2A2D3E', 'stroke-width':1.5 }, bot);
     for (var z = PLATE - 3; z > 0; z -= 3){ var w = layerSvg(-z * PX); el('rect', { x:0, y:0, width:600, height:340, rx:6, fill:'none', stroke:'#2A2D3E', 'stroke-width':1.2 }, w); }
-    // Taschenböden, tiefster zuerst (Maler-Reihenfolge)
+    // Taschenböden, tiefster zuerst; tiefere Flächen sind aus dem Boden ausgespart
     REG.slice().sort(function(a, b){ return depthMm[b.key] - depthMm[a.key]; }).forEach(function(r){
       var f = layerSvg(-depthMm[r.key] * PX);
-      r.shapes.forEach(function(s){ shape(f, s, { fill:r.color, 'fill-opacity':.9 }); });
+      var g = cutOut(f, REG.filter(function(o){ return depthMm[o.key] > depthMm[r.key]; }));
+      r.shapes.forEach(function(s){ shape(g, s, { fill:r.color, 'fill-opacity':.92 }); });
     });
-    // Taschenwände als Höhenlinien je 1,5 mm
+    // Taschenwände als Höhenlinien je 1,5 mm: nur der Umriss der Vereinigung, keine Linien innen
     for (var d = maxD; d > 0; d -= 1.5){
-      var sl = layerSvg(-d * PX);
-      REG.forEach(function(r){ if (depthMm[r.key] >= d) r.shapes.forEach(function(s){ shape(sl, s, { fill:'none', stroke:r.color, 'stroke-width':1.6, 'stroke-opacity':.55 }); }); });
+      var sl = layerSvg(-d * PX), act = REG.filter(function(r){ return depthMm[r.key] >= d; });
+      act.forEach(function(r){ var g = cutOut(sl, act.filter(function(o){ return o !== r; })); r.shapes.forEach(function(s){ shape(g, s, { fill:'none', stroke:r.color, 'stroke-width':1.6, 'stroke-opacity':.55 }); }); });
     }
     // Oberseite mit Loch (Maske) und Gravur
     var top = layerSvg(0), mid = 'm' + Math.random().toString(36).slice(2, 7);
@@ -1033,9 +1065,9 @@ section.s{padding:140px 0 0}
     el('rect', { x:0, y:0, width:600, height:340, fill:'#fff' }, mask);
     REG.forEach(function(r){ r.shapes.forEach(function(s){ shape(mask, s, { fill:'#000' }); }); });
     el('rect', { x:0, y:0, width:600, height:340, rx:6, fill:'#232737', stroke:'#3a3f55', 'stroke-width':2, mask:'url(#' + mid + ')' }, top);
-    REG.forEach(function(r){ r.shapes.forEach(function(s){ shape(top, s, { fill:'none', stroke:'#E2E8F0', 'stroke-width':1.4, 'stroke-opacity':.8 }); }); });
+    REG.forEach(function(r){ var g = cutOut(top, REG.filter(function(o){ return o !== r; })); r.shapes.forEach(function(s){ shape(g, s, { fill:'none', stroke:'#E2E8F0', 'stroke-width':1.4, 'stroke-opacity':.8 }); }); });
     var tx = el('text', { x:300, y:296, 'text-anchor':'middle', 'font-size':16, 'letter-spacing':4, fill:'none', stroke:'#94A3B8', 'stroke-width':.8, 'font-family':'Archivo, sans-serif' }, top);
-    tx.textContent = 'GABELSCHLÜSSEL 17';
+    tx.textContent = 'RING-MAULSCHLÜSSEL 17';
   }
   function view(){ obj.style.transform = flat ? 'rotateX(0deg) rotateZ(0deg) scale(.86)' : 'rotateX(' + rx + 'deg) rotateZ(' + rz + 'deg) scale(.86)'; }
   function fit(){ obj.style.scale = Math.min(1, scene.clientWidth / 640); }
@@ -1055,6 +1087,13 @@ section.s{padding:140px 0 0}
   obj.style.transform = 'rotateX(0deg) rotateZ(0deg) scale(.86)';
   onView(scene, function(){ setTimeout(view, reduce ? 0 : 250); }, .4);
 
+  /* ---------- Bibliothek: Kacheln mit denselben Zeichnungen ---------- */
+  document.querySelectorAll('#tiles .th[data-t]').forEach(function(th){
+    var d = TOOLS[th.getAttribute('data-t')], rot = d.h > d.w, W = rot ? d.h : d.w, H = rot ? d.w : d.h, k = Math.min(184 / W, 68 / H);
+    var sv = el('svg',{viewBox:'0 0 200 80',width:170,'aria-hidden':'true'}, th);
+    d.draw(el('g',{transform:'translate(100 40)' + (rot ? ' rotate(-90)' : '') + ' scale(' + k + ') translate(' + (-d.w / 2) + ' ' + (-d.h / 2) + ')'}, sv));
+  });
+
   /* ---------- Bibliothek-Suche ---------- */
   var input = document.getElementById('libSearch'), tiles = document.querySelectorAll('#tiles .tile');
   var countEl = document.getElementById('libCount'), empty = document.getElementById('libEmpty'), proj = '';
@@ -1073,9 +1112,9 @@ section.s{padding:140px 0 0}
   var minis = document.getElementById('minis'), boards = [];
   var others = [
     function(g){ el('rect',{x:20,y:62,width:70,height:14,rx:6,fill:D2},g); },
-    function(g){ el('rect',{x:110,y:20,width:14,height:60,rx:6,fill:D3},g); },
+    function(g){ el('rect',{x:126,y:22,width:14,height:60,rx:6,fill:D3},g); },
     function(g){ el('circle',{cx:40,cy:70,r:12,fill:D3},g); el('rect',{x:60,y:64,width:60,height:10,rx:4,fill:D3},g); },
-    function(g){ el('path',{d:'M110 20 L110 76 L130 76',fill:'none',stroke:D1,'stroke-width':6,'stroke-linecap':'round'},g); }
+    function(g){ el('path',{d:'M126 22 L126 76 L140 76',fill:'none',stroke:D1,'stroke-width':6,'stroke-linecap':'round'},g); }
   ];
   for (var i = 0; i < 12; i++){
     var d = document.createElement('div'); d.className = 'mini';
@@ -1086,12 +1125,14 @@ section.s{padding:140px 0 0}
     var h = el('rect',{x:24,y:22,width:70,height:9,rx:4.5,fill:D1},wr);
     var c1 = el('circle',{cx:24,cy:26.5,r:10,fill:D1},wr);
     var c2 = el('circle',{cx:95,cy:26.5,r:8,fill:D1},wr);
+    el('rect',{x:12,y:23,width:13,height:7,rx:2,fill:'#0F1117'},wr);
+    var ho = el('circle',{cx:95,cy:26.5,r:3.4,fill:'#0F1117'},wr);
     others[i % 4](s);
     d.appendChild(s); minis.appendChild(d);
-    boards.push({ el:d, h:h, c1:c1, c2:c2, lbl:d.querySelector('.lbl span:last-child') });
+    boards.push({ el:d, h:h, c1:c1, c2:c2, ho:ho, lbl:d.querySelector('.lbl span:last-child') });
   }
   function setV(b, v2){
-    b.h.setAttribute('width', v2 ? 82 : 70); b.c2.setAttribute('cx', v2 ? 107 : 95); b.c2.setAttribute('r', v2 ? 9 : 8);
+    b.h.setAttribute('width', v2 ? 82 : 70); b.c2.setAttribute('cx', v2 ? 107 : 95); b.c2.setAttribute('r', v2 ? 9 : 8); b.ho.setAttribute('cx', v2 ? 107 : 95);
     [b.h,b.c1,b.c2].forEach(function(x){ x.setAttribute('fill', v2 ? A2 : D1); });
     b.lbl.textContent = v2 ? 'v2' : 'v1';
     b.el.classList.remove('flash'); void b.el.offsetWidth; if (v2) b.el.classList.add('flash');
@@ -1118,13 +1159,13 @@ section.s{padding:140px 0 0}
 
   /* ---------- Zeit-Zähler ---------- */
   var clock = document.getElementById('clockNew'), clockN = document.getElementById('clockNext'), timeBox = document.getElementById('timeBox');
-  function fmt(min){ var h = Math.floor(min / 60), m = Math.round(min % 60); if (m === 60){ h++; m = 0; } return h + ':' + (m < 10 ? '0' : '') + m + ' h'; }
+  function fmt(min){ if (min < 59.5) return Math.round(min) + ' min'; var h = Math.floor(min / 60), m = Math.round(min % 60); if (m === 60){ h++; m = 0; } return h + ':' + (m < 10 ? '0' : '') + m + ' h'; }
   function count(elm, to, dur){
     if (reduce){ elm.textContent = fmt(to); return; }
     var t0 = performance.now();
     (function tick(now){ var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3); elm.textContent = fmt(360 - (360 - to) * e); if (p < 1) requestAnimationFrame(tick); })(t0);
   }
-  onView(timeBox, function(){ count(clock, 20, 1800); setTimeout(function(){ count(clockN, 5, 1800); }, reduce ? 0 : 500); });
+  onView(timeBox, function(){ count(clock, 30, 1800); setTimeout(function(){ count(clockN, 10, 1800); }, reduce ? 0 : 500); });
 
   /* ---------- Seiton: vier Teile auf der Kette ---------- */
   var railSpans = document.querySelectorAll('#famRail span');
