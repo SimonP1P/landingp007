@@ -100,6 +100,11 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 #board .st-close .bbox{stroke:var(--warning)}
 #board .st-edge .bbox{stroke:var(--warning);stroke-dasharray:6 5}
 #board .st-overlap .bbox{stroke:var(--error);fill:rgba(239,68,68,.14)}
+#engrText{font-family:var(--mono);font-size:26px;letter-spacing:.16em;fill:none;stroke:#94A3B8;stroke-width:1.1;pointer-events:none}
+.engrave-in{display:grid;gap:6px;margin:2px 0 12px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.engrave-in input{height:44px;min-width:0;padding:0 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:15px;letter-spacing:.08em;text-transform:uppercase;outline:none;transition:border-color .2s}
+.engrave-in input:focus,.engrave-in.typing input{border-color:var(--accent2)}
+.engrave-in input::placeholder{color:var(--muted);text-transform:none;letter-spacing:0}
 #board .engr{font-family:var(--mono);font-size:11px;letter-spacing:.12em;fill:none;stroke:#64748B;stroke-width:.6;pointer-events:none}
 .panel{border-left:1px solid var(--border);padding:18px;display:flex;flex-direction:column;gap:4px}
 .panel h4{margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
@@ -438,6 +443,7 @@ section.s{padding:140px 0 0}
           <span><i style="background:#3E6CC4"></i>25 mm</span>
           <span><i style="background:#2F4F8F"></i>40 mm</span>
           <span><i style="background:#38BDF8"></i>Griffmulde</span>
+          <span><i style="border:1px solid #94A3B8"></i>Gravur</span>
         </div>
       </div>
       <div class="play-body">
@@ -445,6 +451,7 @@ section.s{padding:140px 0 0}
           <svg id="board" viewBox="0 0 1000 460" role="application" aria-label="Interaktives Shadowboard mit verschiebbaren Werkzeugen">
             <rect x="20" y="20" width="960" height="420" rx="8" fill="#1A1D27" stroke="#2A2D3E" stroke-width="2"/>
             <rect x="40" y="40" width="920" height="380" fill="none" stroke="#2A2D3E" stroke-dasharray="8 8"/>
+            <text id="engrText" x="60" y="404"></text>
             <g id="tools"></g>
           </svg>
         </div>
@@ -454,6 +461,7 @@ section.s{padding:140px 0 0}
           <div class="chk"><span>Abstand unter 15 mm</span><b id="cCl">0</b></div>
           <div class="chk"><span>Randbereich verletzt</span><b id="cEd">0</b></div>
           <div class="status" id="status" aria-live="polite">Prüfe Board …</div>
+          <label class="engrave-in" for="engrave"><span>Beschriftung · Gravur</span><input id="engrave" type="text" maxlength="24" placeholder="Boardname eingeben" autocomplete="off" spellcheck="false"></label>
           <button class="btn" id="arrange" type="button">Automatisch anordnen</button>
           <button class="btn sec" id="exportBtn" type="button" disabled>DXF exportieren</button>
         </div>
@@ -903,10 +911,20 @@ section.s{padding:140px 0 0}
       ? '<strong class="good">Alles in Ordnung.</strong> Bereit für den Export.'
       : (ov ? '<strong class="bad">Überschneidung.</strong> Verschieben oder anordnen lassen.' : '<strong class="warnc">Zu knapp.</strong> Abstände prüfen.');
   }
+  // Beschriftung: Eingabe im Panel erscheint sofort als Gravur unten links auf dem Board
+  var engrText = document.getElementById('engrText'), engrIn = document.getElementById('engrave'), engrTouched = false, typeT;
+  function syncEngr(){ engrText.textContent = engrIn.value.toUpperCase(); }
+  engrIn.addEventListener('input', function(){ engrTouched = true; clearTimeout(typeT); engrIn.parentNode.classList.remove('typing'); syncEngr(); });
+  function typeLabel(text){
+    if (engrTouched || engrIn.value) return;
+    var i = 0; engrIn.parentNode.classList.add('typing');
+    (function step(){ engrIn.value = text.slice(0, ++i); syncEngr(); if (i < text.length) typeT = setTimeout(step, reduce ? 0 : 75); else engrIn.parentNode.classList.remove('typing'); })();
+  }
   document.getElementById('arrange').addEventListener('click', function(){
     if (!reduce) svg.classList.add('anim');
     tools.forEach(function(t){ t.x = t.auto[0]; t.y = t.auto[1]; place(t); });
     setTimeout(check, reduce ? 0 : 720);
+    setTimeout(function(){ typeLabel('Montage 1 – Wagen 3'); }, reduce ? 0 : 900);
   });
   exportBtn.addEventListener('click', function(){ toast('Board_A.dxf erzeugt: Ebenen je Frästiefe und Gravur'); });
   check();
