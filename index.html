@@ -435,10 +435,9 @@ section.s{padding:140px 0 0}
       <div class="play-bar">
         <div class="hint"><span class="dot" aria-hidden="true"></span>Ziehen Sie die Werkzeuge. Die Prüfung läuft live mit.</div>
         <div class="legend" aria-label="Legende der Frästiefen">
-          <span><i style="background:#4F8EF7"></i>15 mm</span>
-          <span><i style="background:#3E6CC4"></i>25 mm</span>
-          <span><i style="background:#2F4F8F"></i>40 mm</span>
-          <span><i style="background:#38BDF8"></i>Griffmulde</span>
+          <span><i style="background:#4F8EF7"></i>20 mm</span>
+          <span><i style="background:#2F4F8F"></i>30 mm</span>
+          <span><i style="background:#38BDF8"></i>Griffmulde 10 mm</span>
           <span><i style="border:1px solid #94A3B8"></i>Gravur</span>
         </div>
       </div>
@@ -789,9 +788,14 @@ section.s{padding:140px 0 0}
   /* ---------- Interaktives Board ---------- */
   var svg = document.getElementById('board'), layer = document.getElementById('tools');
   // Tool drawings, shared by the board and the library tiles (about 1.6 px per mm).
-  // Finger recesses (A2) are long slots across the tool, like in the app.
+  // Finger recesses (A2) are long slots across the tool, like in the app. Two pocket levels per tool:
+  // D1 = shallow (20 mm), D3 = deep (30 mm); recess 10 mm.
   var WR = 'M106 174H140A17 17 0 0 1 140 208H106L114.8 227A44 44 0 0 0 181 207L428.8 205A36 36 0 1 0 428.8 177L181 175A44 44 0 0 0 114.8 155Z', WR_HOLE = 'M478 191A16 16 0 1 0 446 191A16 16 0 1 0 478 191Z';
-  function cap(g, x, y, w, h, fill){ return el('rect',{x:x,y:y,width:w,height:h,rx:Math.min(w, h) / 2,fill:fill},g); }
+  function cap(g, x, y, w, h, fill){
+    // Recess is shallower than the tool's pocket, so it lies underneath and shows only beside the tool
+    var r = el('rect',{x:x,y:y,width:w,height:h,rx:Math.min(w, h) / 2,fill:fill}), first = null;
+    for (var i = 0; i < g.children.length && !first; i++) if (g.children[i].getAttribute('class') !== 'bbox') first = g.children[i];
+    g.insertBefore(r, first); return r; }
   function bar(g, x1, y1, x2, y2, w, c){ return el('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:c,'stroke-width':w,'stroke-linecap':'round'},g); }
   var TOOLS = {
     wrench: { name:'Ring-Maulschlüssel 17', w:320, h:104, draw:function(g){
@@ -799,34 +803,34 @@ section.s{padding:140px 0 0}
       el('path',{d:WR + WR_HOLE,'fill-rule':'evenodd',fill:D1,transform:'translate(' + (-106 * k) + ' ' + (52 - 191 * k) + ') scale(' + k + ')'},g);
       cap(g,142,0,36,104,A2); } },
     driver: { name:'Schraubendreher PH2', w:300, h:90, draw:function(g){
-      el('rect',{x:0,y:27,width:118,height:36,rx:14,fill:D2},g); el('rect',{x:114,y:37,width:14,height:16,rx:3,fill:D2},g);
-      el('rect',{x:126,y:40,width:162,height:10,rx:2,fill:D2},g); el('path',{d:'M286 40L300 43.5V46.5L286 50Z',fill:D2},g);
+      el('rect',{x:0,y:27,width:118,height:36,rx:14,fill:D3},g); el('rect',{x:114,y:37,width:14,height:16,rx:3,fill:D3},g);
+      el('rect',{x:126,y:40,width:162,height:10,rx:2,fill:D1},g); el('path',{d:'M286 40L300 43.5V46.5L286 50Z',fill:D1},g);
       cap(g,41,0,36,90,A2); } },
     pliers: { name:'Kombizange 180', w:292, h:96, draw:function(g){
       el('path',{d:'M104 34L62 37L14 43Q4 48 14 53L62 59L104 62Z',fill:D3},g); el('circle',{cx:104,cy:48,r:18,fill:D3},g);
-      bar(g,112,40,282,20,14,D3); bar(g,112,56,282,76,14,D3); bar(g,168,33.4,280,20.2,20,D3); bar(g,168,62.6,280,75.8,20,D3);
+      bar(g,112,40,282,20,14,D1); bar(g,112,56,282,76,14,D1); bar(g,168,33.4,280,20.2,20,D1); bar(g,168,62.6,280,75.8,20,D1);
       cap(g,207,0,36,96,A2); } },
     cutter: { name:'Seitenschneider', w:272, h:96, draw:function(g){
-      el('path',{d:'M86 32L44 38Q30 48 44 58L86 64Z',fill:D2},g); el('circle',{cx:86,cy:48,r:17,fill:D2},g);
-      bar(g,94,40,262,20,14,D2); bar(g,94,56,262,76,14,D2); bar(g,150,33.3,260,20.2,20,D2); bar(g,150,62.7,260,75.8,20,D2);
+      el('path',{d:'M86 32L44 38Q30 48 44 58L86 64Z',fill:D3},g); el('circle',{cx:86,cy:48,r:17,fill:D3},g);
+      bar(g,94,40,262,20,14,D1); bar(g,94,56,262,76,14,D1); bar(g,150,33.3,260,20.2,20,D1); bar(g,150,62.7,260,75.8,20,D1);
       cap(g,190,0,36,96,A2); } },
     caliper: { name:'Messschieber', w:290, h:124, draw:function(g){
-      el('rect',{x:16,y:40,width:274,height:22,rx:2,fill:D3},g);
-      el('path',{d:'M16 62H46V114L38 122L16 78Z',fill:D3},g); el('path',{d:'M18 40L26 8H34L42 40Z',fill:D3},g);
+      el('rect',{x:16,y:40,width:274,height:22,rx:2,fill:D1},g);
+      el('path',{d:'M16 62H46V114L38 122L16 78Z',fill:D1},g); el('path',{d:'M18 40L26 8H34L42 40Z',fill:D1},g);
       el('rect',{x:58,y:32,width:92,height:38,rx:4,fill:D3},g);
       el('path',{d:'M58 70H84L64 118L58 114Z',fill:D3},g); el('path',{d:'M60 32L66 8H72L80 32Z',fill:D3},g);
       el('circle',{cx:112,cy:76,r:6,fill:D3},g);
       cap(g,197,3,36,96,A2); } },
     hammer: { name:'Schlosserhammer', w:100, h:220, draw:function(g){
-      el('path',{d:'M4 0H66L100 10V30L66 40H4Q0 40 0 36V4Q0 0 4 0Z',fill:D2},g);
-      el('path',{d:'M40 38H60L63 212Q63 220 55 220H45Q37 220 37 212Z',fill:D2},g);
+      el('path',{d:'M4 0H66L100 10V30L66 40H4Q0 40 0 36V4Q0 0 4 0Z',fill:D3},g);
+      el('path',{d:'M40 38H60L63 212Q63 220 55 220H45Q37 220 37 212Z',fill:D1},g);
       cap(g,4,132,92,34,A2); } },
     allen: { name:'Innensechskant 6', w:80, h:150, draw:function(g){
       el('path',{d:'M36 2V122Q36 140 54 140H78',fill:'none',stroke:D1,'stroke-width':12,'stroke-linejoin':'round'},g);
       cap(g,0,46,72,28,A2); } },
     torque: { name:'Drehmomentschlüssel', w:320, h:90, draw:function(g){
-      el('rect',{x:0,y:27,width:110,height:36,rx:14,fill:D2},g); el('rect',{x:104,y:35,width:190,height:20,rx:8,fill:D2},g);
-      el('circle',{cx:298,cy:45,r:22,fill:D2},g);
+      el('rect',{x:0,y:27,width:110,height:36,rx:14,fill:D1},g); el('rect',{x:104,y:35,width:190,height:20,rx:8,fill:D1},g);
+      el('circle',{cx:298,cy:45,r:22,fill:D3},g);
       cap(g,37,0,36,90,A2); } }
   };
   var tools = [
@@ -929,32 +933,42 @@ section.s{padding:140px 0 0}
     setTimeout(function(){ typeLabel('Montage 1 – Wagen 3'); }, reduce ? 0 : 900);
   });
   /* ---------- DXF-Export: echte Datei, eine Ebene je Frästiefe ---------- */
-  // Simplified on purpose: three layers (one per tool depth, names as in the app), finger recess
-  // milled at the tool's depth, no board outline and no engraving. Each tool is rasterised,
-  // traced with marching squares and simplified; output is DXF R12 in mm, Y up, origin bottom left.
-  var PX_MM = 1.6, DEPTH = {}; DEPTH[D1] = 15; DEPTH[D2] = 25; DEPTH[D3] = 40;
-  var LAYER_COLOR = { 15:5, 25:4, 40:6 }, RS = 6, PAD = 10 * RS;   // drawings reach past w/h (round caps)
-  function rasterTool(t){
+  // Simplified on purpose, but built like the app: three layers - two pocket depths (a tool may have
+  // both, e.g. hammer head deep, handle shallow) and one shallower finger-recess layer. Regions of one
+  // tool do not overlap (the deep area is cut out of the shallow one); the recess overlaps the tool
+  // like in the app. No board outline, no engraving. Each layer is rasterised per tool, traced with
+  // marching squares and simplified; output is DXF R12 in mm, Y up, origin bottom left.
+  var PX_MM = 1.6, DEPTH = {}; DEPTH[D1] = 20; DEPTH[D3] = 30; DEPTH[A2] = 10;
+  var LAYERS = [{ d:20, name:'POCKET_D20.0', aci:5 }, { d:30, name:'POCKET_D30.0', aci:6 }, { d:10, name:'RECESS_D10.0', aci:4, recess:true }];
+  var RS = 6, PAD = 10 * RS;   // drawings reach past w/h (round caps)
+  function depthOf(n){ return DEPTH[n.getAttribute('fill')] || DEPTH[n.getAttribute('stroke')] || 0; }
+  function drawNode(ctx, n){
+    var fill = n.getAttribute('fill'), stroke = n.getAttribute('stroke');
+    var m = n.transform && n.transform.baseVal.numberOfItems ? n.transform.baseVal.consolidate().matrix : { a:1, b:0, c:0, d:1, e:0, f:0 };
+    ctx.setTransform(RS, 0, 0, RS, PAD, PAD); ctx.transform(m.a, m.b, m.c, m.d, m.e, m.f);
+    ctx.fillStyle = ctx.strokeStyle = '#000'; ctx.lineCap = ctx.lineJoin = 'round';
+    var a = function(k){ return parseFloat(n.getAttribute(k)) || 0; }, p = new Path2D();
+    if (n.tagName === 'rect'){ var r = Math.min(a('rx'), a('width') / 2, a('height') / 2); p.roundRect(a('x'), a('y'), a('width'), a('height'), r); }
+    else if (n.tagName === 'circle') p.arc(a('cx'), a('cy'), a('r'), 0, 2 * Math.PI);
+    else if (n.tagName === 'line'){ p.moveTo(a('x1'), a('y1')); p.lineTo(a('x2'), a('y2')); }
+    else if (n.tagName === 'path') p = new Path2D(n.getAttribute('d'));
+    if (fill && fill !== 'none') ctx.fill(p, n.getAttribute('fill-rule') === 'evenodd' ? 'evenodd' : 'nonzero');
+    if (stroke){ ctx.lineWidth = a('stroke-width'); ctx.stroke(p); }
+  }
+  // Mask of one layer of one tool, or null when the tool has nothing on it
+  function rasterTool(t, L){
+    var nodes = Array.prototype.filter.call(t.g.children, function(n){ return n.getAttribute('class') !== 'bbox'; });
+    var own = nodes.filter(function(n){ return depthOf(n) === L.d; });
+    if (!own.length) return null;
     var W = Math.ceil(t.w * RS) + 2 * PAD, H = Math.ceil(t.h * RS) + 2 * PAD;
     var c = document.createElement('canvas'); c.width = W; c.height = H;
-    var ctx = c.getContext('2d'), depth = 0;
-    Array.prototype.forEach.call(t.g.children, function(n){
-      if (n.getAttribute('class') === 'bbox') return;
-      var fill = n.getAttribute('fill'), stroke = n.getAttribute('stroke');
-      if (DEPTH[fill] && !depth) depth = DEPTH[fill];
-      if (DEPTH[stroke] && !depth) depth = DEPTH[stroke];
-      var m = n.transform && n.transform.baseVal.numberOfItems ? n.transform.baseVal.consolidate().matrix : { a:1, b:0, c:0, d:1, e:0, f:0 };
-      ctx.setTransform(RS, 0, 0, RS, PAD, PAD); ctx.transform(m.a, m.b, m.c, m.d, m.e, m.f);
-      ctx.fillStyle = ctx.strokeStyle = '#000'; ctx.lineCap = ctx.lineJoin = 'round';
-      var a = function(k){ return parseFloat(n.getAttribute(k)) || 0; }, p = new Path2D();
-      if (n.tagName === 'rect'){ var r = Math.min(a('rx'), a('width') / 2, a('height') / 2); p.roundRect(a('x'), a('y'), a('width'), a('height'), r); }
-      else if (n.tagName === 'circle') p.arc(a('cx'), a('cy'), a('r'), 0, 2 * Math.PI);
-      else if (n.tagName === 'line'){ p.moveTo(a('x1'), a('y1')); p.lineTo(a('x2'), a('y2')); }
-      else if (n.tagName === 'path') p = new Path2D(n.getAttribute('d'));
-      if (fill && fill !== 'none') ctx.fill(p, n.getAttribute('fill-rule') === 'evenodd' ? 'evenodd' : 'nonzero');
-      if (stroke){ ctx.lineWidth = a('stroke-width'); ctx.stroke(p); }
-    });
-    return { img:ctx.getImageData(0, 0, W, H).data, W:W, H:H, depth:depth };
+    var ctx = c.getContext('2d');
+    own.forEach(function(n){ drawNode(ctx, n); });
+    if (!L.recess){
+      ctx.globalCompositeOperation = 'destination-out';
+      nodes.forEach(function(n){ if (depthOf(n) > L.d && n.getAttribute('fill') !== A2) drawNode(ctx, n); });
+    }
+    return { img:ctx.getImageData(0, 0, W, H).data, W:W, H:H };
   }
   // Closed contours (in board px) of the filled area, edge points interpolated on the alpha channel
   function trace(r, ox, oy){
@@ -1003,34 +1017,36 @@ section.s{padding:140px 0 0}
     var out = []; dp(0, far, out); dp(far, pts.length, out); return out;
   }
   function buildDxf(){
-    var byDepth = {};
-    tools.forEach(function(t){ var r = rasterTool(t); (byDepth[r.depth] = byDepth[r.depth] || []).push.apply(byDepth[r.depth], trace(r, t.x, t.y)); });
-    var depths = Object.keys(byDepth).map(Number).sort(function(a, b){ return a - b; }), o = [];
+    var used = LAYERS.map(function(L){
+      var loops = [];
+      tools.forEach(function(t){ var r = rasterTool(t, L); if (r) loops.push.apply(loops, trace(r, t.x, t.y)); });
+      return { L:L, loops:loops };
+    }).filter(function(u){ return u.loops.length; }), o = [];
     function g(code, val){ o.push(code, val); }
-    function name(d){ return 'POCKET_D' + d.toFixed(1); }
     function n(v){ return (Math.round(v * 1000) / 1000).toString(); }
     g(0,'SECTION'); g(2,'HEADER'); g(9,'$ACADVER'); g(1,'AC1009'); g(9,'$INSUNITS'); g(70,4); g(0,'ENDSEC');
     g(0,'SECTION'); g(2,'TABLES');
     g(0,'TABLE'); g(2,'LTYPE'); g(70,1); g(0,'LTYPE'); g(2,'CONTINUOUS'); g(70,0); g(3,'Solid line'); g(72,65); g(73,0); g(40,0); g(0,'ENDTAB');
-    g(0,'TABLE'); g(2,'LAYER'); g(70,depths.length);
-    depths.forEach(function(d){ g(0,'LAYER'); g(2,name(d)); g(70,0); g(62,LAYER_COLOR[d] || 7); g(6,'CONTINUOUS'); });
+    g(0,'TABLE'); g(2,'LAYER'); g(70,used.length);
+    used.forEach(function(u){ g(0,'LAYER'); g(2,u.L.name); g(70,0); g(62,u.L.aci); g(6,'CONTINUOUS'); });
     g(0,'ENDTAB'); g(0,'ENDSEC');
     g(0,'SECTION'); g(2,'ENTITIES');
-    depths.forEach(function(d){
-      byDepth[d].forEach(function(loop){
-        g(0,'POLYLINE'); g(8,name(d)); g(66,1); g(10,0); g(20,0); g(30,0); g(70,1);
-        loop.forEach(function(p){ g(0,'VERTEX'); g(8,name(d)); g(10,n((p[0] - 20) / PX_MM)); g(20,n((440 - p[1]) / PX_MM)); g(30,0); });
-        g(0,'SEQEND'); g(8,name(d));
+    used.forEach(function(u){
+      var name = u.L.name;
+      u.loops.forEach(function(loop){
+        g(0,'POLYLINE'); g(8,name); g(66,1); g(10,0); g(20,0); g(30,0); g(70,1);
+        loop.forEach(function(p){ g(0,'VERTEX'); g(8,name); g(10,n((p[0] - 20) / PX_MM)); g(20,n((440 - p[1]) / PX_MM)); g(30,0); });
+        g(0,'SEQEND'); g(8,name);
       });
     });
     g(0,'ENDSEC'); g(0,'EOF');
-    return { text:o.join('\r\n') + '\r\n', depths:depths };
+    return { text:o.join('\r\n') + '\r\n', layers:used.length };
   }
   exportBtn.addEventListener('click', function(){
     var res = buildDxf(), base = (engrIn.value.trim() || 'Board A').replace(/[^\wÄÖÜäöüß\- ]+/g, '').trim().replace(/\s+/g, '_') || 'Board_A';
     var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([res.text], { type:'application/dxf' })); a.download = base + '.dxf';
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
-    toast(a.download + ' heruntergeladen: ' + res.depths.length + ' Ebenen, ' + res.depths.join(' / ') + ' mm');
+    toast(a.download + ' heruntergeladen: Taschen 20 / 30 mm, Griffmulden 10 mm');
   });
   check();
 
