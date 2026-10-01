@@ -94,8 +94,10 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 #board .st-close .bbox{stroke:var(--warning)}
 #board .st-edge .bbox{stroke:var(--warning);stroke-dasharray:6 5}
 #board .st-overlap .bbox{stroke:var(--error);fill:rgba(239,68,68,.14)}
-#engrText{font-family:var(--mono);font-size:26px;letter-spacing:.16em;fill:rgba(0,0,0,0);stroke:#94A3B8;stroke-width:1.1;cursor:move;outline:none;transition:stroke .15s}
-#engrText:hover,#engrText:focus-visible,#engrText.drag{stroke:var(--accent2)}
+#engrText{cursor:move;outline:none}
+#engrText rect{fill:transparent}
+#engrText path{fill:none;stroke:#94A3B8;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s}
+#engrText:hover path,#engrText:focus-visible path,#engrText.drag path{stroke:var(--accent2)}
 .engrave-in small{display:block;margin-top:2px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)}
 .engrave-in{display:grid;gap:6px;margin:2px 0 12px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
 .engrave-in input{height:44px;min-width:0;padding:0 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:15px;letter-spacing:.08em;text-transform:uppercase;outline:none;transition:border-color .2s}
@@ -446,7 +448,7 @@ section.s{padding:140px 0 0}
           <svg id="board" viewBox="0 0 1000 460" role="application" aria-label="Interaktives Shadowboard mit verschiebbaren Werkzeugen">
             <rect x="20" y="20" width="960" height="420" rx="8" fill="#1A1D27" stroke="#2A2D3E" stroke-width="2"/>
             <rect x="40" y="40" width="920" height="380" fill="none" stroke="#2A2D3E" stroke-dasharray="8 8"/>
-            <text id="engrText" x="60" y="404" tabindex="0" role="button" aria-label="Gravur verschieben"></text>
+            <g id="engrText" tabindex="0" role="button" aria-label="Gravur verschieben"><rect x="-6" y="-22" width="0" height="30"/><path/></g>
             <g id="tools"></g>
           </svg>
         </div>
@@ -904,13 +906,34 @@ section.s{padding:140px 0 0}
   }
   // Beschriftung: Eingabe im Panel erscheint sofort als Gravur unten links auf dem Board
   var engrText = document.getElementById('engrText'), engrIn = document.getElementById('engrave'), engrTouched = false, typeT;
-  function syncEngr(){ engrText.textContent = engrIn.value.toUpperCase(); placeEngr(); }
+  // Single-stroke font as in the app (Hershey Sans 1-stroke, futural.jhf; umlauts and sharp s composed by the app).
+  // Acknowledgements required by its licence:
+  //  - The Hershey Fonts were originally created by Dr. A. V. Hershey while working at the U. S. National Bureau of Standards.
+  //  - The format of the Font data in this distribution was originally created by James Hurt, Cognition, Inc.,
+  //    900 Technology Park Drive, Billerica, MA 01821 (mit-eddie!ci-dandelion!hurt)
+  // Per glyph: advance, then strokes as x,y pairs; y down, baseline at 9.
+  var HF = {"\t":[16]," ":[16],"!":[10,[5,-12,5,2],[5,7,4,8,5,9,6,8,5,7]],"\"":[16,[4,-12,4,-5],[12,-12,12,-5]],"#":[21,[11,-16,4,16],[17,-16,10,16],[4,-3,18,-3],[3,3,17,3]],"$":[20,[8,-16,8,13],[12,-16,12,13],[17,-9,15,-11,12,-12,8,-12,5,-11,3,-9,3,-7,4,-5,5,-4,7,-3,13,-1,15,0,16,1,17,3,17,6,15,8,12,9,8,9,5,8,3,6]],"%":[24,[21,-12,3,9],[8,-12,10,-10,10,-8,9,-6,7,-5,5,-5,3,-7,3,-9,4,-11,6,-12,8,-12,10,-11,13,-10,16,-10,19,-11,21,-12],[17,2,15,3,14,5,14,7,16,9,18,9,20,8,21,6,21,4,19,2,17,2]],"&":[26,[23,-3,23,-4,22,-5,21,-5,20,-4,19,-2,17,3,15,6,13,8,11,9,7,9,5,8,4,7,3,5,3,3,4,1,5,0,12,-4,13,-5,14,-7,14,-9,13,-11,11,-12,9,-11,8,-9,8,-7,9,-4,11,-1,16,6,18,8,20,9,22,9,23,8,23,7]],"'":[10,[5,-10,4,-11,5,-12,6,-11,6,-9,5,-7,4,-6]],"(":[14,[11,-16,9,-14,7,-11,5,-7,4,-2,4,2,5,7,7,11,9,14,11,16]],")":[14,[3,-16,5,-14,7,-11,9,-7,10,-2,10,2,9,7,7,11,5,14,3,16]],"*":[16,[8,-6,8,6],[3,-3,13,3],[13,-3,3,3]],"+":[26,[13,-9,13,9],[4,0,22,0]],",":[8,[5,5,4,6,3,5,4,4,5,5,5,7,3,9]],"-":[26,[4,0,22,0]],".":[8,[4,4,3,5,4,6,5,5,4,4]],"/":[22,[20,-16,2,16]],"0":[20,[9,-12,6,-11,4,-8,3,-3,3,0,4,5,6,8,9,9,11,9,14,8,16,5,17,0,17,-3,16,-8,14,-11,11,-12,9,-12]],"1":[20,[6,-8,8,-9,11,-12,11,9]],"2":[20,[4,-7,4,-8,5,-10,6,-11,8,-12,12,-12,14,-11,15,-10,16,-8,16,-6,15,-4,13,-1,3,9,17,9]],"3":[20,[5,-12,16,-12,10,-4,13,-4,15,-3,16,-2,17,1,17,3,16,6,14,8,11,9,8,9,5,8,4,7,3,5]],"4":[20,[13,-12,3,2,18,2],[13,-12,13,9]],"5":[20,[15,-12,5,-12,4,-3,5,-4,8,-5,11,-5,14,-4,16,-2,17,1,17,3,16,6,14,8,11,9,8,9,5,8,4,7,3,5]],"6":[20,[16,-9,15,-11,12,-12,10,-12,7,-11,5,-8,4,-3,4,2,5,6,7,8,10,9,11,9,14,8,16,6,17,3,17,2,16,-1,14,-3,11,-4,10,-4,7,-3,5,-1,4,2]],"7":[20,[17,-12,7,9],[3,-12,17,-12]],"8":[20,[8,-12,5,-11,4,-9,4,-7,5,-5,7,-4,11,-3,14,-2,16,0,17,2,17,5,16,7,15,8,12,9,8,9,5,8,4,7,3,5,3,2,4,0,6,-2,9,-3,13,-4,15,-5,16,-7,16,-9,15,-11,12,-12,8,-12]],"9":[20,[16,-5,15,-2,13,0,10,1,9,1,6,0,4,-2,3,-5,3,-6,4,-9,6,-11,9,-12,10,-12,13,-11,15,-9,16,-5,16,0,15,5,13,8,10,9,8,9,5,8,4,6]],":":[8,[4,-3,3,-2,4,-1,5,-2,4,-3],[4,4,3,5,4,6,5,5,4,4]],";":[8,[4,-3,3,-2,4,-1,5,-2,4,-3],[5,5,4,6,3,5,4,4,5,5,5,7,3,9]],"<":[24,[20,-9,4,0,20,9]],"=":[26,[4,-3,22,-3],[4,3,22,3]],">":[24,[4,-9,20,0,4,9]],"?":[18,[3,-7,3,-8,4,-10,5,-11,7,-12,11,-12,13,-11,14,-10,15,-8,15,-6,14,-4,13,-3,9,-1,9,2],[9,7,8,8,9,9,10,8,9,7]],"@":[27,[18,-4,17,-6,15,-7,12,-7,10,-6,9,-5,8,-2,8,1,9,3,11,4,14,4,16,3,17,1],[12,-7,10,-5,9,-2,9,1,10,3,11,4],[18,-7,17,1,17,3,19,4,21,4,23,2,24,-1,24,-3,23,-6,22,-8,20,-10,18,-11,15,-12,12,-12,9,-11,7,-10,5,-8,4,-6,3,-3,3,0,4,3,5,5,7,7,9,8,12,9,15,9,18,8,20,7,21,6],[19,-7,18,1,18,3,19,4]],"A":[18,[9,-12,1,9],[9,-12,17,9],[4,2,14,2]],"B":[21,[4,-12,4,9],[4,-12,13,-12,16,-11,17,-10,18,-8,18,-6,17,-4,16,-3,13,-2],[4,-2,13,-2,16,-1,17,0,18,2,18,5,17,7,16,8,13,9,4,9]],"C":[21,[18,-7,17,-9,15,-11,13,-12,9,-12,7,-11,5,-9,4,-7,3,-4,3,1,4,4,5,6,7,8,9,9,13,9,15,8,17,6,18,4]],"D":[21,[4,-12,4,9],[4,-12,11,-12,14,-11,16,-9,17,-7,18,-4,18,1,17,4,16,6,14,8,11,9,4,9]],"E":[19,[4,-12,4,9],[4,-12,17,-12],[4,-2,12,-2],[4,9,17,9]],"F":[18,[4,-12,4,9],[4,-12,17,-12],[4,-2,12,-2]],"G":[21,[18,-7,17,-9,15,-11,13,-12,9,-12,7,-11,5,-9,4,-7,3,-4,3,1,4,4,5,6,7,8,9,9,13,9,15,8,17,6,18,4,18,1],[13,1,18,1]],"H":[22,[4,-12,4,9],[18,-12,18,9],[4,-2,18,-2]],"I":[8,[4,-12,4,9]],"J":[16,[12,-12,12,4,11,7,10,8,8,9,6,9,4,8,3,7,2,4,2,2]],"K":[21,[4,-12,4,9],[18,-12,4,2],[9,-3,18,9]],"L":[17,[4,-12,4,9],[4,9,16,9]],"M":[24,[4,-12,4,9],[4,-12,12,9],[20,-12,12,9],[20,-12,20,9]],"N":[22,[4,-12,4,9],[4,-12,18,9],[18,-12,18,9]],"O":[22,[9,-12,7,-11,5,-9,4,-7,3,-4,3,1,4,4,5,6,7,8,9,9,13,9,15,8,17,6,18,4,19,1,19,-4,18,-7,17,-9,15,-11,13,-12,9,-12]],"P":[21,[4,-12,4,9],[4,-12,13,-12,16,-11,17,-10,18,-8,18,-5,17,-3,16,-2,13,-1,4,-1]],"Q":[22,[9,-12,7,-11,5,-9,4,-7,3,-4,3,1,4,4,5,6,7,8,9,9,13,9,15,8,17,6,18,4,19,1,19,-4,18,-7,17,-9,15,-11,13,-12,9,-12],[12,5,18,11]],"R":[21,[4,-12,4,9],[4,-12,13,-12,16,-11,17,-10,18,-8,18,-6,17,-4,16,-3,13,-2,4,-2],[11,-2,18,9]],"S":[20,[17,-9,15,-11,12,-12,8,-12,5,-11,3,-9,3,-7,4,-5,5,-4,7,-3,13,-1,15,0,16,1,17,3,17,6,15,8,12,9,8,9,5,8,3,6]],"T":[16,[8,-12,8,9],[1,-12,15,-12]],"U":[22,[4,-12,4,3,5,6,7,8,10,9,12,9,15,8,17,6,18,3,18,-12]],"V":[18,[1,-12,9,9],[17,-12,9,9]],"W":[24,[2,-12,7,9],[12,-12,7,9],[12,-12,17,9],[22,-12,17,9]],"X":[20,[3,-12,17,9],[17,-12,3,9]],"Y":[18,[1,-12,9,-2,9,9],[17,-12,9,-2]],"Z":[20,[17,-12,3,9],[3,-12,17,-12],[3,9,17,9]],"[":[14,[4,-16,4,16],[5,-16,5,16],[4,-16,11,-16],[4,16,11,16]],"\\":[14,[0,-12,14,12]],"]":[14,[9,-16,9,16],[10,-16,10,16],[3,-16,10,-16],[3,16,10,16]],"^":[16,[8,-14,0,0],[8,-14,16,0]],"_":[18,[0,16,18,16]],"`":[8,[5,-7,3,-5,3,-3,4,-2,5,-3,4,-4,3,-3]],"{":[14,[9,-16,7,-15,6,-14,5,-12,5,-10,6,-8,7,-7,8,-5,8,-3,6,-1],[7,-15,6,-13,6,-11,7,-9,8,-8,9,-6,9,-4,8,-2,4,0,8,2,9,4,9,6,8,8,7,9,6,11,6,13,7,15],[6,1,8,3,8,5,7,7,6,8,5,10,5,12,6,14,7,15,9,16]],"|":[8,[4,-16,4,16]],"}":[14,[5,-16,7,-15,8,-14,9,-12,9,-10,8,-8,7,-7,6,-5,6,-3,8,-1],[7,-15,8,-13,8,-11,7,-9,6,-8,5,-6,5,-4,6,-2,10,0,6,2,5,4,5,6,6,8,7,9,8,11,8,13,7,15],[8,1,6,3,6,5,7,7,8,8,9,10,9,12,8,14,7,15,5,16]],"~":[24,[3,3,3,1,4,-2,6,-3,8,-3,10,-2,14,1,16,2,18,2,20,1,21,-1],[3,1,4,-1,6,-2,8,-2,10,-1,14,2,16,3,18,3,20,2,21,-1,21,-3]]," ":[16],"°":[12,[9,-9,9,-8,8,-7,7,-6,6,-6,5,-6,4,-7,3,-8,3,-9,3,-10,4,-11,5,-12,6,-12,7,-12,8,-11,9,-10,9,-9]],"·":[8,[4,4,3,5,4,6,5,5,4,4]],"Ä":[18,[9,-12,1,9],[9,-12,17,9],[4,2,14,2],[5,-15,5,-12],[13,-15,13,-12]],"Ö":[22,[9,-12,7,-11,5,-9,4,-7,3,-4,3,1,4,4,5,6,7,8,9,9,13,9,15,8,17,6,18,4,19,1,19,-4,18,-7,17,-9,15,-11,13,-12,9,-12],[7,-15,7,-12],[15,-15,15,-12]],"×":[17,[3,-5,14,9],[14,-5,3,9]],"Ø":[22,[9,-12,7,-11,5,-9,4,-7,3,-4,3,1,4,4,5,6,7,8,9,9,13,9,15,8,17,6,18,4,19,1,19,-4,18,-7,17,-9,15,-11,13,-12,9,-12],[1,11,21,-14]],"Ü":[22,[4,-12,4,3,5,6,7,8,10,9,12,9,15,8,17,6,18,3,18,-12],[7,-15,7,-12],[15,-15,15,-12]],"ß":[18,[4,9,4,-7,5,-10,7,-12,10,-12,13,-11,14,-9,14,-6,12,-4,10,-3,13,-2,15,0,15,4,13,7,10,8,7,7]],"‐":[26,[4,0,22,0]],"–":[26,[4,0,22,0]],"—":[26,[4,0,22,0]],"‘":[10,[5,-10,4,-11,5,-12,6,-11,6,-9,5,-7,4,-6]],"’":[10,[5,-10,4,-11,5,-12,6,-11,6,-9,5,-7,4,-6]],"‚":[10,[5,-10,4,-11,5,-12,6,-11,6,-9,5,-7,4,-6]],"“":[16,[4,-12,4,-5],[12,-12,12,-5]],"”":[16,[4,-12,4,-5],[12,-12,12,-5]],"„":[16,[4,-12,4,-5],[12,-12,12,-5]],"→":[24,[4,-9,20,0,4,9]]};
+  var ENGR_CAP = 16, ENGR_TRACK = 0.02, engr = { strokes:[], width:0 };   // cap height 10 mm; tracking as in the app
+  var engrPath = engrText.querySelector('path'), engrHit = engrText.querySelector('rect');
+  function engrStrokes(text){
+    var sc = ENGR_CAP / 21, gap = ENGR_TRACK * ENGR_CAP, pen = 0, out = [];
+    for (var i = 0; i < text.length; i++){
+      var gl = HF[text.charAt(i)] || HF['?'];
+      for (var k = 1; k < gl.length; k++){ var st = gl[k], pts = []; for (var j = 0; j < st.length; j += 2) pts.push([pen + st[j] * sc, (st[j + 1] - 9) * sc]); out.push(pts); }
+      pen += gl[0] * sc + gap;
+    }
+    return { strokes:out, width:Math.max(pen - gap, 0) };
+  }
+  function syncEngr(){
+    engr = engrStrokes(engrIn.value.toUpperCase());
+    engrPath.setAttribute('d', engr.strokes.map(function(st){ return 'M' + st.map(function(q){ return q[0].toFixed(2) + ' ' + q[1].toFixed(2); }).join('L'); }).join(''));
+    engrHit.setAttribute('width', engr.width ? engr.width + 12 : 0); placeEngr();
+  }
   // Gravur verschieben: ziehen oder Pfeiltasten, bleibt auf dem Board
   var ex = 60, ey = 404, eDrag = null;
   function placeEngr(){
-    var b = engrText.getBBox();
-    ex = clamp(ex, BX, Math.max(BX, BX + BW - b.width)); ey = clamp(ey, BY + 26, BY + BH - 4);
-    engrText.setAttribute('x', ex); engrText.setAttribute('y', ey);
+    ex = clamp(ex, BX, Math.max(BX, BX + BW - engr.width)); ey = clamp(ey, BY + ENGR_CAP + 4, BY + BH - 6);
+    engrText.setAttribute('transform', 'translate(' + ex + ' ' + ey + ')');
   }
   engrText.addEventListener('pointerdown', function(e){ e.preventDefault(); var p = toSvg(e); eDrag = { x:p.x - ex, y:p.y - ey }; engrText.setPointerCapture(e.pointerId); engrText.classList.add('drag'); });
   engrText.addEventListener('pointermove', function(e){ if (!eDrag) return; var p = toSvg(e); ex = p.x - eDrag.x; ey = p.y - eDrag.y; placeEngr(); });
@@ -936,8 +959,9 @@ section.s{padding:140px 0 0}
   // Simplified on purpose, but built like the app: three layers - two pocket depths (a tool may have
   // both, e.g. hammer head deep, handle shallow) and one shallower finger-recess layer. Regions of one
   // tool do not overlap (the deep area is cut out of the shallow one); the recess overlaps the tool
-  // like in the app. No board outline, no engraving. Each layer is rasterised per tool, traced with
-  // marching squares and simplified; output is DXF R12 in mm, Y up, origin bottom left.
+  // like in the app. Engraving goes on its own layer as open single strokes (V bit follows the line).
+  // No board outline. Each pocket layer is rasterised per tool, traced with marching squares and
+  // simplified; output is DXF R12 in mm, Y up, origin bottom left.
   var PX_MM = 1.6, DEPTH = {}; DEPTH[D1] = 20; DEPTH[D3] = 30; DEPTH[A2] = 10;
   var LAYERS = [{ d:20, name:'POCKET_D20.0', aci:5 }, { d:30, name:'POCKET_D30.0', aci:6 }, { d:10, name:'RECESS_D10.0', aci:4, recess:true }];
   var RS = 6, PAD = 10 * RS;   // drawings reach past w/h (round caps)
@@ -1022,6 +1046,8 @@ section.s{padding:140px 0 0}
       tools.forEach(function(t){ var r = rasterTool(t, L); if (r) loops.push.apply(loops, trace(r, t.x, t.y)); });
       return { L:L, loops:loops };
     }).filter(function(u){ return u.loops.length; }), o = [];
+    var engrLines = engr.strokes.filter(function(st){ return st.length > 1; }).map(function(st){ return st.map(function(q){ return [ex + q[0], ey + q[1]]; }); });
+    if (engrLines.length) used.push({ L:{ name:'ENGRAVE_D1.0', aci:7, open:true }, loops:engrLines });
     function g(code, val){ o.push(code, val); }
     function n(v){ return (Math.round(v * 1000) / 1000).toString(); }
     g(0,'SECTION'); g(2,'HEADER'); g(9,'$ACADVER'); g(1,'AC1009'); g(9,'$INSUNITS'); g(70,4); g(0,'ENDSEC');
@@ -1034,7 +1060,7 @@ section.s{padding:140px 0 0}
     used.forEach(function(u){
       var name = u.L.name;
       u.loops.forEach(function(loop){
-        g(0,'POLYLINE'); g(8,name); g(66,1); g(10,0); g(20,0); g(30,0); g(70,1);
+        g(0,'POLYLINE'); g(8,name); g(66,1); g(10,0); g(20,0); g(30,0); g(70,u.L.open ? 0 : 1);
         loop.forEach(function(p){ g(0,'VERTEX'); g(8,name); g(10,n((p[0] - 20) / PX_MM)); g(20,n((440 - p[1]) / PX_MM)); g(30,0); });
         g(0,'SEQEND'); g(8,name);
       });
@@ -1046,7 +1072,7 @@ section.s{padding:140px 0 0}
     var res = buildDxf(), base = (engrIn.value.trim() || 'Board A').replace(/[^\wÄÖÜäöüß\- ]+/g, '').trim().replace(/\s+/g, '_') || 'Board_A';
     var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([res.text], { type:'application/dxf' })); a.download = base + '.dxf';
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
-    toast(a.download + ' heruntergeladen: Taschen 20 / 30 mm, Griffmulden 10 mm');
+    toast(a.download + ' heruntergeladen: Taschen 20 / 30 mm, Griffmulden 10 mm' + (engr.strokes.length ? ', Gravur 1 mm' : ''));
   });
   check();
 
