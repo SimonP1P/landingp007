@@ -44,7 +44,6 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 .logo small{font-weight:500;color:var(--muted-light);font-size:15px;font-stretch:100%;letter-spacing:.04em}
 .tabs{display:flex;align-items:stretch}
 .tabs a{display:flex;align-items:center;gap:8px;padding:0 15px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-light);border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
-.tabs a span{font-family:var(--mono);font-weight:400;color:var(--muted)}
 .tabs a:hover,.tabs a.on{color:var(--text);border-bottom-color:var(--accent)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:0 20px;border-radius:6px;border:0;background:var(--accent);color:var(--white);font-weight:700;font-size:16px;cursor:pointer;transition:background .15s, transform .15s}
 .btn:hover{background:#6FA2F9}
@@ -60,11 +59,6 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;line-height:.9;lett
 .seg button:hover{color:var(--text)}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--white)}
 .est{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);border-radius:3px;padding:1px 5px;vertical-align:middle;white-space:nowrap}
-
-/* Blattkennung je Abschnitt (Zeichnungsmetapher) */
-.sheet{display:flex;align-items:center;gap:12px;margin-bottom:26px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.sheet b{color:var(--accent2);font-weight:400}
-.sheet i{flex:0 0 60px;height:1px;background:var(--border)}
 
 /* ---------- HERO ---------- */
 .hero{padding:40px 0 0}
@@ -340,7 +334,7 @@ section.s{padding:140px 0 0}
 .title-block .todo{color:var(--muted)}
 
 /* ---------- Responsive ---------- */
-@media (max-width:1180px){ .tabs a{padding:0 10px} .tabs a span{display:none} }
+@media (max-width:1180px){ .tabs a{padding:0 10px} }
 @media (max-width:1100px){
   .tabs{display:none}
   .hero-row{grid-template-columns:minmax(0,1fr)}
@@ -401,12 +395,12 @@ section.s{padding:140px 0 0}
       Seiton <small>Studio</small>
     </a>
     <nav class="tabs" aria-label="Hauptnavigation">
-      <a href="#ablauf"><span>01</span>Ablauf</a>
-      <a href="#digitalisieren"><span>02</span>Digitalisieren</a>
-      <a href="#tiefe"><span>03</span>Tiefe</a>
-      <a href="#bibliothek"><span>04</span>Bibliothek</a>
-      <a href="#export"><span>05</span>Fräsen</a>
-      <a href="#seiton"><span>06</span>Seiton</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#digitalisieren">Digitalisieren</a>
+      <a href="#tiefe">Tiefe</a>
+      <a href="#bibliothek">Bibliothek</a>
+      <a href="#export">Fräsen</a>
+      <a href="#seiton">Seiton</a>
     </nav>
     <a class="btn" href="#demo">Live-Demo anfragen</a>
   </div>
@@ -475,7 +469,6 @@ section.s{padding:140px 0 0}
 <!-- ===================== ABLAUF ===================== -->
 <section class="s" id="ablauf">
   <div class="wrap">
-    <div class="sheet"><b>Blatt 01</b><i></i>Ablauf</div>
     <h2 class="s-title">Zehn Schritte. Übrig bleiben drei.</h2>
     <p class="s-lead">Die ganze Kette vom Werkzeug bis zum gefrästen Board. Schalten Sie um und sehen Sie, was wegfällt.</p>
 
@@ -503,7 +496,6 @@ section.s{padding:140px 0 0}
 <!-- ===================== DIGITALISIEREN ===================== -->
 <section class="s" id="digitalisieren">
   <div class="wrap">
-    <div class="sheet"><b>Blatt 02</b><i></i>Digitalisieren</div>
     <h2 class="s-title">Einmal digitalisieren. Immer wieder verwenden.</h2>
     <p class="s-lead">Werkzeug auf den Seiton-Messbogen legen, Foto machen. Die Marker am Rand machen aus jedem Foto ein maßhaltiges Abbild – Perspektive, Maßstab und Kontur rechnet Seiton Studio selbst.</p>
 
@@ -559,7 +551,6 @@ section.s{padding:140px 0 0}
 <!-- ===================== TIEFE ===================== -->
 <section class="s" id="tiefe">
   <div class="wrap">
-    <div class="sheet"><b>Blatt 03</b><i></i>Tiefe</div>
     <h2 class="s-title">Jede Fläche hat ihre Dicke.</h2>
     <p class="s-lead">Kopf dicker als der Griff? Dann wird die Tasche dort tiefer. Sie geben die Dicke einmal am Werkzeug an – die Frästiefe jeder Stufe rechnet Seiton aus. Griffmulden inklusive.</p>
 
@@ -582,7 +573,6 @@ section.s{padding:140px 0 0}
 <!-- ===================== BIBLIOTHEK ===================== -->
 <section class="s" id="bibliothek">
   <div class="wrap">
-    <div class="sheet"><b>Blatt 04</b><i></i>Bibliothek</div>
     <h2 class="s-title">Eine Bibliothek statt einzelner Dateien.</h2>
 
     <div class="lib-top">
@@ -615,7 +605,6 @@ section.s{padding:140px 0 0}
 <!-- ===================== ÄNDERUNGEN ===================== -->
 <section class="s" id="aenderungen">
   <div class="wrap">
-    <div class="sheet"><b>Blatt 05</b><i></i>Änderungen</div>
     <h2 class="s-title">Werkzeug geändert? Alle Boards ziehen mit.</h2>
     <div class="chg">
       <div class="chg-text">
@@ -642,7 +631,6 @@ section.s{padding:140px 0 0}
 <!-- ===================== FRÄSEN ===================== -->
 <section class="s" id="export">
   <div class="wrap">
-    <div class="sheet"><b>Blatt 06</b><i></i>Fräsen</div>
     <h2 class="s-title">Vom Board zum fertigen Einsatz.</h2>
     <div class="flow-ctrl">
       <div class="seg" role="group" aria-label="Wer fräst?" id="millSeg">
@@ -688,7 +676,6 @@ section.s{padding:140px 0 0}
 <!-- ===================== ZEIT ===================== -->
 <section class="s" id="zeit">
   <div class="wrap">
-    <div class="sheet"><b>Blatt 07</b><i></i>Zeit</div>
     <h2 class="s-title">Von Stunden zu Minuten.</h2>
     <div class="time" id="timeBox">
       <div class="old"><div class="clock">6:00 h</div><p class="lbl">heute, von Hand</p></div>
@@ -702,7 +689,6 @@ section.s{padding:140px 0 0}
 <!-- ===================== SEITON ===================== -->
 <section class="s" id="seiton">
   <div class="wrap">
-    <div class="sheet"><b>Blatt 08</b><i></i>Seiton</div>
     <h2 class="s-title">Vier Teile. Ein Ablauf.</h2>
     <p class="s-lead">Nehmen Sie, was Sie brauchen. Alles greift ineinander – vom ersten Foto bis zum fertigen Einsatz.</p>
 
@@ -737,7 +723,6 @@ section.s{padding:140px 0 0}
 <!-- ===================== FÜR WEN ===================== -->
 <section class="s" id="zielgruppe">
   <div class="wrap">
-    <div class="sheet"><b>Blatt 09</b><i></i>Für wen</div>
     <h2 class="s-title">Für alle, die eigentlich anderes zu tun haben.</h2>
     <div class="who">
       <ul class="roles">
@@ -779,7 +764,7 @@ section.s{padding:140px 0 0}
       <div><small>Benennung</small><span class="name">Seiton Studio</span></div>
       <div><small>Inhalt</small><span>Werkzeuge digitalisieren. Shadowboards standardisieren.</span></div>
       <div><small>Maßstab</small><span>1:1</span></div>
-      <div><small>Blatt</small><span>09 / 09</span></div>
+      <div><small>Plattform</small><span>Windows · Mac</span></div>
       <div><small>Kontakt</small><span class="todo">[E-Mail-Adresse]</span></div>
       <div><small>Telefon</small><span class="todo">[Telefon]</span></div>
       <div><small>Rechtliches</small><span class="todo">Impressum (folgt)</span></div>
@@ -943,7 +928,110 @@ section.s{padding:140px 0 0}
     setTimeout(check, reduce ? 0 : 720);
     setTimeout(function(){ typeLabel('Montage 1 – Wagen 3'); }, reduce ? 0 : 900);
   });
-  exportBtn.addEventListener('click', function(){ toast('Board_A.dxf erzeugt: Ebenen je Frästiefe und Gravur'); });
+  /* ---------- DXF-Export: echte Datei, eine Ebene je Frästiefe ---------- */
+  // Simplified on purpose: three layers (one per tool depth, names as in the app), finger recess
+  // milled at the tool's depth, no board outline and no engraving. Each tool is rasterised,
+  // traced with marching squares and simplified; output is DXF R12 in mm, Y up, origin bottom left.
+  var PX_MM = 1.6, DEPTH = {}; DEPTH[D1] = 15; DEPTH[D2] = 25; DEPTH[D3] = 40;
+  var LAYER_COLOR = { 15:5, 25:4, 40:6 }, RS = 6, PAD = 10 * RS;   // drawings reach past w/h (round caps)
+  function rasterTool(t){
+    var W = Math.ceil(t.w * RS) + 2 * PAD, H = Math.ceil(t.h * RS) + 2 * PAD;
+    var c = document.createElement('canvas'); c.width = W; c.height = H;
+    var ctx = c.getContext('2d'), depth = 0;
+    Array.prototype.forEach.call(t.g.children, function(n){
+      if (n.getAttribute('class') === 'bbox') return;
+      var fill = n.getAttribute('fill'), stroke = n.getAttribute('stroke');
+      if (DEPTH[fill] && !depth) depth = DEPTH[fill];
+      if (DEPTH[stroke] && !depth) depth = DEPTH[stroke];
+      var m = n.transform && n.transform.baseVal.numberOfItems ? n.transform.baseVal.consolidate().matrix : { a:1, b:0, c:0, d:1, e:0, f:0 };
+      ctx.setTransform(RS, 0, 0, RS, PAD, PAD); ctx.transform(m.a, m.b, m.c, m.d, m.e, m.f);
+      ctx.fillStyle = ctx.strokeStyle = '#000'; ctx.lineCap = ctx.lineJoin = 'round';
+      var a = function(k){ return parseFloat(n.getAttribute(k)) || 0; }, p = new Path2D();
+      if (n.tagName === 'rect'){ var r = Math.min(a('rx'), a('width') / 2, a('height') / 2); p.roundRect(a('x'), a('y'), a('width'), a('height'), r); }
+      else if (n.tagName === 'circle') p.arc(a('cx'), a('cy'), a('r'), 0, 2 * Math.PI);
+      else if (n.tagName === 'line'){ p.moveTo(a('x1'), a('y1')); p.lineTo(a('x2'), a('y2')); }
+      else if (n.tagName === 'path') p = new Path2D(n.getAttribute('d'));
+      if (fill && fill !== 'none') ctx.fill(p, n.getAttribute('fill-rule') === 'evenodd' ? 'evenodd' : 'nonzero');
+      if (stroke){ ctx.lineWidth = a('stroke-width'); ctx.stroke(p); }
+    });
+    return { img:ctx.getImageData(0, 0, W, H).data, W:W, H:H, depth:depth };
+  }
+  // Closed contours (in board px) of the filled area, edge points interpolated on the alpha channel
+  function trace(r, ox, oy){
+    var W = r.W, H = r.H, img = r.img, adj = new Map(), pts = new Map();
+    function v(x, y){ return img[(y * W + x) * 4 + 3] / 255; }
+    function ept(k){
+      if (!pts.has(k)){
+        var e = k >> 1, x = e % W, y = (e - x) / W, hz = !(k & 1), v0 = v(x, y), v1 = hz ? v(x + 1, y) : v(x, y + 1), f = (0.5 - v0) / (v1 - v0);
+        pts.set(k, [ox + ((hz ? x + f : x) + 0.5 - PAD) / RS, oy + ((hz ? y : y + f) + 0.5 - PAD) / RS]);
+      }
+      return k;
+    }
+    function seg(a, b){ (adj.get(a) || adj.set(a, []).get(a)).push(b); (adj.get(b) || adj.set(b, []).get(b)).push(a); ept(a); ept(b); }
+    for (var y = 0; y < H - 1; y++) for (var x = 0; x < W - 1; x++){
+      var tl = v(x, y) >= .5, tr = v(x + 1, y) >= .5, br = v(x + 1, y + 1) >= .5, bl = v(x, y + 1) >= .5;
+      var c = (tl ? 8 : 0) | (tr ? 4 : 0) | (br ? 2 : 0) | (bl ? 1 : 0);
+      if (!c || c === 15) continue;
+      var T = (y * W + x) * 2, B = ((y + 1) * W + x) * 2, L = (y * W + x) * 2 + 1, R = (y * W + x + 1) * 2 + 1;
+      var mid = (v(x, y) + v(x + 1, y) + v(x + 1, y + 1) + v(x, y + 1)) / 4 >= .5;
+      switch (c){
+        case 1: case 14: seg(L, B); break;   case 2: case 13: seg(B, R); break;
+        case 3: case 12: seg(L, R); break;   case 4: case 11: seg(T, R); break;
+        case 6: case 9: seg(T, B); break;    case 7: case 8: seg(T, L); break;
+        case 5: if (mid){ seg(T, L); seg(B, R); } else { seg(T, R); seg(L, B); } break;
+        case 10: if (mid){ seg(T, R); seg(L, B); } else { seg(T, L); seg(B, R); } break;
+      }
+    }
+    var loops = [], seen = new Set();
+    adj.forEach(function(_, start){
+      if (seen.has(start)) return;
+      var loop = [], prev = -1, cur = start;
+      do { seen.add(cur); loop.push(pts.get(cur)); var nb = adj.get(cur), nx = nb[0] !== prev ? nb[0] : nb[1]; prev = cur; cur = nx; } while (cur !== start && !seen.has(cur));
+      if (loop.length > 2) loops.push(simplify(loop, 0.05 * PX_MM));
+    });
+    return loops;
+  }
+  // Douglas-Peucker on a closed loop, split at the point farthest from the first one
+  function simplify(pts, tol){
+    function dp(a, b, out){
+      var ax = pts[a][0], ay = pts[a][1], dx = pts[b % pts.length][0] - ax, dy = pts[b % pts.length][1] - ay, L = Math.hypot(dx, dy) || 1e-9, best = 0, bi = -1;
+      for (var i = a + 1; i < b; i++){ var d = Math.abs((pts[i][0] - ax) * dy - (pts[i][1] - ay) * dx) / L; if (d > best){ best = d; bi = i; } }
+      if (best > tol){ dp(a, bi, out); dp(bi, b, out); } else out.push(pts[a]);
+    }
+    var far = 0, fd = 0;
+    pts.forEach(function(p, i){ var d = Math.hypot(p[0] - pts[0][0], p[1] - pts[0][1]); if (d > fd){ fd = d; far = i; } });
+    var out = []; dp(0, far, out); dp(far, pts.length, out); return out;
+  }
+  function buildDxf(){
+    var byDepth = {};
+    tools.forEach(function(t){ var r = rasterTool(t); (byDepth[r.depth] = byDepth[r.depth] || []).push.apply(byDepth[r.depth], trace(r, t.x, t.y)); });
+    var depths = Object.keys(byDepth).map(Number).sort(function(a, b){ return a - b; }), o = [];
+    function g(code, val){ o.push(code, val); }
+    function name(d){ return 'POCKET_D' + d.toFixed(1); }
+    function n(v){ return (Math.round(v * 1000) / 1000).toString(); }
+    g(0,'SECTION'); g(2,'HEADER'); g(9,'$ACADVER'); g(1,'AC1009'); g(9,'$INSUNITS'); g(70,4); g(0,'ENDSEC');
+    g(0,'SECTION'); g(2,'TABLES');
+    g(0,'TABLE'); g(2,'LTYPE'); g(70,1); g(0,'LTYPE'); g(2,'CONTINUOUS'); g(70,0); g(3,'Solid line'); g(72,65); g(73,0); g(40,0); g(0,'ENDTAB');
+    g(0,'TABLE'); g(2,'LAYER'); g(70,depths.length);
+    depths.forEach(function(d){ g(0,'LAYER'); g(2,name(d)); g(70,0); g(62,LAYER_COLOR[d] || 7); g(6,'CONTINUOUS'); });
+    g(0,'ENDTAB'); g(0,'ENDSEC');
+    g(0,'SECTION'); g(2,'ENTITIES');
+    depths.forEach(function(d){
+      byDepth[d].forEach(function(loop){
+        g(0,'POLYLINE'); g(8,name(d)); g(66,1); g(10,0); g(20,0); g(30,0); g(70,1);
+        loop.forEach(function(p){ g(0,'VERTEX'); g(8,name(d)); g(10,n((p[0] - 20) / PX_MM)); g(20,n((440 - p[1]) / PX_MM)); g(30,0); });
+        g(0,'SEQEND'); g(8,name(d));
+      });
+    });
+    g(0,'ENDSEC'); g(0,'EOF');
+    return { text:o.join('\r\n') + '\r\n', depths:depths };
+  }
+  exportBtn.addEventListener('click', function(){
+    var res = buildDxf(), base = (engrIn.value.trim() || 'Board A').replace(/[^\wÄÖÜäöüß\- ]+/g, '').trim().replace(/\s+/g, '_') || 'Board_A';
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([res.text], { type:'application/dxf' })); a.download = base + '.dxf';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
+    toast(a.download + ' heruntergeladen: ' + res.depths.length + ' Ebenen, ' + res.depths.join(' / ') + ' mm');
+  });
   check();
 
   /* ---------- Prozesskette: zehn Schritte, die zusammenfließen ---------- */
